@@ -1,6 +1,19 @@
-hash: 5ce735e76783faf4811edff698920a846732a973b67d2e31752048a8e3babcca
-updated: 2018-08-14T09:11:19.377871-07:00
+hash: abb93b5ca4d83e26854d51f85d7da06a157b2008c0a44a124476f8b292d42692
+updated: 2018-08-14T11:27:53.059783-07:00
 imports:
 - name: github.com/gin-gonic/gin
   version: b869fe1415e4b9eb52f247441830d502aece2d4d
+- name: github.com/sirupsen/logrus
+  version: 3e01752db0189b9157070a0e1668a620f9a85da2
+- name: golang.org/x/crypto
+  version: 80db560fac1fb3e6ac81dbc7f8ae4c061f5257bd
+  subpackages:
+  - ssh/terminal
+- name: golang.org/x/sys
+  version: 641605214e7dab930817f68e2fef560efbb033e5
+  subpackages:
+  - unix
+  - windows
+- name: gopkg.in/yaml.v2
+  version: 5420a8b6744d3b0345ab293f6fcba19c978f1183
 testImports: []

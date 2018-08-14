@@ -1,0 +1,11 @@
+# use YAML format
+
+db:
+    db_table: sso
+    db_hosts: 127.0.0.1
+    db_user: 
+    db_pwd: 
+    db_port: 9042
+api:
+    api_protocol: http
+    api_domain: localhost
