@@ -6,11 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-<<<<<<< HEAD
 	"time"
-=======
-	"unicode/utf8"
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 type resolveMapItem struct {
@@ -79,11 +75,7 @@ func longTag(tag string) string {
 
 func resolvableTag(tag string) bool {
 	switch tag {
-<<<<<<< HEAD
 	case "", yaml_STR_TAG, yaml_BOOL_TAG, yaml_INT_TAG, yaml_FLOAT_TAG, yaml_NULL_TAG, yaml_TIMESTAMP_TAG:
-=======
-	case "", yaml_STR_TAG, yaml_BOOL_TAG, yaml_INT_TAG, yaml_FLOAT_TAG, yaml_NULL_TAG:
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return true
 	}
 	return false
@@ -100,7 +92,6 @@ func resolve(tag string, in string) (rtag string, out interface{}) {
 		switch tag {
 		case "", rtag, yaml_STR_TAG, yaml_BINARY_TAG:
 			return
-<<<<<<< HEAD
 		case yaml_FLOAT_TAG:
 			if rtag == yaml_INT_TAG {
 				switch v := out.(type) {
@@ -114,8 +105,6 @@ func resolve(tag string, in string) (rtag string, out interface{}) {
 					return
 				}
 			}
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 		failf("cannot decode %s `%s` as a %s", shortTag(rtag), in, shortTag(tag))
 	}()
@@ -149,7 +138,6 @@ func resolve(tag string, in string) (rtag string, out interface{}) {
 
 		case 'D', 'S':
 			// Int, float, or timestamp.
-<<<<<<< HEAD
 			// Only try values as a timestamp if the value is unquoted or there's an explicit
 			// !!timestamp tag.
 			if tag == "" || tag == yaml_TIMESTAMP_TAG {
@@ -159,8 +147,6 @@ func resolve(tag string, in string) (rtag string, out interface{}) {
 				}
 			}
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			plain := strings.Replace(in, "_", "", -1)
 			intv, err := strconv.ParseInt(plain, 0, 64)
 			if err == nil {
@@ -194,7 +180,6 @@ func resolve(tag string, in string) (rtag string, out interface{}) {
 					return yaml_INT_TAG, uintv
 				}
 			} else if strings.HasPrefix(plain, "-0b") {
-<<<<<<< HEAD
 				intv, err := strconv.ParseInt("-" + plain[3:], 2, 64)
 				if err == nil {
 					if true || intv == int64(int(intv)) {
@@ -204,34 +189,11 @@ func resolve(tag string, in string) (rtag string, out interface{}) {
 					}
 				}
 			}
-=======
-				intv, err := strconv.ParseInt(plain[3:], 2, 64)
-				if err == nil {
-					if intv == int64(int(intv)) {
-						return yaml_INT_TAG, -int(intv)
-					} else {
-						return yaml_INT_TAG, -intv
-					}
-				}
-			}
-			// XXX Handle timestamps here.
-
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		default:
 			panic("resolveTable item not yet handled: " + string(rune(hint)) + " (with " + in + ")")
 		}
 	}
-<<<<<<< HEAD
 	return yaml_STR_TAG, in
-=======
-	if tag == yaml_BINARY_TAG {
-		return yaml_BINARY_TAG, in
-	}
-	if utf8.ValidString(in) {
-		return yaml_STR_TAG, in
-	}
-	return yaml_BINARY_TAG, encodeBase64(in)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // encodeBase64 encodes s as base64 that is broken up into multiple lines
@@ -258,7 +220,6 @@ func encodeBase64(s string) string {
 	}
 	return string(out[:k])
 }
-<<<<<<< HEAD
 
 // This is a subset of the formats allowed by the regular expression
 // defined at http://yaml.org/type/timestamp.html.
@@ -295,5 +256,3 @@ func parseTimestamp(s string) (time.Time, bool) {
 	}
 	return time.Time{}, false
 }
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 // Copyright (c) 2012-2018 Ugorji Nwoke. All rights reserved.
-=======
-// Copyright (c) 2012-2015 Ugorji Nwoke. All rights reserved.
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Use of this source code is governed by a MIT license found in the LICENSE file.
 
 package codec
@@ -101,11 +97,7 @@ type testCborGolden struct {
 }
 
 // Some tests are skipped because they include numbers outside the range of int64/uint64
-<<<<<<< HEAD
 func TestCborGoldens(t *testing.T) {
-=======
-func doTestCborGoldens(t *testing.T) {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	oldMapType := testCborH.MapType
 	defer func() {
 		testCborH.MapType = oldMapType
@@ -208,7 +200,6 @@ func testCborError(t *testing.T, i int, v0, v1 interface{}, err error, equal *bo
 	// fmt.Printf("%v testCborError passed (checks passed)\n", i)
 }
 
-<<<<<<< HEAD
 func TestCborHalfFloat(t *testing.T) {
 	m := map[uint16]float64{
 		// using examples from
@@ -236,8 +227,4 @@ func TestCborHalfFloat(t *testing.T) {
 			failT(t, "unequal floats: from %x %b, %v != %v", k, k, res, v)
 		}
 	}
-=======
-func TestCborGoldens(t *testing.T) {
-	doTestCborGoldens(t)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }

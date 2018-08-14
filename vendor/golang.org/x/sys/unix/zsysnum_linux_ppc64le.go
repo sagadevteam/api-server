@@ -366,8 +366,8 @@ const (
 	SYS_PREADV2                = 380
 	SYS_PWRITEV2               = 381
 	SYS_KEXEC_FILE_LOAD        = 382
-<<<<<<< HEAD
 	SYS_STATX                  = 383
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
+	SYS_PKEY_ALLOC             = 384
+	SYS_PKEY_FREE              = 385
+	SYS_PKEY_MPROTECT          = 386
 )

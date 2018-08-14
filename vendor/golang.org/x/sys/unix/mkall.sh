@@ -72,11 +72,7 @@ darwin_amd64)
 	;;
 darwin_arm)
 	mkerrors="$mkerrors"
-<<<<<<< HEAD
 	mksysnum="./mksysnum_darwin.pl $(xcrun --show-sdk-path --sdk iphoneos)/usr/include/sys/syscall.h"
-=======
-	mksysnum="./mksysnum_darwin.pl /usr/include/sys/syscall.h"
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	mktypes="GOARCH=$GOARCH go tool cgo -godefs"
 	;;
 darwin_arm64)
@@ -84,15 +80,6 @@ darwin_arm64)
 	mksysnum="./mksysnum_darwin.pl $(xcrun --show-sdk-path --sdk iphoneos)/usr/include/sys/syscall.h"
 	mktypes="GOARCH=$GOARCH go tool cgo -godefs"
 	;;
-<<<<<<< HEAD
-=======
-dragonfly_386)
-	mkerrors="$mkerrors -m32"
-	mksyscall="./mksyscall.pl -l32 -dragonfly"
-	mksysnum="curl -s 'http://gitweb.dragonflybsd.org/dragonfly.git/blob_plain/HEAD:/sys/kern/syscalls.master' | ./mksysnum_dragonfly.pl"
-	mktypes="GOARCH=$GOARCH go tool cgo -godefs"
-	;;
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 dragonfly_amd64)
 	mkerrors="$mkerrors -m64"
 	mksyscall="./mksyscall.pl -dragonfly"
@@ -115,11 +102,7 @@ freebsd_arm)
 	mksyscall="./mksyscall.pl -l32 -arm"
 	mksysnum="curl -s 'http://svn.freebsd.org/base/stable/10/sys/kern/syscalls.master' | ./mksysnum_freebsd.pl"
 	# Let the type of C char be signed for making the bare syscall
-<<<<<<< HEAD
 	# API consistent across platforms.
-=======
-	# API consistent across over platforms.
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	mktypes="GOARCH=$GOARCH go tool cgo -godefs -- -fsigned-char"
 	;;
 linux_sparc64)
@@ -141,7 +124,6 @@ netbsd_amd64)
 	mksysnum="curl -s 'http://cvsweb.netbsd.org/bsdweb.cgi/~checkout~/src/sys/kern/syscalls.master' | ./mksysnum_netbsd.pl"
 	mktypes="GOARCH=$GOARCH go tool cgo -godefs"
 	;;
-<<<<<<< HEAD
 netbsd_arm)
 	mkerrors="$mkerrors"
 	mksyscall="./mksyscall.pl -l32 -netbsd -arm"
@@ -150,16 +132,10 @@ netbsd_arm)
 	# API consistent across platforms.
 	mktypes="GOARCH=$GOARCH go tool cgo -godefs -- -fsigned-char"
 	;;
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 openbsd_386)
 	mkerrors="$mkerrors -m32"
 	mksyscall="./mksyscall.pl -l32 -openbsd"
 	mksysctl="./mksysctl_openbsd.pl"
-<<<<<<< HEAD
-=======
-	zsysctl="zsysctl_openbsd.go"
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	mksysnum="curl -s 'http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/sys/kern/syscalls.master' | ./mksysnum_openbsd.pl"
 	mktypes="GOARCH=$GOARCH go tool cgo -godefs"
 	;;
@@ -167,7 +143,6 @@ openbsd_amd64)
 	mkerrors="$mkerrors -m64"
 	mksyscall="./mksyscall.pl -openbsd"
 	mksysctl="./mksysctl_openbsd.pl"
-<<<<<<< HEAD
 	mksysnum="curl -s 'http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/sys/kern/syscalls.master' | ./mksysnum_openbsd.pl"
 	mktypes="GOARCH=$GOARCH go tool cgo -godefs"
 	;;
@@ -180,12 +155,6 @@ openbsd_arm)
 	# API consistent across platforms.
 	mktypes="GOARCH=$GOARCH go tool cgo -godefs -- -fsigned-char"
 	;;
-=======
-	zsysctl="zsysctl_openbsd.go"
-	mksysnum="curl -s 'http://cvsweb.openbsd.org/cgi-bin/cvsweb/~checkout~/src/sys/kern/syscalls.master' | ./mksysnum_openbsd.pl"
-	mktypes="GOARCH=$GOARCH go tool cgo -godefs"
-	;;
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 solaris_amd64)
 	mksyscall="./mksyscall_solaris.pl"
 	mkerrors="$mkerrors -m64"

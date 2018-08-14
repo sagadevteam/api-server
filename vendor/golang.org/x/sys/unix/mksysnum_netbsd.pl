@@ -47,11 +47,7 @@ while(<>){
 		$name = "$7_$11" if $11 ne '';
 		$name =~ y/a-z/A-Z/;
 
-<<<<<<< HEAD
 		if($compat eq '' || $compat eq '13' || $compat eq '30' || $compat eq '50') {
-=======
-		if($compat eq '' || $compat eq '30' || $compat eq '50') {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			print "	$name = $num;  // $proto\n";
 		}
 	}

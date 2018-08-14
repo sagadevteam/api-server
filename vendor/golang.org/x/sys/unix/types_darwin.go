@@ -19,10 +19,7 @@ package unix
 #define _DARWIN_USE_64_BIT_INODE
 #include <dirent.h>
 #include <fcntl.h>
-<<<<<<< HEAD
 #include <poll.h>
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <signal.h>
 #include <termios.h>
 #include <unistd.h>
@@ -42,10 +39,7 @@ package unix
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <sys/un.h>
-<<<<<<< HEAD
 #include <sys/utsname.h>
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <sys/wait.h>
 #include <net/bpf.h>
 #include <net/if.h>
@@ -250,11 +244,8 @@ type BpfHdr C.struct_bpf_hdr
 
 type Termios C.struct_termios
 
-<<<<<<< HEAD
 type Winsize C.struct_winsize
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // fchmodat-like syscalls.
 
 const (
@@ -263,7 +254,6 @@ const (
 	AT_SYMLINK_FOLLOW   = C.AT_SYMLINK_FOLLOW
 	AT_SYMLINK_NOFOLLOW = C.AT_SYMLINK_NOFOLLOW
 )
-<<<<<<< HEAD
 
 // poll
 
@@ -285,5 +275,3 @@ const (
 // uname
 
 type Utsname C.struct_utsname
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

@@ -1,17 +1,10 @@
-<<<<<<< HEAD
 // +build !go1.7 safe appengine
 
 // Copyright (c) 2012-2018 Ugorji Nwoke. All rights reserved.
-=======
-// +build !unsafe
-
-// Copyright (c) 2012-2015 Ugorji Nwoke. All rights reserved.
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Use of this source code is governed by a MIT license found in the LICENSE file.
 
 package codec
 
-<<<<<<< HEAD
 import (
 	"reflect"
 	"sync/atomic"
@@ -20,8 +13,6 @@ import (
 
 const safeMode = true
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // stringView returns a view of the []byte as a string.
 // In unsafe mode, it doesn't incur allocation and copying caused by conversion.
 // In regular safe mode, it is an allocation and copy.
@@ -42,7 +33,6 @@ func bytesView(v string) []byte {
 	return []byte(v)
 }
 
-<<<<<<< HEAD
 func definitelyNil(v interface{}) bool {
 	// this is a best-effort option.
 	// We just return false, so we don't unnecessarily incur the cost of reflection this early.
@@ -280,14 +270,3 @@ func (e *Encoder) kUintptr(f *codecFnInfo, rv reflect.Value) {
 // 		return false
 // 	}
 // }
-=======
-// keepAlive4BytesView maintains a reference to the input parameter for bytesView.
-//
-// Usage: call this at point where done with the bytes view.
-func keepAlive4BytesView(v string) {}
-
-// keepAlive4BytesView maintains a reference to the input parameter for stringView.
-//
-// Usage: call this at point where done with the string view.
-func keepAlive4StringView(v []byte) {}
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

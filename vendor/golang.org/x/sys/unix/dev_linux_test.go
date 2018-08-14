@@ -2,11 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-<<<<<<< HEAD
 // +build go1.7
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 package unix_test
 
 import (
@@ -36,6 +33,9 @@ func TestDevices(t *testing.T) {
 			var stat unix.Stat_t
 			err := unix.Stat(tc.path, &stat)
 			if err != nil {
+				if err == unix.EACCES {
+					t.Skip("no permission to stat device, skipping test")
+				}
 				t.Errorf("failed to stat device: %v", err)
 				return
 			}

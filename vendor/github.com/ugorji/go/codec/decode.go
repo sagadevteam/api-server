@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 // Copyright (c) 2012-2018 Ugorji Nwoke. All rights reserved.
-=======
-// Copyright (c) 2012-2015 Ugorji Nwoke. All rights reserved.
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Use of this source code is governed by a MIT license found in the LICENSE file.
 
 package codec
@@ -13,17 +9,13 @@ import (
 	"fmt"
 	"io"
 	"reflect"
-<<<<<<< HEAD
 	"strconv"
 	"sync"
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"time"
 )
 
 // Some tagging information for error messages.
 const (
-<<<<<<< HEAD
 	msgBadDesc            = "unrecognized descriptor byte"
 	msgDecCannotExpandArr = "cannot expand go array from %v to stream length: %v"
 )
@@ -44,15 +36,6 @@ var (
 	errDecUnreadByteNothingToRead   = errors.New("cannot unread - nothing has been read")
 	errDecUnreadByteLastByteNotRead = errors.New("cannot unread - last byte has not been read")
 	errDecUnreadByteUnknown         = errors.New("cannot unread - reason unknown")
-=======
-	msgBadDesc            = "Unrecognized descriptor byte"
-	msgDecCannotExpandArr = "cannot expand go array from %v to stream length: %v"
-)
-
-var (
-	onlyMapOrArrayCanDecodeIntoStructErr = errors.New("only encoded map or array can be decoded into a struct")
-	cannotDecodeIntoNilErr               = errors.New("cannot decode into nil")
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 // decReader abstracts the reading source, allowing implementations that can
@@ -66,7 +49,6 @@ type decReader interface {
 	readx(n int) []byte
 	readb([]byte)
 	readn1() uint8
-<<<<<<< HEAD
 	numread() int // number of bytes read
 	track()
 	stopTrack() []byte
@@ -77,23 +59,11 @@ type decReader interface {
 	readTo(in []byte, accept *bitset256) (out []byte)
 	// readUntil will read, only stopping once it matches the 'stop' byte.
 	readUntil(in []byte, stop byte) (out []byte)
-=======
-	readn1eof() (v uint8, eof bool)
-	numread() int // number of bytes read
-	track()
-	stopTrack() []byte
-}
-
-type decReaderByteScanner interface {
-	io.Reader
-	io.ByteScanner
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type decDriver interface {
 	// this will check if the next token is a break.
 	CheckBreak() bool
-<<<<<<< HEAD
 	// Note: TryDecodeAsNil should be careful not to share any temporary []byte with
 	// the rest of the decDriver. This is because sometimes, we optimize by holding onto
 	// a transient []byte, and ensuring the only other call we make to the decDriver
@@ -102,13 +72,6 @@ type decDriver interface {
 	// vt is one of: Bytes, String, Nil, Slice or Map. Return unSet if not known.
 	ContainerType() (vt valueType)
 	// IsBuiltinType(rt uintptr) bool
-=======
-	TryDecodeAsNil() bool
-	// vt is one of: Bytes, String, Nil, Slice or Map. Return unSet if not known.
-	ContainerType() (vt valueType)
-	IsBuiltinType(rt uintptr) bool
-	DecodeBuiltin(rt uintptr, v interface{})
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	// DecodeNaked will decode primitives (number, bool, string, []byte) and RawExt.
 	// For maps and arrays, it will not do the decoding in-band, but will signal
@@ -122,7 +85,6 @@ type decDriver interface {
 	// extensions should also use readx to decode them, for efficiency.
 	// kInterface will extract the detached byte slice if it has to pass it outside its realm.
 	DecodeNaked()
-<<<<<<< HEAD
 
 	// Deprecated: use DecodeInt64 and DecodeUint64 instead
 	// DecodeInt(bitsize uint8) (i int64)
@@ -132,11 +94,6 @@ type decDriver interface {
 	DecodeUint64() (ui uint64)
 
 	DecodeFloat64() (f float64)
-=======
-	DecodeInt(bitsize uint8) (i int64)
-	DecodeUint(bitsize uint8) (ui uint64)
-	DecodeFloat(chkOverflow32 bool) (f float64)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	DecodeBool() (b bool)
 	// DecodeString can also decode symbols.
 	// It looks redundant as DecodeBytes is available.
@@ -144,24 +101,16 @@ type decDriver interface {
 	// return a pre-stored string value, meaning that it can bypass
 	// the cost of []byte->string conversion.
 	DecodeString() (s string)
-<<<<<<< HEAD
 	DecodeStringAsBytes() (v []byte)
 
 	// DecodeBytes may be called directly, without going through reflection.
 	// Consequently, it must be designed to handle possible nil.
 	DecodeBytes(bs []byte, zerocopy bool) (bsOut []byte)
 	// DecodeBytes(bs []byte, isstring, zerocopy bool) (bsOut []byte)
-=======
-
-	// DecodeBytes may be called directly, without going through reflection.
-	// Consequently, it must be designed to handle possible nil.
-	DecodeBytes(bs []byte, isstring, zerocopy bool) (bsOut []byte)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	// decodeExt will decode into a *RawExt or into an extension.
 	DecodeExt(v interface{}, xtag uint64, ext Ext) (realxtag uint64)
 	// decodeExt(verifyTag bool, tag byte) (xtag byte, xbs []byte)
-<<<<<<< HEAD
 
 	DecodeTime() (t time.Time)
 
@@ -172,16 +121,11 @@ type decDriver interface {
 	ReadMapElemKey()
 	ReadMapElemValue()
 	ReadMapEnd()
-=======
-	ReadMapStart() int
-	ReadArrayStart() int
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	reset()
 	uncacheRead()
 }
 
-<<<<<<< HEAD
 type decDriverNoopContainerReader struct{}
 
 func (x decDriverNoopContainerReader) ReadArrayStart() (v int) { return }
@@ -220,32 +164,6 @@ type DecodeOptions struct {
 	// if > 0, we use a smart buffer internally for performance purposes.
 	ReaderBufferSize int
 
-=======
-type decNoSeparator struct {
-}
-
-func (_ decNoSeparator) ReadEnd() {}
-
-// func (_ decNoSeparator) uncacheRead() {}
-
-type DecodeOptions struct {
-	// MapType specifies type to use during schema-less decoding of a map in the stream.
-	// If nil, we use map[interface{}]interface{}
-	MapType reflect.Type
-
-	// SliceType specifies type to use during schema-less decoding of an array in the stream.
-	// If nil, we use []interface{}
-	SliceType reflect.Type
-
-	// MaxInitLen defines the maxinum initial length that we "make" a collection (string, slice, map, chan).
-	// If 0 or negative, we default to a sensible value based on the size of an element in the collection.
-	//
-	// For example, when decoding, a stream may say that it has 2^64 elements.
-	// We should not auto-matically provision a slice of that length, to prevent Out-Of-Memory crash.
-	// Instead, we provision up to MaxInitLen, fill that up, and start appending after that.
-	MaxInitLen int
-
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// If ErrorIfNoField, return an error when decoding a map
 	// from a codec stream into a struct, and no matching struct field is found.
 	ErrorIfNoField bool
@@ -272,14 +190,11 @@ type DecodeOptions struct {
 	// or is an interface.
 	MapValueReset bool
 
-<<<<<<< HEAD
 	// SliceElementReset: on decoding a slice, reset the element to a zero value first.
 	//
 	// concern: if the slice already contained some garbage, we will decode into that garbage.
 	SliceElementReset bool
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// InterfaceReset controls how we decode into an interface.
 	//
 	// By default, when we see a field that is an interface{...},
@@ -313,20 +228,16 @@ type DecodeOptions struct {
 	// *Note*: This only applies if using go1.5 and above,
 	// as it requires reflect.ArrayOf support which was absent before go1.5.
 	PreferArrayOverSlice bool
-<<<<<<< HEAD
 
 	// DeleteOnNilMapValue controls how to decode a nil value in the stream.
 	//
 	// If true, we will delete the mapping of the key.
 	// Else, just set the mapping to the zero value of the type.
 	DeleteOnNilMapValue bool
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // ------------------------------------
 
-<<<<<<< HEAD
 type bufioDecReader struct {
 	buf []byte
 	r   io.Reader
@@ -666,18 +577,6 @@ func (z *ioDecReader) Read(p []byte) (n int, err error) {
 	if len(p) == 0 {
 		return
 	}
-=======
-// ioDecByteScanner implements Read(), ReadByte(...), UnreadByte(...) methods
-// of io.Reader, io.ByteScanner.
-type ioDecByteScanner struct {
-	r  io.Reader
-	l  byte    // last byte
-	ls byte    // last byte status. 0: init-canDoNothing, 1: canRead, 2: canUnread
-	b  [1]byte // tiny buffer for reading single bytes
-}
-
-func (z *ioDecByteScanner) Read(p []byte) (n int, err error) {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	var firstByte bool
 	if z.ls == 1 {
 		z.ls = 2
@@ -703,13 +602,8 @@ func (z *ioDecByteScanner) Read(p []byte) (n int, err error) {
 	return
 }
 
-<<<<<<< HEAD
 func (z *ioDecReader) ReadByte() (c byte, err error) {
 	n, err := z.Read(z.b[:1])
-=======
-func (z *ioDecByteScanner) ReadByte() (c byte, err error) {
-	n, err := z.Read(z.b[:])
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if n == 1 {
 		c = z.b[0]
 		if err == io.EOF {
@@ -719,7 +613,6 @@ func (z *ioDecByteScanner) ReadByte() (c byte, err error) {
 	return
 }
 
-<<<<<<< HEAD
 func (z *ioDecReader) UnreadByte() (err error) {
 	switch z.ls {
 	case 2:
@@ -730,35 +623,10 @@ func (z *ioDecReader) UnreadByte() (err error) {
 		err = errDecUnreadByteLastByteNotRead
 	default:
 		err = errDecUnreadByteUnknown
-=======
-func (z *ioDecByteScanner) UnreadByte() (err error) {
-	x := z.ls
-	if x == 0 {
-		err = errors.New("cannot unread - nothing has been read")
-	} else if x == 1 {
-		err = errors.New("cannot unread - last byte has not been read")
-	} else if x == 2 {
-		z.ls = 1
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 	return
 }
 
-<<<<<<< HEAD
-=======
-// ioDecReader is a decReader that reads off an io.Reader
-type ioDecReader struct {
-	br decReaderByteScanner
-	// temp byte array re-used internally for efficiency during read.
-	// shares buffer with Decoder, so we keep size of struct within 8 words.
-	x   *[scratchByteArrayLen]byte
-	bs  ioDecByteScanner
-	n   int    // num read
-	tr  []byte // tracking bytes read
-	trb bool
-}
-
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (z *ioDecReader) numread() int {
 	return z.n
 }
@@ -772,11 +640,7 @@ func (z *ioDecReader) readx(n int) (bs []byte) {
 	} else {
 		bs = make([]byte, n)
 	}
-<<<<<<< HEAD
 	if _, err := decReadFull(z.rr, bs); err != nil {
-=======
-	if _, err := io.ReadAtLeast(z.br, bs, n); err != nil {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		panic(err)
 	}
 	z.n += len(bs)
@@ -787,7 +651,6 @@ func (z *ioDecReader) readx(n int) (bs []byte) {
 }
 
 func (z *ioDecReader) readb(bs []byte) {
-<<<<<<< HEAD
 	// if len(bs) == 0 {
 	// 	return
 	// }
@@ -795,36 +658,11 @@ func (z *ioDecReader) readb(bs []byte) {
 		panic(err)
 	}
 	z.n += len(bs)
-=======
-	if len(bs) == 0 {
-		return
-	}
-	n, err := io.ReadAtLeast(z.br, bs, len(bs))
-	z.n += n
-	if err != nil {
-		panic(err)
-	}
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if z.trb {
 		z.tr = append(z.tr, bs...)
 	}
 }
 
-<<<<<<< HEAD
-=======
-func (z *ioDecReader) readn1() (b uint8) {
-	b, err := z.br.ReadByte()
-	if err != nil {
-		panic(err)
-	}
-	z.n++
-	if z.trb {
-		z.tr = append(z.tr, b)
-	}
-	return b
-}
-
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (z *ioDecReader) readn1eof() (b uint8, eof bool) {
 	b, err := z.br.ReadByte()
 	if err == nil {
@@ -840,7 +678,6 @@ func (z *ioDecReader) readn1eof() (b uint8, eof bool) {
 	return
 }
 
-<<<<<<< HEAD
 func (z *ioDecReader) readn1() (b uint8) {
 	var err error
 	if b, err = z.br.ReadByte(); err == nil {
@@ -897,8 +734,6 @@ func (z *ioDecReader) readUntil(in []byte, stop byte) (out []byte) {
 	}
 }
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (z *ioDecReader) unreadn1() {
 	err := z.br.UnreadByte()
 	if err != nil {
@@ -926,11 +761,7 @@ func (z *ioDecReader) stopTrack() (bs []byte) {
 
 // ------------------------------------
 
-<<<<<<< HEAD
 var errBytesDecReaderCannotUnread = errors.New("cannot unread last byte read")
-=======
-var bytesDecReaderCannotUnreadErr = errors.New("cannot unread last byte read")
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 // bytesDecReader is a decReader that reads off a byte slice with zero copying
 type bytesDecReader struct {
@@ -953,11 +784,7 @@ func (z *bytesDecReader) numread() int {
 
 func (z *bytesDecReader) unreadn1() {
 	if z.c == 0 || len(z.b) == 0 {
-<<<<<<< HEAD
 		panic(errBytesDecReaderCannotUnread)
-=======
-		panic(bytesDecReaderCannotUnreadErr)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 	z.c--
 	z.a++
@@ -983,13 +810,10 @@ func (z *bytesDecReader) readx(n int) (bs []byte) {
 	return
 }
 
-<<<<<<< HEAD
 func (z *bytesDecReader) readb(bs []byte) {
 	copy(bs, z.readx(len(bs)))
 }
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (z *bytesDecReader) readn1() (v uint8) {
 	if z.a == 0 {
 		panic(io.EOF)
@@ -1000,7 +824,6 @@ func (z *bytesDecReader) readn1() (v uint8) {
 	return
 }
 
-<<<<<<< HEAD
 // func (z *bytesDecReader) readn1eof() (v uint8, eof bool) {
 // 	if z.a == 0 {
 // 		eof = true
@@ -1064,21 +887,6 @@ func (z *bytesDecReader) readUntil(_ []byte, stop byte) (out []byte) {
 	}
 	z.a, z.c = 0, blen
 	panic(io.EOF)
-=======
-func (z *bytesDecReader) readn1eof() (v uint8, eof bool) {
-	if z.a == 0 {
-		eof = true
-		return
-	}
-	v = z.b[z.c]
-	z.c++
-	z.a--
-	return
-}
-
-func (z *bytesDecReader) readb(bs []byte) {
-	copy(bs, z.readx(len(bs)))
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (z *bytesDecReader) track() {
@@ -1089,7 +897,6 @@ func (z *bytesDecReader) stopTrack() (bs []byte) {
 	return z.b[z.t:z.c]
 }
 
-<<<<<<< HEAD
 // ----------------------------------------
 
 // func (d *Decoder) builtin(f *codecFnInfo, rv reflect.Value) {
@@ -1111,103 +918,29 @@ func (d *Decoder) selferUnmarshal(f *codecFnInfo, rv reflect.Value) {
 func (d *Decoder) binaryUnmarshal(f *codecFnInfo, rv reflect.Value) {
 	bm := rv2i(rv).(encoding.BinaryUnmarshaler)
 	xbs := d.d.DecodeBytes(nil, true)
-=======
-// ------------------------------------
-
-type decFnInfo struct {
-	d     *Decoder
-	ti    *typeInfo
-	xfFn  Ext
-	xfTag uint64
-	seq   seqType
-}
-
-// ----------------------------------------
-
-type decFn struct {
-	i decFnInfo
-	f func(*decFnInfo, reflect.Value)
-}
-
-func (f *decFnInfo) builtin(rv reflect.Value) {
-	f.d.d.DecodeBuiltin(f.ti.rtid, rv.Addr().Interface())
-}
-
-func (f *decFnInfo) rawExt(rv reflect.Value) {
-	f.d.d.DecodeExt(rv.Addr().Interface(), 0, nil)
-}
-
-func (f *decFnInfo) raw(rv reflect.Value) {
-	rv.SetBytes(f.d.raw())
-}
-
-func (f *decFnInfo) ext(rv reflect.Value) {
-	f.d.d.DecodeExt(rv.Addr().Interface(), f.xfTag, f.xfFn)
-}
-
-func (f *decFnInfo) getValueForUnmarshalInterface(rv reflect.Value, indir int8) (v interface{}) {
-	if indir == -1 {
-		v = rv.Addr().Interface()
-	} else if indir == 0 {
-		v = rv.Interface()
-	} else {
-		for j := int8(0); j < indir; j++ {
-			if rv.IsNil() {
-				rv.Set(reflect.New(rv.Type().Elem()))
-			}
-			rv = rv.Elem()
-		}
-		v = rv.Interface()
-	}
-	return
-}
-
-func (f *decFnInfo) selferUnmarshal(rv reflect.Value) {
-	f.getValueForUnmarshalInterface(rv, f.ti.csIndir).(Selfer).CodecDecodeSelf(f.d)
-}
-
-func (f *decFnInfo) binaryUnmarshal(rv reflect.Value) {
-	bm := f.getValueForUnmarshalInterface(rv, f.ti.bunmIndir).(encoding.BinaryUnmarshaler)
-	xbs := f.d.d.DecodeBytes(nil, false, true)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if fnerr := bm.UnmarshalBinary(xbs); fnerr != nil {
 		panic(fnerr)
 	}
 }
 
-<<<<<<< HEAD
 func (d *Decoder) textUnmarshal(f *codecFnInfo, rv reflect.Value) {
 	tm := rv2i(rv).(encoding.TextUnmarshaler)
 	fnerr := tm.UnmarshalText(d.d.DecodeStringAsBytes())
-=======
-func (f *decFnInfo) textUnmarshal(rv reflect.Value) {
-	tm := f.getValueForUnmarshalInterface(rv, f.ti.tunmIndir).(encoding.TextUnmarshaler)
-	fnerr := tm.UnmarshalText(f.d.d.DecodeBytes(f.d.b[:], true, true))
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if fnerr != nil {
 		panic(fnerr)
 	}
 }
 
-<<<<<<< HEAD
 func (d *Decoder) jsonUnmarshal(f *codecFnInfo, rv reflect.Value) {
 	tm := rv2i(rv).(jsonUnmarshaler)
 	// bs := d.d.DecodeBytes(d.b[:], true, true)
 	// grab the bytes to be read, as UnmarshalJSON needs the full JSON so as to unmarshal it itself.
 	fnerr := tm.UnmarshalJSON(d.nextValueBytes())
-=======
-func (f *decFnInfo) jsonUnmarshal(rv reflect.Value) {
-	tm := f.getValueForUnmarshalInterface(rv, f.ti.junmIndir).(jsonUnmarshaler)
-	// bs := f.d.d.DecodeBytes(f.d.b[:], true, true)
-	// grab the bytes to be read, as UnmarshalJSON needs the full JSON so as to unmarshal it itself.
-	fnerr := tm.UnmarshalJSON(f.d.nextValueBytes())
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if fnerr != nil {
 		panic(fnerr)
 	}
 }
 
-<<<<<<< HEAD
 func (d *Decoder) kErr(f *codecFnInfo, rv reflect.Value) {
 	d.errorf("no decoding function defined for kind %v", rv.Kind())
 }
@@ -1220,97 +953,10 @@ func (d *Decoder) kInterfaceNaked(f *codecFnInfo) (rvn reflect.Value) {
 	// based on the detected next value in the stream.
 	n := d.naked()
 	d.d.DecodeNaked()
-=======
-func (f *decFnInfo) kErr(rv reflect.Value) {
-	f.d.errorf("no decoding function defined for kind %v", rv.Kind())
-}
-
-func (f *decFnInfo) kString(rv reflect.Value) {
-	rv.SetString(f.d.d.DecodeString())
-}
-
-func (f *decFnInfo) kBool(rv reflect.Value) {
-	rv.SetBool(f.d.d.DecodeBool())
-}
-
-func (f *decFnInfo) kInt(rv reflect.Value) {
-	rv.SetInt(f.d.d.DecodeInt(intBitsize))
-}
-
-func (f *decFnInfo) kInt64(rv reflect.Value) {
-	rv.SetInt(f.d.d.DecodeInt(64))
-}
-
-func (f *decFnInfo) kInt32(rv reflect.Value) {
-	rv.SetInt(f.d.d.DecodeInt(32))
-}
-
-func (f *decFnInfo) kInt8(rv reflect.Value) {
-	rv.SetInt(f.d.d.DecodeInt(8))
-}
-
-func (f *decFnInfo) kInt16(rv reflect.Value) {
-	rv.SetInt(f.d.d.DecodeInt(16))
-}
-
-func (f *decFnInfo) kFloat32(rv reflect.Value) {
-	rv.SetFloat(f.d.d.DecodeFloat(true))
-}
-
-func (f *decFnInfo) kFloat64(rv reflect.Value) {
-	rv.SetFloat(f.d.d.DecodeFloat(false))
-}
-
-func (f *decFnInfo) kUint8(rv reflect.Value) {
-	rv.SetUint(f.d.d.DecodeUint(8))
-}
-
-func (f *decFnInfo) kUint64(rv reflect.Value) {
-	rv.SetUint(f.d.d.DecodeUint(64))
-}
-
-func (f *decFnInfo) kUint(rv reflect.Value) {
-	rv.SetUint(f.d.d.DecodeUint(uintBitsize))
-}
-
-func (f *decFnInfo) kUintptr(rv reflect.Value) {
-	rv.SetUint(f.d.d.DecodeUint(uintBitsize))
-}
-
-func (f *decFnInfo) kUint32(rv reflect.Value) {
-	rv.SetUint(f.d.d.DecodeUint(32))
-}
-
-func (f *decFnInfo) kUint16(rv reflect.Value) {
-	rv.SetUint(f.d.d.DecodeUint(16))
-}
-
-// func (f *decFnInfo) kPtr(rv reflect.Value) {
-// 	debugf(">>>>>>> ??? decode kPtr called - shouldn't get called")
-// 	if rv.IsNil() {
-// 		rv.Set(reflect.New(rv.Type().Elem()))
-// 	}
-// 	f.d.decodeValue(rv.Elem())
-// }
-
-// var kIntfCtr uint64
-
-func (f *decFnInfo) kInterfaceNaked() (rvn reflect.Value) {
-	// nil interface:
-	// use some hieristics to decode it appropriately
-	// based on the detected next value in the stream.
-	d := f.d
-	d.d.DecodeNaked()
-	n := &d.n
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if n.v == valueTypeNil {
 		return
 	}
 	// We cannot decode non-nil stream value into nil interface with methods (e.g. io.Reader).
-<<<<<<< HEAD
-=======
-	// if num := f.ti.rt.NumMethod(); num > 0 {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if f.ti.numMeth > 0 {
 		d.errorf("cannot decode non-nil codec value into nil %v (%v methods)", f.ti.rt, f.ti.numMeth)
 		return
@@ -1318,7 +964,6 @@ func (f *decFnInfo) kInterfaceNaked() (rvn reflect.Value) {
 	// var useRvn bool
 	switch n.v {
 	case valueTypeMap:
-<<<<<<< HEAD
 		// if json, default to a map type with string keys
 		mtid := d.mtid
 		if mtid == 0 {
@@ -1392,50 +1037,11 @@ func (f *decFnInfo) kInterfaceNaked() (rvn reflect.Value) {
 				rvn = reflect.New(d.h.SliceType).Elem()
 				d.decodeValue(rvn, nil, true)
 			}
-=======
-		// if d.h.MapType == nil || d.h.MapType == mapIntfIntfTyp {
-		// } else if d.h.MapType == mapStrIntfTyp { // for json performance
-		// }
-		if d.mtid == 0 || d.mtid == mapIntfIntfTypId {
-			l := len(n.ms)
-			n.ms = append(n.ms, nil)
-			var v2 interface{} = &n.ms[l]
-			d.decode(v2)
-			rvn = reflect.ValueOf(v2).Elem()
-			n.ms = n.ms[:l]
-		} else if d.mtid == mapStrIntfTypId { // for json performance
-			l := len(n.ns)
-			n.ns = append(n.ns, nil)
-			var v2 interface{} = &n.ns[l]
-			d.decode(v2)
-			rvn = reflect.ValueOf(v2).Elem()
-			n.ns = n.ns[:l]
-		} else {
-			rvn = reflect.New(d.h.MapType).Elem()
-			d.decodeValue(rvn, nil)
-		}
-	case valueTypeArray:
-		// if d.h.SliceType == nil || d.h.SliceType == intfSliceTyp {
-		if d.stid == 0 || d.stid == intfSliceTypId {
-			l := len(n.ss)
-			n.ss = append(n.ss, nil)
-			var v2 interface{} = &n.ss[l]
-			d.decode(v2)
-			n.ss = n.ss[:l]
-			rvn = reflect.ValueOf(v2).Elem()
-			if reflectArrayOfSupported && d.stid == 0 && d.h.PreferArrayOverSlice {
-				rvn = reflectArrayOf(rvn)
-			}
-		} else {
-			rvn = reflect.New(d.h.SliceType).Elem()
-			d.decodeValue(rvn, nil)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 	case valueTypeExt:
 		var v interface{}
 		tag, bytes := n.u, n.l // calling decode below might taint the values
 		if bytes == nil {
-<<<<<<< HEAD
 			n.initContainers()
 			if n.li < arrayCacheLen {
 				n.ia[n.li] = nil
@@ -1448,21 +1054,12 @@ func (f *decFnInfo) kInterfaceNaked() (rvn reflect.Value) {
 			} else {
 				d.decode(&v)
 			}
-=======
-			l := len(n.is)
-			n.is = append(n.is, nil)
-			v2 := &n.is[l]
-			d.decode(v2)
-			v = *v2
-			n.is = n.is[:l]
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 		bfn := d.h.getExtForTag(tag)
 		if bfn == nil {
 			var re RawExt
 			re.Tag = tag
 			re.Data = detachZeroCopyBytes(d.bytes, nil, bytes)
-<<<<<<< HEAD
 			re.Value = v
 			rvn = reflect.ValueOf(&re).Elem()
 		} else {
@@ -1473,22 +1070,10 @@ func (f *decFnInfo) kInterfaceNaked() (rvn reflect.Value) {
 				bfn.ext.UpdateExt(rv2i(rvnA), v)
 			}
 			rvn = rvnA.Elem()
-=======
-			rvn = reflect.ValueOf(re)
-		} else {
-			rvnA := reflect.New(bfn.rt)
-			rvn = rvnA.Elem()
-			if bytes != nil {
-				bfn.ext.ReadExt(rvnA.Interface(), bytes)
-			} else {
-				bfn.ext.UpdateExt(rvnA.Interface(), v)
-			}
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 	case valueTypeNil:
 		// no-op
 	case valueTypeInt:
-<<<<<<< HEAD
 		rvn = n.ri
 	case valueTypeUint:
 		rvn = n.ru
@@ -1504,41 +1089,17 @@ func (f *decFnInfo) kInterfaceNaked() (rvn reflect.Value) {
 		rvn = n.rt
 	default:
 		panicv.errorf("kInterfaceNaked: unexpected valueType: %d", n.v)
-=======
-		rvn = reflect.ValueOf(&n.i).Elem()
-	case valueTypeUint:
-		rvn = reflect.ValueOf(&n.u).Elem()
-	case valueTypeFloat:
-		rvn = reflect.ValueOf(&n.f).Elem()
-	case valueTypeBool:
-		rvn = reflect.ValueOf(&n.b).Elem()
-	case valueTypeString, valueTypeSymbol:
-		rvn = reflect.ValueOf(&n.s).Elem()
-	case valueTypeBytes:
-		rvn = reflect.ValueOf(&n.l).Elem()
-	case valueTypeTimestamp:
-		rvn = reflect.ValueOf(&n.t).Elem()
-	default:
-		panic(fmt.Errorf("kInterfaceNaked: unexpected valueType: %d", n.v))
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 	return
 }
 
-<<<<<<< HEAD
 func (d *Decoder) kInterface(f *codecFnInfo, rv reflect.Value) {
-=======
-func (f *decFnInfo) kInterface(rv reflect.Value) {
-	// debugf("\t===> kInterface")
-
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// Note:
 	// A consequence of how kInterface works, is that
 	// if an interface already contains something, we try
 	// to decode into what was there before.
 	// We do not replace with a generic value (as got from decodeNaked).
 
-<<<<<<< HEAD
 	// every interface passed here MUST be settable.
 	var rvn reflect.Value
 	if rv.IsNil() || d.h.InterfaceReset {
@@ -1605,50 +1166,10 @@ func (d *Decoder) kStruct(f *codecFnInfo, rv reflect.Value) {
 	dd := d.d
 	elemsep := d.esep
 	sfn := structFieldNode{v: rv, update: true}
-=======
-	var rvn reflect.Value
-	if rv.IsNil() {
-		rvn = f.kInterfaceNaked()
-		if rvn.IsValid() {
-			rv.Set(rvn)
-		}
-	} else if f.d.h.InterfaceReset {
-		rvn = f.kInterfaceNaked()
-		if rvn.IsValid() {
-			rv.Set(rvn)
-		} else {
-			// reset to zero value based on current type in there.
-			rv.Set(reflect.Zero(rv.Elem().Type()))
-		}
-	} else {
-		rvn = rv.Elem()
-		// Note: interface{} is settable, but underlying type may not be.
-		// Consequently, we have to set the reflect.Value directly.
-		// if underlying type is settable (e.g. ptr or interface),
-		// we just decode into it.
-		// Else we create a settable value, decode into it, and set on the interface.
-		if rvn.CanSet() {
-			f.d.decodeValue(rvn, nil)
-		} else {
-			rvn2 := reflect.New(rvn.Type()).Elem()
-			rvn2.Set(rvn)
-			f.d.decodeValue(rvn2, nil)
-			rv.Set(rvn2)
-		}
-	}
-}
-
-func (f *decFnInfo) kStruct(rv reflect.Value) {
-	fti := f.ti
-	d := f.d
-	dd := d.d
-	cr := d.cr
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	ctyp := dd.ContainerType()
 	if ctyp == valueTypeMap {
 		containerLen := dd.ReadMapStart()
 		if containerLen == 0 {
-<<<<<<< HEAD
 			dd.ReadMapEnd()
 			return
 		}
@@ -1681,102 +1202,21 @@ func (f *decFnInfo) kStruct(rv reflect.Value) {
 		containerLen := dd.ReadArrayStart()
 		if containerLen == 0 {
 			dd.ReadArrayEnd()
-=======
-			if cr != nil {
-				cr.sendContainerState(containerMapEnd)
-			}
-			return
-		}
-		tisfi := fti.sfi
-		hasLen := containerLen >= 0
-		if hasLen {
-			for j := 0; j < containerLen; j++ {
-				// rvkencname := dd.DecodeString()
-				if cr != nil {
-					cr.sendContainerState(containerMapKey)
-				}
-				rvkencnameB := dd.DecodeBytes(f.d.b[:], true, true)
-				rvkencname := stringView(rvkencnameB)
-				// rvksi := ti.getForEncName(rvkencname)
-				if cr != nil {
-					cr.sendContainerState(containerMapValue)
-				}
-				if k := fti.indexForEncName(rvkencname); k > -1 {
-					si := tisfi[k]
-					if dd.TryDecodeAsNil() {
-						si.setToZeroValue(rv)
-					} else {
-						d.decodeValue(si.field(rv, true), nil)
-					}
-				} else {
-					d.structFieldNotFound(-1, rvkencname)
-				}
-				keepAlive4StringView(rvkencnameB) // maintain ref 4 stringView
-			}
-		} else {
-			for j := 0; !dd.CheckBreak(); j++ {
-				// rvkencname := dd.DecodeString()
-				if cr != nil {
-					cr.sendContainerState(containerMapKey)
-				}
-				rvkencnameB := dd.DecodeBytes(f.d.b[:], true, true)
-				rvkencname := stringView(rvkencnameB)
-				// rvksi := ti.getForEncName(rvkencname)
-				if cr != nil {
-					cr.sendContainerState(containerMapValue)
-				}
-				if k := fti.indexForEncName(rvkencname); k > -1 {
-					si := tisfi[k]
-					if dd.TryDecodeAsNil() {
-						si.setToZeroValue(rv)
-					} else {
-						d.decodeValue(si.field(rv, true), nil)
-					}
-				} else {
-					d.structFieldNotFound(-1, rvkencname)
-				}
-				keepAlive4StringView(rvkencnameB) // maintain ref 4 stringView
-			}
-		}
-		if cr != nil {
-			cr.sendContainerState(containerMapEnd)
-		}
-	} else if ctyp == valueTypeArray {
-		containerLen := dd.ReadArrayStart()
-		if containerLen == 0 {
-			if cr != nil {
-				cr.sendContainerState(containerArrayEnd)
-			}
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			return
 		}
 		// Not much gain from doing it two ways for array.
 		// Arrays are not used as much for structs.
 		hasLen := containerLen >= 0
-<<<<<<< HEAD
 		for j, si := range fti.sfiSrc {
 			if (hasLen && j == containerLen) || (!hasLen && dd.CheckBreak()) {
 				break
 			}
 			if elemsep {
 				dd.ReadArrayElem()
-=======
-		for j, si := range fti.sfip {
-			if hasLen {
-				if j == containerLen {
-					break
-				}
-			} else if dd.CheckBreak() {
-				break
-			}
-			if cr != nil {
-				cr.sendContainerState(containerArrayElem)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			}
 			if dd.TryDecodeAsNil() {
 				si.setToZeroValue(rv)
 			} else {
-<<<<<<< HEAD
 				d.decodeValue(sfn.field(si), nil, true)
 			}
 		}
@@ -1785,36 +1225,17 @@ func (f *decFnInfo) kStruct(rv reflect.Value) {
 			for j := len(fti.sfiSrc); j < containerLen; j++ {
 				if elemsep {
 					dd.ReadArrayElem()
-=======
-				d.decodeValue(si.field(rv, true), nil)
-			}
-		}
-		if containerLen > len(fti.sfip) {
-			// read remaining values and throw away
-			for j := len(fti.sfip); j < containerLen; j++ {
-				if cr != nil {
-					cr.sendContainerState(containerArrayElem)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 				}
 				d.structFieldNotFound(j, "")
 			}
 		}
-<<<<<<< HEAD
 		dd.ReadArrayEnd()
 	} else {
 		d.errorstr(errstrOnlyMapOrArrayCanDecodeIntoStruct)
-=======
-		if cr != nil {
-			cr.sendContainerState(containerArrayEnd)
-		}
-	} else {
-		f.d.error(onlyMapOrArrayCanDecodeIntoStructErr)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 }
 
-<<<<<<< HEAD
 func (d *Decoder) kSlice(f *codecFnInfo, rv reflect.Value) {
 	// A slice can be set from a map or array in stream.
 	// This way, the order can be kept (as order is lost with map).
@@ -1824,20 +1245,10 @@ func (d *Decoder) kSlice(f *codecFnInfo, rv reflect.Value) {
 	}
 	dd := d.d
 	rtelem0 := ti.elem
-=======
-func (f *decFnInfo) kSlice(rv reflect.Value) {
-	// A slice can be set from a map or array in stream.
-	// This way, the order can be kept (as order is lost with map).
-	ti := f.ti
-	d := f.d
-	dd := d.d
-	rtelem0 := ti.rt.Elem()
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	ctyp := dd.ContainerType()
 	if ctyp == valueTypeBytes || ctyp == valueTypeString {
 		// you can only decode bytes or string in the stream into a slice or array of bytes
 		if !(ti.rtid == uint8SliceTypId || rtelem0.Kind() == reflect.Uint8) {
-<<<<<<< HEAD
 			d.errorf("bytes/string in stream must decode into slice/array of bytes, not %v", ti.rt)
 		}
 		if f.seq == seqTypeChan {
@@ -1847,32 +1258,17 @@ func (f *decFnInfo) kSlice(rv reflect.Value) {
 			if !ok {
 				ch = irv.(chan byte)
 			}
-=======
-			f.d.errorf("bytes or string in the stream must be decoded into a slice or array of bytes, not %v", ti.rt)
-		}
-		if f.seq == seqTypeChan {
-			bs2 := dd.DecodeBytes(nil, false, true)
-			ch := rv.Interface().(chan<- byte)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			for _, b := range bs2 {
 				ch <- b
 			}
 		} else {
 			rvbs := rv.Bytes()
-<<<<<<< HEAD
 			bs2 := dd.DecodeBytes(rvbs, false)
 			// if rvbs == nil && bs2 != nil || rvbs != nil && bs2 == nil || len(bs2) != len(rvbs) {
 			if !(len(bs2) > 0 && len(bs2) == len(rvbs) && &bs2[0] == &rvbs[0]) {
 				if rv.CanSet() {
 					rv.SetBytes(bs2)
 				} else if len(rvbs) > 0 && len(bs2) > 0 {
-=======
-			bs2 := dd.DecodeBytes(rvbs, false, false)
-			if rvbs == nil && bs2 != nil || rvbs != nil && bs2 == nil || len(bs2) != len(rvbs) {
-				if rv.CanSet() {
-					rv.SetBytes(bs2)
-				} else {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 					copy(rvbs, bs2)
 				}
 			}
@@ -1884,7 +1280,6 @@ func (f *decFnInfo) kSlice(rv reflect.Value) {
 
 	slh, containerLenS := d.decSliceHelperStart() // only expects valueType(Array|Map)
 
-<<<<<<< HEAD
 	// an array can never return a nil slice. so no need to check f.array here.
 	if containerLenS == 0 {
 		if rv.CanSet() {
@@ -1898,26 +1293,12 @@ func (f *decFnInfo) kSlice(rv reflect.Value) {
 				if rv.IsNil() {
 					rv.Set(reflect.MakeChan(ti.rt, 0))
 				}
-=======
-	// // an array can never return a nil slice. so no need to check f.array here.
-	if containerLenS == 0 {
-		if f.seq == seqTypeSlice {
-			if rv.IsNil() {
-				rv.Set(reflect.MakeSlice(ti.rt, 0, 0))
-			} else {
-				rv.SetLen(0)
-			}
-		} else if f.seq == seqTypeChan {
-			if rv.IsNil() {
-				rv.Set(reflect.MakeChan(ti.rt, 0))
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			}
 		}
 		slh.End()
 		return
 	}
 
-<<<<<<< HEAD
 	rtelem0Size := int(rtelem0.Size())
 	rtElem0Kind := rtelem0.Kind()
 	rtelem0Mut := !isImmutableKind(rtElem0Kind)
@@ -2074,154 +1455,15 @@ func (f *decFnInfo) kSlice(rv reflect.Value) {
 				rv = reflect.MakeSlice(ti.rt, 0, 0)
 				rvChanged = true
 			} // else { d.errorf("kSlice: cannot change non-settable slice") }
-=======
-	rtelem := rtelem0
-	for rtelem.Kind() == reflect.Ptr {
-		rtelem = rtelem.Elem()
-	}
-	fn := d.getDecFn(rtelem, true, true)
-
-	var rv0, rv9 reflect.Value
-	rv0 = rv
-	rvChanged := false
-
-	// for j := 0; j < containerLenS; j++ {
-	var rvlen int
-	if containerLenS > 0 { // hasLen
-		if f.seq == seqTypeChan {
-			if rv.IsNil() {
-				rvlen, _ = decInferLen(containerLenS, f.d.h.MaxInitLen, int(rtelem0.Size()))
-				rv.Set(reflect.MakeChan(ti.rt, rvlen))
-			}
-			// handle chan specially:
-			for j := 0; j < containerLenS; j++ {
-				rv9 = reflect.New(rtelem0).Elem()
-				slh.ElemContainerState(j)
-				d.decodeValue(rv9, fn)
-				rv.Send(rv9)
-			}
-		} else { // slice or array
-			var truncated bool         // says len of sequence is not same as expected number of elements
-			numToRead := containerLenS // if truncated, reset numToRead
-
-			rvcap := rv.Cap()
-			rvlen = rv.Len()
-			if containerLenS > rvcap {
-				if f.seq == seqTypeArray {
-					d.arrayCannotExpand(rvlen, containerLenS)
-				} else {
-					oldRvlenGtZero := rvlen > 0
-					rvlen, truncated = decInferLen(containerLenS, f.d.h.MaxInitLen, int(rtelem0.Size()))
-					if truncated {
-						if rvlen <= rvcap {
-							rv.SetLen(rvlen)
-						} else {
-							rv = reflect.MakeSlice(ti.rt, rvlen, rvlen)
-							rvChanged = true
-						}
-					} else {
-						rv = reflect.MakeSlice(ti.rt, rvlen, rvlen)
-						rvChanged = true
-					}
-					if rvChanged && oldRvlenGtZero && !isImmutableKind(rtelem0.Kind()) {
-						reflect.Copy(rv, rv0) // only copy up to length NOT cap i.e. rv0.Slice(0, rvcap)
-					}
-					rvcap = rvlen
-				}
-				numToRead = rvlen
-			} else if containerLenS != rvlen {
-				if f.seq == seqTypeSlice {
-					rv.SetLen(containerLenS)
-					rvlen = containerLenS
-				}
-			}
-			j := 0
-			// we read up to the numToRead
-			for ; j < numToRead; j++ {
-				slh.ElemContainerState(j)
-				d.decodeValue(rv.Index(j), fn)
-			}
-
-			// if slice, expand and read up to containerLenS (or EOF) iff truncated
-			// if array, swallow all the rest.
-
-			if f.seq == seqTypeArray {
-				for ; j < containerLenS; j++ {
-					slh.ElemContainerState(j)
-					d.swallow()
-				}
-			} else if truncated { // slice was truncated, as chan NOT in this block
-				for ; j < containerLenS; j++ {
-					rv = expandSliceValue(rv, 1)
-					rv9 = rv.Index(j)
-					if resetSliceElemToZeroValue {
-						rv9.Set(reflect.Zero(rtelem0))
-					}
-					slh.ElemContainerState(j)
-					d.decodeValue(rv9, fn)
-				}
-			}
-		}
-	} else {
-		rvlen = rv.Len()
-		j := 0
-		for ; !dd.CheckBreak(); j++ {
-			if f.seq == seqTypeChan {
-				slh.ElemContainerState(j)
-				rv9 = reflect.New(rtelem0).Elem()
-				d.decodeValue(rv9, fn)
-				rv.Send(rv9)
-			} else {
-				// if indefinite, etc, then expand the slice if necessary
-				var decodeIntoBlank bool
-				if j >= rvlen {
-					if f.seq == seqTypeArray {
-						d.arrayCannotExpand(rvlen, j+1)
-						decodeIntoBlank = true
-					} else { // if f.seq == seqTypeSlice
-						// rv = reflect.Append(rv, reflect.Zero(rtelem0)) // uses append logic, plus varargs
-						rv = expandSliceValue(rv, 1)
-						rv9 = rv.Index(j)
-						// rv.Index(rv.Len() - 1).Set(reflect.Zero(rtelem0))
-						if resetSliceElemToZeroValue {
-							rv9.Set(reflect.Zero(rtelem0))
-						}
-						rvlen++
-						rvChanged = true
-					}
-				} else { // slice or array
-					rv9 = rv.Index(j)
-				}
-				slh.ElemContainerState(j)
-				if decodeIntoBlank {
-					d.swallow()
-				} else { // seqTypeSlice
-					d.decodeValue(rv9, fn)
-				}
-			}
-		}
-		if f.seq == seqTypeSlice {
-			if j < rvlen {
-				rv.SetLen(j)
-			} else if j == 0 && rv.IsNil() {
-				rv = reflect.MakeSlice(ti.rt, 0, 0)
-				rvChanged = true
-			}
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 	}
 	slh.End()
 
-<<<<<<< HEAD
 	if rvChanged { // infers rvCanset=true, so it can be reset
-=======
-	if rvChanged {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		rv0.Set(rv)
 	}
 }
 
-<<<<<<< HEAD
 // func (d *Decoder) kArray(f *codecFnInfo, rv reflect.Value) {
 // 	// d.decodeValueFn(rv.Slice(0, rv.Len()))
 // 	f.kSlice(rv.Slice(0, rv.Len()))
@@ -2257,43 +1499,6 @@ func (d *Decoder) kMap(f *codecFnInfo, rv reflect.Value) {
 	var mapGet, mapSet bool
 	rvvImmut := isImmutableKind(vtypeKind)
 	if !d.h.MapValueReset {
-=======
-func (f *decFnInfo) kArray(rv reflect.Value) {
-	// f.d.decodeValue(rv.Slice(0, rv.Len()))
-	f.kSlice(rv.Slice(0, rv.Len()))
-}
-
-func (f *decFnInfo) kMap(rv reflect.Value) {
-	d := f.d
-	dd := d.d
-	containerLen := dd.ReadMapStart()
-	cr := d.cr
-	ti := f.ti
-	if rv.IsNil() {
-		rv.Set(reflect.MakeMap(ti.rt))
-	}
-
-	if containerLen == 0 {
-		if cr != nil {
-			cr.sendContainerState(containerMapEnd)
-		}
-		return
-	}
-
-	ktype, vtype := ti.rt.Key(), ti.rt.Elem()
-	ktypeId := reflect.ValueOf(ktype).Pointer()
-	vtypeKind := vtype.Kind()
-	var keyFn, valFn *decFn
-	var xtyp reflect.Type
-	for xtyp = ktype; xtyp.Kind() == reflect.Ptr; xtyp = xtyp.Elem() {
-	}
-	keyFn = d.getDecFn(xtyp, true, true)
-	for xtyp = vtype; xtyp.Kind() == reflect.Ptr; xtyp = xtyp.Elem() {
-	}
-	valFn = d.getDecFn(xtyp, true, true)
-	var mapGet, mapSet bool
-	if !f.d.h.MapValueReset {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		// if pointer, mapGet = true
 		// if interface, mapGet = true if !DecodeNakedAlways (else false)
 		// if builtin, mapGet = false
@@ -2301,22 +1506,14 @@ func (f *decFnInfo) kMap(rv reflect.Value) {
 		if vtypeKind == reflect.Ptr {
 			mapGet = true
 		} else if vtypeKind == reflect.Interface {
-<<<<<<< HEAD
 			if !d.h.InterfaceReset {
 				mapGet = true
 			}
 		} else if !rvvImmut {
-=======
-			if !f.d.h.InterfaceReset {
-				mapGet = true
-			}
-		} else if !isImmutableKind(vtypeKind) {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			mapGet = true
 		}
 	}
 
-<<<<<<< HEAD
 	var rvk, rvkp, rvv, rvz reflect.Value
 	rvkMut := !isImmutableKind(ktype.Kind()) // if ktype is immutable, then re-use the same rvk.
 	ktypeIsString := ktypeId == stringTypId
@@ -2427,112 +1624,6 @@ func (f *decFnInfo) kMap(rv reflect.Value) {
 	}
 
 	dd.ReadMapEnd()
-=======
-	var rvk, rvv, rvz reflect.Value
-
-	// for j := 0; j < containerLen; j++ {
-	if containerLen > 0 {
-		for j := 0; j < containerLen; j++ {
-			rvk = reflect.New(ktype).Elem()
-			if cr != nil {
-				cr.sendContainerState(containerMapKey)
-			}
-			d.decodeValue(rvk, keyFn)
-
-			// special case if a byte array.
-			if ktypeId == intfTypId {
-				rvk = rvk.Elem()
-				if rvk.Type() == uint8SliceTyp {
-					rvk = reflect.ValueOf(d.string(rvk.Bytes()))
-				}
-			}
-			mapSet = true // set to false if u do a get, and its a pointer, and exists
-			if mapGet {
-				rvv = rv.MapIndex(rvk)
-				if rvv.IsValid() {
-					if vtypeKind == reflect.Ptr {
-						mapSet = false
-					}
-				} else {
-					if rvz.IsValid() {
-						rvz.Set(reflect.Zero(vtype))
-					} else {
-						rvz = reflect.New(vtype).Elem()
-					}
-					rvv = rvz
-				}
-			} else {
-				if rvz.IsValid() {
-					rvz.Set(reflect.Zero(vtype))
-				} else {
-					rvz = reflect.New(vtype).Elem()
-				}
-				rvv = rvz
-			}
-			if cr != nil {
-				cr.sendContainerState(containerMapValue)
-			}
-			d.decodeValue(rvv, valFn)
-			if mapSet {
-				rv.SetMapIndex(rvk, rvv)
-			}
-		}
-	} else {
-		for j := 0; !dd.CheckBreak(); j++ {
-			rvk = reflect.New(ktype).Elem()
-			if cr != nil {
-				cr.sendContainerState(containerMapKey)
-			}
-			d.decodeValue(rvk, keyFn)
-
-			// special case if a byte array.
-			if ktypeId == intfTypId {
-				rvk = rvk.Elem()
-				if rvk.Type() == uint8SliceTyp {
-					rvk = reflect.ValueOf(d.string(rvk.Bytes()))
-				}
-			}
-			mapSet = true // set to false if u do a get, and its a pointer, and exists
-			if mapGet {
-				rvv = rv.MapIndex(rvk)
-				if rvv.IsValid() {
-					if vtypeKind == reflect.Ptr {
-						mapSet = false
-					}
-				} else {
-					if rvz.IsValid() {
-						rvz.Set(reflect.Zero(vtype))
-					} else {
-						rvz = reflect.New(vtype).Elem()
-					}
-					rvv = rvz
-				}
-			} else {
-				if rvz.IsValid() {
-					rvz.Set(reflect.Zero(vtype))
-				} else {
-					rvz = reflect.New(vtype).Elem()
-				}
-				rvv = rvz
-			}
-			if cr != nil {
-				cr.sendContainerState(containerMapValue)
-			}
-			d.decodeValue(rvv, valFn)
-			if mapSet {
-				rv.SetMapIndex(rvk, rvv)
-			}
-		}
-	}
-	if cr != nil {
-		cr.sendContainerState(containerMapEnd)
-	}
-}
-
-type decRtidFn struct {
-	rtid uintptr
-	fn   decFn
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // decNaked is used to keep track of the primitives decoded.
@@ -2553,7 +1644,6 @@ type decRtidFn struct {
 //
 // kInterfaceNaked will ensure that there is no allocation for the common
 // uses.
-<<<<<<< HEAD
 
 type decNakedContainers struct {
 	// array/stacks for reducing allocation
@@ -2580,16 +1670,11 @@ type decNaked struct {
 	// r RawExt // used for RawExt, uint, []byte.
 
 	// primitives below
-=======
-type decNaked struct {
-	// r RawExt // used for RawExt, uint, []byte.
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	u uint64
 	i int64
 	f float64
 	l []byte
 	s string
-<<<<<<< HEAD
 
 	// ---- cpu cache line boundary?
 	t time.Time
@@ -2726,51 +1811,12 @@ type decReaderSwitch struct {
 // A Decoder reads and decodes an object from an input stream in the codec format.
 type Decoder struct {
 	panicHdl
-=======
-	t time.Time
-	b bool
-	v valueType
-
-	// stacks for reducing allocation
-	is []interface{}
-	ms []map[interface{}]interface{}
-	ns []map[string]interface{}
-	ss [][]interface{}
-	// rs []RawExt
-
-	// keep arrays at the bottom? Chance is that they are not used much.
-	ia [4]interface{}
-	ma [4]map[interface{}]interface{}
-	na [4]map[string]interface{}
-	sa [4][]interface{}
-	// ra [2]RawExt
-}
-
-func (n *decNaked) reset() {
-	if n.ss != nil {
-		n.ss = n.ss[:0]
-	}
-	if n.is != nil {
-		n.is = n.is[:0]
-	}
-	if n.ms != nil {
-		n.ms = n.ms[:0]
-	}
-	if n.ns != nil {
-		n.ns = n.ns[:0]
-	}
-}
-
-// A Decoder reads and decodes an object from an input stream in the codec format.
-type Decoder struct {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// hopefully, reduce derefencing cost by laying the decReader inside the Decoder.
 	// Try to put things that go together to fit within a cache line (8 words).
 
 	d decDriver
 	// NOTE: Decoder shouldn't call it's read methods,
 	// as the handler MAY need to do some coordination.
-<<<<<<< HEAD
 	r  decReader
 	h  *BasicHandle
 	bi *bufioDecReader
@@ -2794,33 +1840,6 @@ type Decoder struct {
 
 	// padding - false sharing help // modify 232 if Decoder struct changes.
 	// _ [cacheLineSize - 232%cacheLineSize]byte
-=======
-	r decReader
-	// sa [initCollectionCap]decRtidFn
-	h  *BasicHandle
-	hh Handle
-
-	be    bool // is binary encoding
-	bytes bool // is bytes reader
-	js    bool // is json handle
-
-	rb bytesDecReader
-	ri ioDecReader
-	cr containerStateRecv
-
-	s []decRtidFn
-	f map[uintptr]*decFn
-
-	// _  uintptr // for alignment purposes, so next one starts from a cache line
-
-	// cache the mapTypeId and sliceTypeId for faster comparisons
-	mtid uintptr
-	stid uintptr
-
-	n  decNaked
-	b  [scratchByteArrayLen]byte
-	is map[string]string // used for interning strings
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // NewDecoder returns a Decoder for decoding a stream of bytes from an io.Reader.
@@ -2841,7 +1860,6 @@ func NewDecoderBytes(in []byte, h Handle) *Decoder {
 	return d
 }
 
-<<<<<<< HEAD
 var defaultDecNaked decNaked
 
 func newDecoder(h Handle) *Decoder {
@@ -2855,34 +1873,17 @@ func newDecoder(h Handle) *Decoder {
 		d.jsms = jh.MapKeyAsString
 	}
 	d.esep = d.hh.hasElemSeparators()
-=======
-func newDecoder(h Handle) *Decoder {
-	d := &Decoder{hh: h, h: h.getBasicHandle(), be: h.isBinary()}
-	n := &d.n
-	// n.rs = n.ra[:0]
-	n.ms = n.ma[:0]
-	n.is = n.ia[:0]
-	n.ns = n.na[:0]
-	n.ss = n.sa[:0]
-	_, d.js = h.(*JsonHandle)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if d.h.InternString {
 		d.is = make(map[string]string, 32)
 	}
 	d.d = h.newDecDriver(d)
-<<<<<<< HEAD
 	// d.cr, _ = d.d.(containerStateRecv)
-=======
-	d.cr, _ = d.d.(containerStateRecv)
-	// d.d = h.newDecDriver(decReaderT{true, &d.rb, &d.ri})
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return d
 }
 
 func (d *Decoder) resetCommon() {
 	d.n.reset()
 	d.d.reset()
-<<<<<<< HEAD
 	d.err = nil
 	// reset all things which were cached from the Handle, but could change
 	d.mtid, d.stid = 0, 0
@@ -2929,41 +1930,12 @@ func (d *Decoder) ResetBytes(in []byte) {
 	if in == nil {
 		return
 	}
-=======
-	// reset all things which were cached from the Handle,
-	// but could be changed.
-	d.mtid, d.stid = 0, 0
-	if d.h.MapType != nil {
-		d.mtid = reflect.ValueOf(d.h.MapType).Pointer()
-	}
-	if d.h.SliceType != nil {
-		d.stid = reflect.ValueOf(d.h.SliceType).Pointer()
-	}
-}
-
-func (d *Decoder) Reset(r io.Reader) {
-	d.ri.x = &d.b
-	// d.s = d.sa[:0]
-	d.ri.bs.r = r
-	var ok bool
-	d.ri.br, ok = r.(decReaderByteScanner)
-	if !ok {
-		d.ri.br = &d.ri.bs
-	}
-	d.r = &d.ri
-	d.resetCommon()
-}
-
-func (d *Decoder) ResetBytes(in []byte) {
-	// d.s = d.sa[:0]
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	d.bytes = true
 	d.rb.reset(in)
 	d.r = &d.rb
 	d.resetCommon()
 }
 
-<<<<<<< HEAD
 // naked must be called before each call to .DecodeNaked,
 // as they will use it.
 func (d *Decoder) naked() *decNaked {
@@ -2982,13 +1954,6 @@ func (d *Decoder) naked() *decNaked {
 	}
 	return d.n
 }
-=======
-// func (d *Decoder) sendContainerState(c containerState) {
-// 	if d.cr != nil {
-// 		d.cr.sendContainerState(c)
-// 	}
-// }
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 // Decode decodes the stream from reader and stores the result in the
 // value pointed to by v. v cannot be a nil pointer. v can also be
@@ -3040,7 +2005,6 @@ func (d *Decoder) naked() *decNaked {
 // However, when decoding a stream nil, we reset the destination container
 // to its "zero" value (e.g. nil for slice/map, etc).
 //
-<<<<<<< HEAD
 // Note: we allow nil values in the stream anywhere except for map keys.
 // A nil value in the encoded stream where a map key is expected is treated as an error.
 func (d *Decoder) Decode(v interface{}) (err error) {
@@ -3090,27 +2054,12 @@ func (d *Decoder) alwaysAtEnd() {
 // 	d.decodeValueNoFn(reflect.ValueOf(&blank).Elem())
 // }
 
-=======
-func (d *Decoder) Decode(v interface{}) (err error) {
-	defer panicToErr(&err)
-	d.decode(v)
-	return
-}
-
-// this is not a smart swallow, as it allocates objects and does unnecessary work.
-func (d *Decoder) swallowViaHammer() {
-	var blank interface{}
-	d.decodeValue(reflect.ValueOf(&blank).Elem(), nil)
-}
-
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (d *Decoder) swallow() {
 	// smarter decode that just swallows the content
 	dd := d.d
 	if dd.TryDecodeAsNil() {
 		return
 	}
-<<<<<<< HEAD
 	elemsep := d.esep
 	switch dd.ContainerType() {
 	case valueTypeMap:
@@ -3159,72 +2108,10 @@ func (d *Decoder) swallow() {
 				var v2 interface{}
 				d.decode(&v2)
 			}
-=======
-	cr := d.cr
-	switch dd.ContainerType() {
-	case valueTypeMap:
-		containerLen := dd.ReadMapStart()
-		clenGtEqualZero := containerLen >= 0
-		for j := 0; ; j++ {
-			if clenGtEqualZero {
-				if j >= containerLen {
-					break
-				}
-			} else if dd.CheckBreak() {
-				break
-			}
-			if cr != nil {
-				cr.sendContainerState(containerMapKey)
-			}
-			d.swallow()
-			if cr != nil {
-				cr.sendContainerState(containerMapValue)
-			}
-			d.swallow()
-		}
-		if cr != nil {
-			cr.sendContainerState(containerMapEnd)
-		}
-	case valueTypeArray:
-		containerLenS := dd.ReadArrayStart()
-		clenGtEqualZero := containerLenS >= 0
-		for j := 0; ; j++ {
-			if clenGtEqualZero {
-				if j >= containerLenS {
-					break
-				}
-			} else if dd.CheckBreak() {
-				break
-			}
-			if cr != nil {
-				cr.sendContainerState(containerArrayElem)
-			}
-			d.swallow()
-		}
-		if cr != nil {
-			cr.sendContainerState(containerArrayEnd)
-		}
-	case valueTypeBytes:
-		dd.DecodeBytes(d.b[:], false, true)
-	case valueTypeString:
-		dd.DecodeBytes(d.b[:], true, true)
-		// dd.DecodeStringAsBytes(d.b[:])
-	default:
-		// these are all primitives, which we can get from decodeNaked
-		// if RawExt using Value, complete the processing.
-		dd.DecodeNaked()
-		if n := &d.n; n.v == valueTypeExt && n.l == nil {
-			l := len(n.is)
-			n.is = append(n.is, nil)
-			v2 := &n.is[l]
-			d.decode(v2)
-			n.is = n.is[:l]
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 	}
 }
 
-<<<<<<< HEAD
 func setZero(iv interface{}) {
 	if iv == nil || definitelyNil(iv) {
 		return
@@ -3288,108 +2175,22 @@ func (d *Decoder) decode(iv interface{}) {
 	}
 	if v, ok := iv.(Selfer); ok {
 		v.CodecDecodeSelf(d)
-=======
-// MustDecode is like Decode, but panics if unable to Decode.
-// This provides insight to the code location that triggered the error.
-func (d *Decoder) MustDecode(v interface{}) {
-	d.decode(v)
-}
-
-func (d *Decoder) decode(iv interface{}) {
-	// if ics, ok := iv.(Selfer); ok {
-	// 	ics.CodecDecodeSelf(d)
-	// 	return
-	// }
-
-	if d.d.TryDecodeAsNil() {
-		switch v := iv.(type) {
-		case nil:
-		case *string:
-			*v = ""
-		case *bool:
-			*v = false
-		case *int:
-			*v = 0
-		case *int8:
-			*v = 0
-		case *int16:
-			*v = 0
-		case *int32:
-			*v = 0
-		case *int64:
-			*v = 0
-		case *uint:
-			*v = 0
-		case *uint8:
-			*v = 0
-		case *uint16:
-			*v = 0
-		case *uint32:
-			*v = 0
-		case *uint64:
-			*v = 0
-		case *float32:
-			*v = 0
-		case *float64:
-			*v = 0
-		case *[]uint8:
-			*v = nil
-		case *Raw:
-			*v = nil
-		case reflect.Value:
-			if v.Kind() != reflect.Ptr || v.IsNil() {
-				d.errNotValidPtrValue(v)
-			}
-			// d.chkPtrValue(v)
-			v = v.Elem()
-			if v.IsValid() {
-				v.Set(reflect.Zero(v.Type()))
-			}
-		default:
-			rv := reflect.ValueOf(iv)
-			if rv.Kind() != reflect.Ptr || rv.IsNil() {
-				d.errNotValidPtrValue(rv)
-			}
-			// d.chkPtrValue(rv)
-			rv = rv.Elem()
-			if rv.IsValid() {
-				rv.Set(reflect.Zero(rv.Type()))
-			}
-		}
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 
 	switch v := iv.(type) {
-<<<<<<< HEAD
 	// case nil:
 	// case Selfer:
 
 	case reflect.Value:
 		v = d.ensureDecodeable(v)
 		d.decodeValue(v, nil, true)
-=======
-	case nil:
-		d.error(cannotDecodeIntoNilErr)
-		return
-
-	case Selfer:
-		v.CodecDecodeSelf(d)
-
-	case reflect.Value:
-		if v.Kind() != reflect.Ptr || v.IsNil() {
-			d.errNotValidPtrValue(v)
-		}
-		// d.chkPtrValue(v)
-		d.decodeValueNotNil(v.Elem(), nil)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	case *string:
 		*v = d.d.DecodeString()
 	case *bool:
 		*v = d.d.DecodeBool()
 	case *int:
-<<<<<<< HEAD
 		*v = int(chkOvf.IntV(d.d.DecodeInt64(), intBitsize))
 	case *int8:
 		*v = int8(chkOvf.IntV(d.d.DecodeInt64(), 8))
@@ -3439,48 +2240,10 @@ func (d *Decoder) decode(iv interface{}) {
 			v = d.ensureDecodeable(v)
 			d.decodeValue(v, nil, false)
 			// d.decodeValueFallback(v)
-=======
-		*v = int(d.d.DecodeInt(intBitsize))
-	case *int8:
-		*v = int8(d.d.DecodeInt(8))
-	case *int16:
-		*v = int16(d.d.DecodeInt(16))
-	case *int32:
-		*v = int32(d.d.DecodeInt(32))
-	case *int64:
-		*v = d.d.DecodeInt(64)
-	case *uint:
-		*v = uint(d.d.DecodeUint(uintBitsize))
-	case *uint8:
-		*v = uint8(d.d.DecodeUint(8))
-	case *uint16:
-		*v = uint16(d.d.DecodeUint(16))
-	case *uint32:
-		*v = uint32(d.d.DecodeUint(32))
-	case *uint64:
-		*v = d.d.DecodeUint(64)
-	case *float32:
-		*v = float32(d.d.DecodeFloat(true))
-	case *float64:
-		*v = d.d.DecodeFloat(false)
-	case *[]uint8:
-		*v = d.d.DecodeBytes(*v, false, false)
-
-	case *Raw:
-		*v = d.raw()
-
-	case *interface{}:
-		d.decodeValueNotNil(reflect.ValueOf(iv).Elem(), nil)
-
-	default:
-		if !fastpathDecodeTypeSwitch(iv, d) {
-			d.decodeI(iv, true, false, false, false)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 	}
 }
 
-<<<<<<< HEAD
 func (d *Decoder) decodeValue(rv reflect.Value, fn *codecFn, chkAll bool) {
 	// If stream is not containing a nil value, then we can deref to the base
 	// non-pointer value, and decode into that.
@@ -3495,83 +2258,10 @@ func (d *Decoder) decodeValue(rv reflect.Value, fn *codecFn, chkAll bool) {
 			rvp = rv
 			rv = rv.Elem()
 			if rv.Kind() != reflect.Ptr {
-=======
-func (d *Decoder) preDecodeValue(rv reflect.Value, tryNil bool) (rv2 reflect.Value, proceed bool) {
-	if tryNil && d.d.TryDecodeAsNil() {
-		// No need to check if a ptr, recursively, to determine
-		// whether to set value to nil.
-		// Just always set value to its zero type.
-		if rv.IsValid() { // rv.CanSet() // always settable, except it's invalid
-			rv.Set(reflect.Zero(rv.Type()))
-		}
-		return
-	}
-
-	// If stream is not containing a nil value, then we can deref to the base
-	// non-pointer value, and decode into that.
-	for rv.Kind() == reflect.Ptr {
-		if rv.IsNil() {
-			rv.Set(reflect.New(rv.Type().Elem()))
-		}
-		rv = rv.Elem()
-	}
-	return rv, true
-}
-
-func (d *Decoder) decodeI(iv interface{}, checkPtr, tryNil, checkFastpath, checkCodecSelfer bool) {
-	rv := reflect.ValueOf(iv)
-	if checkPtr {
-		if rv.Kind() != reflect.Ptr || rv.IsNil() {
-			d.errNotValidPtrValue(rv)
-		}
-		// d.chkPtrValue(rv)
-	}
-	rv, proceed := d.preDecodeValue(rv, tryNil)
-	if proceed {
-		fn := d.getDecFn(rv.Type(), checkFastpath, checkCodecSelfer)
-		fn.f(&fn.i, rv)
-	}
-}
-
-func (d *Decoder) decodeValue(rv reflect.Value, fn *decFn) {
-	if rv, proceed := d.preDecodeValue(rv, true); proceed {
-		if fn == nil {
-			fn = d.getDecFn(rv.Type(), true, true)
-		}
-		fn.f(&fn.i, rv)
-	}
-}
-
-func (d *Decoder) decodeValueNotNil(rv reflect.Value, fn *decFn) {
-	if rv, proceed := d.preDecodeValue(rv, false); proceed {
-		if fn == nil {
-			fn = d.getDecFn(rv.Type(), true, true)
-		}
-		fn.f(&fn.i, rv)
-	}
-}
-
-func (d *Decoder) getDecFn(rt reflect.Type, checkFastpath, checkCodecSelfer bool) (fn *decFn) {
-	rtid := reflect.ValueOf(rt).Pointer()
-
-	// retrieve or register a focus'ed function for this type
-	// to eliminate need to do the retrieval multiple times
-
-	// if d.f == nil && d.s == nil { debugf("---->Creating new dec f map for type: %v\n", rt) }
-	var ok bool
-	if useMapForCodecCache {
-		fn, ok = d.f[rtid]
-	} else {
-		for i := range d.s {
-			v := &(d.s[i])
-			if v.rtid == rtid {
-				fn, ok = &(v.fn), true
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 				break
 			}
 		}
 	}
-<<<<<<< HEAD
 
 	if fn == nil {
 		// always pass checkCodecSelfer=true, in case T or ****T is passed, where *T is a Selfer
@@ -3591,142 +2281,6 @@ func (d *Decoder) getDecFn(rt reflect.Type, checkFastpath, checkCodecSelfer bool
 		fn.fd(d, &fn.i, rv)
 	}
 	// return rv
-=======
-	if ok {
-		return
-	}
-
-	if useMapForCodecCache {
-		if d.f == nil {
-			d.f = make(map[uintptr]*decFn, initCollectionCap)
-		}
-		fn = new(decFn)
-		d.f[rtid] = fn
-	} else {
-		if d.s == nil {
-			d.s = make([]decRtidFn, 0, initCollectionCap)
-		}
-		d.s = append(d.s, decRtidFn{rtid: rtid})
-		fn = &(d.s[len(d.s)-1]).fn
-	}
-
-	// debugf("\tCreating new dec fn for type: %v\n", rt)
-	ti := d.h.getTypeInfo(rtid, rt)
-	fi := &(fn.i)
-	fi.d = d
-	fi.ti = ti
-
-	// An extension can be registered for any type, regardless of the Kind
-	// (e.g. type BitSet int64, type MyStruct { / * unexported fields * / }, type X []int, etc.
-	//
-	// We can't check if it's an extension byte here first, because the user may have
-	// registered a pointer or non-pointer type, meaning we may have to recurse first
-	// before matching a mapped type, even though the extension byte is already detected.
-	//
-	// NOTE: if decoding into a nil interface{}, we return a non-nil
-	// value except even if the container registers a length of 0.
-	if checkCodecSelfer && ti.cs {
-		fn.f = (*decFnInfo).selferUnmarshal
-	} else if rtid == rawExtTypId {
-		fn.f = (*decFnInfo).rawExt
-	} else if rtid == rawTypId {
-		fn.f = (*decFnInfo).raw
-	} else if d.d.IsBuiltinType(rtid) {
-		fn.f = (*decFnInfo).builtin
-	} else if xfFn := d.h.getExt(rtid); xfFn != nil {
-		fi.xfTag, fi.xfFn = xfFn.tag, xfFn.ext
-		fn.f = (*decFnInfo).ext
-	} else if supportMarshalInterfaces && d.be && ti.bunm {
-		fn.f = (*decFnInfo).binaryUnmarshal
-	} else if supportMarshalInterfaces && !d.be && d.js && ti.junm {
-		//If JSON, we should check JSONUnmarshal before textUnmarshal
-		fn.f = (*decFnInfo).jsonUnmarshal
-	} else if supportMarshalInterfaces && !d.be && ti.tunm {
-		fn.f = (*decFnInfo).textUnmarshal
-	} else {
-		rk := rt.Kind()
-		if fastpathEnabled && checkFastpath && (rk == reflect.Map || rk == reflect.Slice) {
-			if rt.PkgPath() == "" {
-				if idx := fastpathAV.index(rtid); idx != -1 {
-					fn.f = fastpathAV[idx].decfn
-				}
-			} else {
-				// use mapping for underlying type if there
-				ok = false
-				var rtu reflect.Type
-				if rk == reflect.Map {
-					rtu = reflect.MapOf(rt.Key(), rt.Elem())
-				} else {
-					rtu = reflect.SliceOf(rt.Elem())
-				}
-				rtuid := reflect.ValueOf(rtu).Pointer()
-				if idx := fastpathAV.index(rtuid); idx != -1 {
-					xfnf := fastpathAV[idx].decfn
-					xrt := fastpathAV[idx].rt
-					fn.f = func(xf *decFnInfo, xrv reflect.Value) {
-						// xfnf(xf, xrv.Convert(xrt))
-						xfnf(xf, xrv.Addr().Convert(reflect.PtrTo(xrt)).Elem())
-					}
-				}
-			}
-		}
-		if fn.f == nil {
-			switch rk {
-			case reflect.String:
-				fn.f = (*decFnInfo).kString
-			case reflect.Bool:
-				fn.f = (*decFnInfo).kBool
-			case reflect.Int:
-				fn.f = (*decFnInfo).kInt
-			case reflect.Int64:
-				fn.f = (*decFnInfo).kInt64
-			case reflect.Int32:
-				fn.f = (*decFnInfo).kInt32
-			case reflect.Int8:
-				fn.f = (*decFnInfo).kInt8
-			case reflect.Int16:
-				fn.f = (*decFnInfo).kInt16
-			case reflect.Float32:
-				fn.f = (*decFnInfo).kFloat32
-			case reflect.Float64:
-				fn.f = (*decFnInfo).kFloat64
-			case reflect.Uint8:
-				fn.f = (*decFnInfo).kUint8
-			case reflect.Uint64:
-				fn.f = (*decFnInfo).kUint64
-			case reflect.Uint:
-				fn.f = (*decFnInfo).kUint
-			case reflect.Uint32:
-				fn.f = (*decFnInfo).kUint32
-			case reflect.Uint16:
-				fn.f = (*decFnInfo).kUint16
-				// case reflect.Ptr:
-				// 	fn.f = (*decFnInfo).kPtr
-			case reflect.Uintptr:
-				fn.f = (*decFnInfo).kUintptr
-			case reflect.Interface:
-				fn.f = (*decFnInfo).kInterface
-			case reflect.Struct:
-				fn.f = (*decFnInfo).kStruct
-			case reflect.Chan:
-				fi.seq = seqTypeChan
-				fn.f = (*decFnInfo).kSlice
-			case reflect.Slice:
-				fi.seq = seqTypeSlice
-				fn.f = (*decFnInfo).kSlice
-			case reflect.Array:
-				fi.seq = seqTypeArray
-				fn.f = (*decFnInfo).kArray
-			case reflect.Map:
-				fn.f = (*decFnInfo).kMap
-			default:
-				fn.f = (*decFnInfo).kErr
-			}
-		}
-	}
-
-	return
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (d *Decoder) structFieldNotFound(index int, rvkencname string) {
@@ -3749,7 +2303,6 @@ func (d *Decoder) arrayCannotExpand(sliceLen, streamLen int) {
 	}
 }
 
-<<<<<<< HEAD
 func isDecodeable(rv reflect.Value) (rv2 reflect.Value, canDecode bool) {
 	switch rv.Kind() {
 	case reflect.Array:
@@ -3779,51 +2332,20 @@ func (d *Decoder) ensureDecodeable(rv reflect.Value) (rv2 reflect.Value) {
 	}
 	if !rv.IsValid() {
 		d.errorstr(errstrCannotDecodeIntoNil)
-=======
-func (d *Decoder) chkPtrValue(rv reflect.Value) {
-	// We can only decode into a non-nil pointer
-	if rv.Kind() == reflect.Ptr && !rv.IsNil() {
-		return
-	}
-	d.errNotValidPtrValue(rv)
-}
-
-func (d *Decoder) errNotValidPtrValue(rv reflect.Value) {
-	if !rv.IsValid() {
-		d.error(cannotDecodeIntoNilErr)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 	if !rv.CanInterface() {
 		d.errorf("cannot decode into a value without an interface: %v", rv)
 		return
 	}
-<<<<<<< HEAD
 	rvi := rv2i(rv)
 	rvk := rv.Kind()
 	d.errorf("cannot decode into value of kind: %v, type: %T, %v", rvk, rvi, rvi)
 	return
-=======
-	rvi := rv.Interface()
-	d.errorf("cannot decode into non-pointer or nil pointer. Got: %v, %T, %v", rv.Kind(), rvi, rvi)
-}
-
-func (d *Decoder) error(err error) {
-	panic(err)
-}
-
-func (d *Decoder) errorf(format string, params ...interface{}) {
-	params2 := make([]interface{}, len(params)+1)
-	params2[0] = d.r.numread()
-	copy(params2[1:], params)
-	err := fmt.Errorf("[pos %d]: "+format, params2...)
-	panic(err)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // Possibly get an interned version of a string
 //
-<<<<<<< HEAD
 // This should mostly be used for map keys, where the key type is string.
 // This is because keys of a map/struct are typically reused across many objects.
 func (d *Decoder) string(v []byte) (s string) {
@@ -3848,36 +2370,6 @@ func (d *Decoder) nextValueBytes() (bs []byte) {
 }
 
 func (d *Decoder) rawBytes() []byte {
-=======
-// This should mostly be used for map keys, where the key type is string
-func (d *Decoder) string(v []byte) (s string) {
-	if d.is != nil {
-		s, ok := d.is[string(v)] // no allocation here, per go implementation
-		if !ok {
-			s = string(v) // new allocation here
-			d.is[s] = s
-		}
-		return s
-	}
-	return string(v) // don't return stringView, as we need a real string here.
-}
-
-// func (d *Decoder) intern(s string) {
-// 	if d.is != nil {
-// 		d.is[s] = s
-// 	}
-// }
-
-// nextValueBytes returns the next value in the stream as a set of bytes.
-func (d *Decoder) nextValueBytes() []byte {
-	d.d.uncacheRead()
-	d.r.track()
-	d.swallow()
-	return d.r.stopTrack()
-}
-
-func (d *Decoder) raw() []byte {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// ensure that this is not a view into the bytes
 	// i.e. make new copy always.
 	bs := d.nextValueBytes()
@@ -3886,13 +2378,14 @@ func (d *Decoder) raw() []byte {
 	return bs2
 }
 
-<<<<<<< HEAD
 func (d *Decoder) wrapErrstr(v interface{}, err *error) {
 	*err = fmt.Errorf("%s decode error [pos %d]: %v", d.hh.Name(), d.r.numread(), v)
 }
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
+func (d *Decoder) NumBytesRead() int {
+	return d.r.numread()
+}
+
 // --------------------------------------------------
 
 // decSliceHelper assists when decoding into a slice, from a map or an array in the stream.
@@ -3906,7 +2399,6 @@ type decSliceHelper struct {
 func (d *Decoder) decSliceHelperStart() (x decSliceHelper, clen int) {
 	dd := d.d
 	ctyp := dd.ContainerType()
-<<<<<<< HEAD
 	switch ctyp {
 	case valueTypeArray:
 		x.array = true
@@ -3914,14 +2406,6 @@ func (d *Decoder) decSliceHelperStart() (x decSliceHelper, clen int) {
 	case valueTypeMap:
 		clen = dd.ReadMapStart() * 2
 	default:
-=======
-	if ctyp == valueTypeArray {
-		x.array = true
-		clen = dd.ReadArrayStart()
-	} else if ctyp == valueTypeMap {
-		clen = dd.ReadMapStart() * 2
-	} else {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		d.errorf("only encoded map or array can be decoded into a slice (%d)", ctyp)
 	}
 	// x.ct = ctyp
@@ -3930,46 +2414,20 @@ func (d *Decoder) decSliceHelperStart() (x decSliceHelper, clen int) {
 }
 
 func (x decSliceHelper) End() {
-<<<<<<< HEAD
 	if x.array {
 		x.d.d.ReadArrayEnd()
 	} else {
 		x.d.d.ReadMapEnd()
-=======
-	cr := x.d.cr
-	if cr == nil {
-		return
-	}
-	if x.array {
-		cr.sendContainerState(containerArrayEnd)
-	} else {
-		cr.sendContainerState(containerMapEnd)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 }
 
 func (x decSliceHelper) ElemContainerState(index int) {
-<<<<<<< HEAD
 	if x.array {
 		x.d.d.ReadArrayElem()
 	} else if index%2 == 0 {
 		x.d.d.ReadMapElemKey()
 	} else {
 		x.d.d.ReadMapElemValue()
-=======
-	cr := x.d.cr
-	if cr == nil {
-		return
-	}
-	if x.array {
-		cr.sendContainerState(containerArrayElem)
-	} else {
-		if index%2 == 0 {
-			cr.sendContainerState(containerMapKey)
-		} else {
-			cr.sendContainerState(containerMapValue)
-		}
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 }
 
@@ -3985,20 +2443,11 @@ func decByteSlice(r decReader, clen, maxInitLen int, bs []byte) (bsOut []byte) {
 		r.readb(bsOut)
 	} else {
 		// bsOut = make([]byte, clen)
-<<<<<<< HEAD
 		len2 := decInferLen(clen, maxInitLen, 1)
 		bsOut = make([]byte, len2)
 		r.readb(bsOut)
 		for len2 < clen {
 			len3 := decInferLen(clen-len2, maxInitLen, 1)
-=======
-		len2, _ := decInferLen(clen, maxInitLen, 1)
-		bsOut = make([]byte, len2)
-		r.readb(bsOut)
-		for len2 < clen {
-			len3, _ := decInferLen(clen-len2, maxInitLen, 1)
-			// fmt.Printf(">>>>> TESTING: in loop: clen: %v, maxInitLen: %v, len2: %v, len3: %v\n", clen, maxInitLen, len2, len3)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			bs3 := bsOut
 			bsOut = make([]byte, len2+len3)
 			copy(bsOut, bs3)
@@ -4029,21 +2478,14 @@ func detachZeroCopyBytes(isBytesReader bool, dest []byte, in []byte) (out []byte
 //    - maxlen: max length to be returned.
 //      if <= 0, it is unset, and we infer it based on the unit size
 //    - unit: number of bytes for each element of the collection
-<<<<<<< HEAD
 func decInferLen(clen, maxlen, unit int) (rvlen int) {
-=======
-func decInferLen(clen, maxlen, unit int) (rvlen int, truncated bool) {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// handle when maxlen is not set i.e. <= 0
 	if clen <= 0 {
 		return
 	}
-<<<<<<< HEAD
 	if unit == 0 {
 		return clen
 	}
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if maxlen <= 0 {
 		// no maxlen defined. Use maximum of 256K memory, with a floor of 4K items.
 		// maxlen = 256 * 1024 / unit
@@ -4058,15 +2500,10 @@ func decInferLen(clen, maxlen, unit int) (rvlen int, truncated bool) {
 	}
 	if clen > maxlen {
 		rvlen = maxlen
-<<<<<<< HEAD
-=======
-		truncated = true
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	} else {
 		rvlen = clen
 	}
 	return
-<<<<<<< HEAD
 }
 
 func expandSliceRV(s reflect.Value, st reflect.Type, canChange bool, stElemSize, num, slen, scap int) (
@@ -4117,36 +2554,3 @@ func decReadFull(r io.Reader, bs []byte) (n int, err error) {
 	// if n != len(bs) && err == io.EOF { err = io.ErrUnexpectedEOF }
 	return
 }
-=======
-	// if clen <= 0 {
-	// 	rvlen = 0
-	// } else if maxlen > 0 && clen > maxlen {
-	// 	rvlen = maxlen
-	// 	truncated = true
-	// } else {
-	// 	rvlen = clen
-	// }
-	// return
-}
-
-// // implement overall decReader wrapping both, for possible use inline:
-// type decReaderT struct {
-// 	bytes bool
-// 	rb    *bytesDecReader
-// 	ri    *ioDecReader
-// }
-//
-// // implement *Decoder as a decReader.
-// // Using decReaderT (defined just above) caused performance degradation
-// // possibly because of constant copying the value,
-// // and some value->interface conversion causing allocation.
-// func (d *Decoder) unreadn1() {
-// 	if d.bytes {
-// 		d.rb.unreadn1()
-// 	} else {
-// 		d.ri.unreadn1()
-// 	}
-// }
-// ... for other methods of decReader.
-// Testing showed that performance improvement was negligible.
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

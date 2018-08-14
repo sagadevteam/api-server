@@ -17,7 +17,6 @@ func TestMmap(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Mmap: %v", err)
 	}
-<<<<<<< HEAD
 	if err := unix.Mprotect(b, unix.PROT_READ|unix.PROT_WRITE); err != nil {
 		t.Fatalf("Mprotect: %v", err)
 	}
@@ -30,8 +29,6 @@ func TestMmap(t *testing.T) {
 	if err := unix.Madvise(b, unix.MADV_DONTNEED); err != nil {
 		t.Fatalf("Madvise: %v", err)
 	}
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if err := unix.Munmap(b); err != nil {
 		t.Fatalf("Munmap: %v", err)
 	}

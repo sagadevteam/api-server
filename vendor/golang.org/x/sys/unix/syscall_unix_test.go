@@ -15,6 +15,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"syscall"
 	"testing"
 	"time"
 
@@ -59,6 +60,44 @@ func _() {
 	)
 }
 
+func TestErrnoSignalName(t *testing.T) {
+	testErrors := []struct {
+		num  syscall.Errno
+		name string
+	}{
+		{syscall.EPERM, "EPERM"},
+		{syscall.EINVAL, "EINVAL"},
+		{syscall.ENOENT, "ENOENT"},
+	}
+
+	for _, te := range testErrors {
+		t.Run(fmt.Sprintf("%d/%s", te.num, te.name), func(t *testing.T) {
+			e := unix.ErrnoName(te.num)
+			if e != te.name {
+				t.Errorf("ErrnoName(%d) returned %s, want %s", te.num, e, te.name)
+			}
+		})
+	}
+
+	testSignals := []struct {
+		num  syscall.Signal
+		name string
+	}{
+		{syscall.SIGHUP, "SIGHUP"},
+		{syscall.SIGPIPE, "SIGPIPE"},
+		{syscall.SIGSEGV, "SIGSEGV"},
+	}
+
+	for _, ts := range testSignals {
+		t.Run(fmt.Sprintf("%d/%s", ts.num, ts.name), func(t *testing.T) {
+			s := unix.SignalName(ts.num)
+			if s != ts.name {
+				t.Errorf("SignalName(%d) returned %s, want %s", ts.num, s, ts.name)
+			}
+		})
+	}
+}
+
 // TestFcntlFlock tests whether the file locking structure matches
 // the calling convention of each kernel.
 func TestFcntlFlock(t *testing.T) {
@@ -86,6 +125,10 @@ func TestFcntlFlock(t *testing.T) {
 // "-test.run=^TestPassFD$" and an environment variable used to signal
 // that the test should become the child process instead.
 func TestPassFD(t *testing.T) {
+	if runtime.GOOS == "darwin" && (runtime.GOARCH == "arm" || runtime.GOARCH == "arm64") {
+		t.Skip("cannot exec subprocess on iOS, skipping test")
+	}
+
 	if os.Getenv("GO_WANT_HELPER_PROCESS") == "1" {
 		passFDChild()
 		return
@@ -138,12 +181,9 @@ func TestPassFD(t *testing.T) {
 		uc.Close()
 	})
 	_, oobn, _, _, err := uc.ReadMsgUnix(buf, oob)
-<<<<<<< HEAD
 	if err != nil {
 		t.Fatalf("ReadMsgUnix: %v", err)
 	}
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	closeUnix.Stop()
 
 	scms, err := unix.ParseSocketControlMessage(oob[:oobn])
@@ -341,12 +381,9 @@ func TestDup(t *testing.T) {
 		t.Fatalf("Write to dup2 fd failed: %v", err)
 	}
 	_, err = unix.Seek(f, 0, 0)
-<<<<<<< HEAD
 	if err != nil {
 		t.Fatalf("Seek failed: %v", err)
 	}
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	_, err = unix.Read(f, b2)
 	if err != nil {
 		t.Fatalf("Read back failed: %v", err)
@@ -355,9 +392,13 @@ func TestDup(t *testing.T) {
 		t.Errorf("Dup: stdout write not in file, expected %v, got %v", string(b1), string(b2))
 	}
 }
-<<<<<<< HEAD
 
 func TestPoll(t *testing.T) {
+	if runtime.GOOS == "android" ||
+		(runtime.GOOS == "darwin" && (runtime.GOARCH == "arm" || runtime.GOARCH == "arm64")) {
+		t.Skip("mkfifo syscall is not available on android and iOS, skipping test")
+	}
+
 	f, cleanup := mktmpfifo(t)
 	defer cleanup()
 
@@ -394,7 +435,10 @@ func TestGetwd(t *testing.T) {
 	// These are chosen carefully not to be symlinks on a Mac
 	// (unlike, say, /var, /etc)
 	dirs := []string{"/", "/usr/bin"}
-	if runtime.GOOS == "darwin" {
+	switch runtime.GOOS {
+	case "android":
+		dirs = []string{"/", "/system/bin"}
+	case "darwin":
 		switch runtime.GOARCH {
 		case "arm", "arm64":
 			d1, err := ioutil.TempDir("", "d1")
@@ -499,16 +543,18 @@ func TestFchmodat(t *testing.T) {
 	}
 
 	mode = os.FileMode(0644)
+	didChmodSymlink := true
 	err = unix.Fchmodat(unix.AT_FDCWD, "symlink1", uint32(mode), unix.AT_SYMLINK_NOFOLLOW)
 	if err != nil {
-		if runtime.GOOS == "linux" && err == unix.EOPNOTSUPP {
-			// Linux doesn't support flags != 0
+		if (runtime.GOOS == "android" || runtime.GOOS == "linux" || runtime.GOOS == "solaris") && err == unix.EOPNOTSUPP {
+			// Linux and Illumos don't support flags != 0
+			didChmodSymlink = false
 		} else {
 			t.Fatalf("Fchmodat: unexpected error: %v", err)
 		}
 	}
 
-	if runtime.GOOS == "linux" {
+	if !didChmodSymlink {
 		// Didn't change mode of the symlink. On Linux, the permissions
 		// of a symbolic link are always 0777 according to symlink(7)
 		mode = os.FileMode(0777)
@@ -523,6 +569,19 @@ func TestFchmodat(t *testing.T) {
 	got := os.FileMode(st.Mode & 0777)
 	if got != mode {
 		t.Errorf("Fchmodat: failed to change symlink mode: expected %v, got %v", mode, got)
+	}
+}
+
+func TestMkdev(t *testing.T) {
+	major := uint32(42)
+	minor := uint32(7)
+	dev := unix.Mkdev(major, minor)
+
+	if unix.Major(dev) != major {
+		t.Errorf("Major(%#x) == %d, want %d", dev, unix.Major(dev), major)
+	}
+	if unix.Minor(dev) != minor {
+		t.Errorf("Minor(%#x) == %d, want %d", dev, unix.Minor(dev), minor)
 	}
 }
 
@@ -578,5 +637,3 @@ func chtmpdir(t *testing.T) func() {
 		os.RemoveAll(d)
 	}
 }
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

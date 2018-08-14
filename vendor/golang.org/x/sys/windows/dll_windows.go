@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 // Copyright 2011 The Go Authors. All rights reserved.
-=======
-// Copyright 2011 The Go Authors.  All rights reserved.
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -120,11 +116,7 @@ func (p *Proc) Addr() uintptr {
 
 //go:uintptrescapes
 
-<<<<<<< HEAD
 // Call executes procedure p with arguments a. It will panic, if more than 15 arguments
-=======
-// Call executes procedure p with arguments a. It will panic, if more then 15 arguments
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // are supplied.
 //
 // The returned error is always non-nil, constructed from the result of GetLastError.
@@ -297,10 +289,7 @@ func (p *LazyProc) mustFind() {
 
 // Addr returns the address of the procedure represented by p.
 // The return value can be passed to Syscall to run the procedure.
-<<<<<<< HEAD
 // It will panic if the procedure cannot be found.
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (p *LazyProc) Addr() uintptr {
 	p.mustFind()
 	return p.proc.Addr()
@@ -308,13 +297,8 @@ func (p *LazyProc) Addr() uintptr {
 
 //go:uintptrescapes
 
-<<<<<<< HEAD
 // Call executes procedure p with arguments a. It will panic, if more than 15 arguments
 // are supplied. It will also panic if the procedure cannot be found.
-=======
-// Call executes procedure p with arguments a. It will panic, if more then 15 arguments
-// are supplied.
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //
 // The returned error is always non-nil, constructed from the result of GetLastError.
 // Callers must inspect the primary return value to decide whether an error occurred

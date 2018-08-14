@@ -48,7 +48,6 @@ func TestItoa(t *testing.T) {
 		t.Fatalf("itoa(%d) = %s, want %s", i, s, f)
 	}
 }
-<<<<<<< HEAD
 
 func TestUname(t *testing.T) {
 	var utsname unix.Utsname
@@ -59,5 +58,3 @@ func TestUname(t *testing.T) {
 
 	t.Logf("OS: %s/%s %s", utsname.Sysname[:], utsname.Machine[:], utsname.Release[:])
 }
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

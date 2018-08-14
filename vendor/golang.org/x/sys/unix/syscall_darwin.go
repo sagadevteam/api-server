@@ -13,7 +13,7 @@
 package unix
 
 import (
-	errorspkg "errors"
+	"errors"
 	"syscall"
 	"unsafe"
 )
@@ -36,10 +36,7 @@ func Getwd() (string, error) {
 	return "", ENOTSUP
 }
 
-<<<<<<< HEAD
 // SockaddrDatalink implements the Sockaddr interface for AF_LINK type sockets.
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrDatalink struct {
 	Len    uint8
 	Family uint8
@@ -58,11 +55,7 @@ func nametomib(name string) (mib []_C_int, err error) {
 
 	// NOTE(rsc): It seems strange to set the buffer to have
 	// size CTL_MAXNAME+2 but use only CTL_MAXNAME
-<<<<<<< HEAD
 	// as the size. I don't know why the +2 is here, but the
-=======
-	// as the size.  I don't know why the +2 is here, but the
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// kernel uses +2 for its own implementation of this function.
 	// I am scared that if we don't include the +2 here, the kernel
 	// will silently write 2 words farther than we specify
@@ -84,21 +77,6 @@ func nametomib(name string) (mib []_C_int, err error) {
 	return buf[0 : n/siz], nil
 }
 
-<<<<<<< HEAD
-=======
-func direntIno(buf []byte) (uint64, bool) {
-	return readInt(buf, unsafe.Offsetof(Dirent{}.Ino), unsafe.Sizeof(Dirent{}.Ino))
-}
-
-func direntReclen(buf []byte) (uint64, bool) {
-	return readInt(buf, unsafe.Offsetof(Dirent{}.Reclen), unsafe.Sizeof(Dirent{}.Reclen))
-}
-
-func direntNamlen(buf []byte) (uint64, bool) {
-	return readInt(buf, unsafe.Offsetof(Dirent{}.Namlen), unsafe.Sizeof(Dirent{}.Namlen))
-}
-
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys   ptrace(request int, pid int, addr uintptr, data uintptr) (err error)
 func PtraceAttach(pid int) (err error) { return ptrace(PT_ATTACH, pid, 0, 0) }
 func PtraceDetach(pid int) (err error) { return ptrace(PT_DETACH, pid, 0, 0) }
@@ -120,7 +98,7 @@ type attrList struct {
 
 func getAttrList(path string, attrList attrList, attrBuf []byte, options uint) (attrs [][]byte, err error) {
 	if len(attrBuf) < 4 {
-		return nil, errorspkg.New("attrBuf too small")
+		return nil, errors.New("attrBuf too small")
 	}
 	attrList.bitmapCount = attrBitMapCount
 
@@ -156,12 +134,12 @@ func getAttrList(path string, attrList attrList, attrBuf []byte, options uint) (
 	for i := uint32(0); int(i) < len(dat); {
 		header := dat[i:]
 		if len(header) < 8 {
-			return attrs, errorspkg.New("truncated attribute header")
+			return attrs, errors.New("truncated attribute header")
 		}
 		datOff := *(*int32)(unsafe.Pointer(&header[0]))
 		attrLen := *(*uint32)(unsafe.Pointer(&header[4]))
 		if datOff < 0 || uint32(datOff)+attrLen > uint32(len(dat)) {
-			return attrs, errorspkg.New("truncated results; attrBuf too small")
+			return attrs, errors.New("truncated results; attrBuf too small")
 		}
 		end := uint32(datOff) + attrLen
 		attrs = append(attrs, dat[datOff:end])
@@ -198,7 +176,88 @@ func Getfsstat(buf []Statfs_t, flags int) (n int, err error) {
 	return
 }
 
-<<<<<<< HEAD
+func xattrPointer(dest []byte) *byte {
+	// It's only when dest is set to NULL that the OS X implementations of
+	// getxattr() and listxattr() return the current sizes of the named attributes.
+	// An empty byte array is not sufficient. To maintain the same behaviour as the
+	// linux implementation, we wrap around the system calls and pass in NULL when
+	// dest is empty.
+	var destp *byte
+	if len(dest) > 0 {
+		destp = &dest[0]
+	}
+	return destp
+}
+
+//sys	getxattr(path string, attr string, dest *byte, size int, position uint32, options int) (sz int, err error)
+
+func Getxattr(path string, attr string, dest []byte) (sz int, err error) {
+	return getxattr(path, attr, xattrPointer(dest), len(dest), 0, 0)
+}
+
+func Lgetxattr(link string, attr string, dest []byte) (sz int, err error) {
+	return getxattr(link, attr, xattrPointer(dest), len(dest), 0, XATTR_NOFOLLOW)
+}
+
+//sys  setxattr(path string, attr string, data *byte, size int, position uint32, options int) (err error)
+
+func Setxattr(path string, attr string, data []byte, flags int) (err error) {
+	// The parameters for the OS X implementation vary slightly compared to the
+	// linux system call, specifically the position parameter:
+	//
+	//  linux:
+	//      int setxattr(
+	//          const char *path,
+	//          const char *name,
+	//          const void *value,
+	//          size_t size,
+	//          int flags
+	//      );
+	//
+	//  darwin:
+	//      int setxattr(
+	//          const char *path,
+	//          const char *name,
+	//          void *value,
+	//          size_t size,
+	//          u_int32_t position,
+	//          int options
+	//      );
+	//
+	// position specifies the offset within the extended attribute. In the
+	// current implementation, only the resource fork extended attribute makes
+	// use of this argument. For all others, position is reserved. We simply
+	// default to setting it to zero.
+	return setxattr(path, attr, xattrPointer(data), len(data), 0, flags)
+}
+
+func Lsetxattr(link string, attr string, data []byte, flags int) (err error) {
+	return setxattr(link, attr, xattrPointer(data), len(data), 0, flags|XATTR_NOFOLLOW)
+}
+
+//sys removexattr(path string, attr string, options int) (err error)
+
+func Removexattr(path string, attr string) (err error) {
+	// We wrap around and explicitly zero out the options provided to the OS X
+	// implementation of removexattr, we do so for interoperability with the
+	// linux variant.
+	return removexattr(path, attr, 0)
+}
+
+func Lremovexattr(link string, attr string) (err error) {
+	return removexattr(link, attr, XATTR_NOFOLLOW)
+}
+
+//sys	listxattr(path string, dest *byte, size int, options int) (sz int, err error)
+
+func Listxattr(path string, dest []byte) (sz int, err error) {
+	return listxattr(path, xattrPointer(dest), len(dest), 0)
+}
+
+func Llistxattr(link string, dest []byte) (sz int, err error) {
+	return listxattr(link, xattrPointer(dest), len(dest), XATTR_NOFOLLOW)
+}
+
 func setattrlistTimes(path string, times []Timespec, flags int) error {
 	_p0, err := BytePtrFromString(path)
 	if err != nil {
@@ -235,8 +294,6 @@ func utimensat(dirfd int, path string, times *[2]Timespec, flags int) error {
 	return ENOSYS
 }
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 /*
  * Wrapped
  */
@@ -245,7 +302,6 @@ func utimensat(dirfd int, path string, times *[2]Timespec, flags int) error {
 
 func Kill(pid int, signum syscall.Signal) (err error) { return kill(pid, int(signum), 1) }
 
-<<<<<<< HEAD
 //sys	ioctl(fd int, req uint, arg uintptr) (err error)
 
 // ioctl itself should not be exposed directly, but additional get/set
@@ -331,8 +387,6 @@ func Uname(uname *Utsname) error {
 	return nil
 }
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 /*
  * Exposed directly
  */
@@ -358,10 +412,7 @@ func Uname(uname *Utsname) error {
 //sys	Flock(fd int, how int) (err error)
 //sys	Fpathconf(fd int, name int) (val int, err error)
 //sys	Fstat(fd int, stat *Stat_t) (err error) = SYS_FSTAT64
-<<<<<<< HEAD
 //sys	Fstatat(fd int, path string, stat *Stat_t, flags int) (err error) = SYS_FSTATAT64
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Fstatfs(fd int, stat *Statfs_t) (err error) = SYS_FSTATFS64
 //sys	Fsync(fd int) (err error)
 //sys	Ftruncate(fd int, length int64) (err error)
@@ -390,15 +441,6 @@ func Uname(uname *Utsname) error {
 //sys	Mkdirat(dirfd int, path string, mode uint32) (err error)
 //sys	Mkfifo(path string, mode uint32) (err error)
 //sys	Mknod(path string, mode uint32, dev int) (err error)
-<<<<<<< HEAD
-=======
-//sys	Mlock(b []byte) (err error)
-//sys	Mlockall(flags int) (err error)
-//sys	Mprotect(b []byte, prot int) (err error)
-//sys	Msync(b []byte, flags int) (err error)
-//sys	Munlock(b []byte) (err error)
-//sys	Munlockall() (err error)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Open(path string, mode int, perm uint32) (fd int, err error)
 //sys	Openat(dirfd int, path string, mode int, perm uint32) (fd int, err error)
 //sys	Pathconf(path string, name int) (val int, err error)
@@ -475,12 +517,6 @@ func Uname(uname *Utsname) error {
 // Add_profil
 // Kdebug_trace
 // Sigreturn
-<<<<<<< HEAD
-=======
-// Mmap
-// Mlock
-// Munlock
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Atsocket
 // Kqueue_from_portset_np
 // Kqueue_portset
@@ -490,20 +526,12 @@ func Uname(uname *Utsname) error {
 // Searchfs
 // Delete
 // Copyfile
-<<<<<<< HEAD
-=======
-// Poll
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Watchevent
 // Waitevent
 // Modwatch
-// Getxattr
 // Fgetxattr
-// Setxattr
 // Fsetxattr
-// Removexattr
 // Fremovexattr
-// Listxattr
 // Flistxattr
 // Fsctl
 // Initgroups
@@ -576,11 +604,6 @@ func Uname(uname *Utsname) error {
 // Lio_listio
 // __pthread_cond_wait
 // Iopolicysys
-<<<<<<< HEAD
-=======
-// Mlockall
-// Munlockall
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // __pthread_kill
 // __pthread_sigmask
 // __sigwait

@@ -2,10 +2,7 @@ package yaml
 
 import (
 	"bytes"
-<<<<<<< HEAD
 	"fmt"
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 // Flush the buffer if needed.
@@ -668,11 +665,7 @@ func yaml_emitter_emit_node(emitter *yaml_emitter_t, event *yaml_event_t,
 		return yaml_emitter_emit_mapping_start(emitter, event)
 	default:
 		return yaml_emitter_set_emitter_error(emitter,
-<<<<<<< HEAD
 			fmt.Sprintf("expected SCALAR, SEQUENCE-START, MAPPING-START, or ALIAS, but got %v", event.typ))
-=======
-			"expected SCALAR, SEQUENCE-START, MAPPING-START, or ALIAS")
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 }
 
@@ -850,11 +843,7 @@ func yaml_emitter_select_scalar_style(emitter *yaml_emitter_t, event *yaml_event
 	return true
 }
 
-<<<<<<< HEAD
 // Write an anchor.
-=======
-// Write an achor.
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func yaml_emitter_process_anchor(emitter *yaml_emitter_t) bool {
 	if emitter.anchor_data.anchor == nil {
 		return true
@@ -1007,15 +996,9 @@ func yaml_emitter_analyze_scalar(emitter *yaml_emitter_t, value []byte) bool {
 		space_break    = false
 
 		preceded_by_whitespace = false
-<<<<<<< HEAD
 		followed_by_whitespace = false
 		previous_space         = false
 		previous_break         = false
-=======
-		followed_by_whitespace  = false
-		previous_space          = false
-		previous_break          = false
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	)
 
 	emitter.scalar_data.value = value

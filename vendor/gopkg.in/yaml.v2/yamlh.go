@@ -1,10 +1,7 @@
 package yaml
 
 import (
-<<<<<<< HEAD
 	"fmt"
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"io"
 )
 
@@ -243,7 +240,6 @@ const (
 	yaml_MAPPING_END_EVENT    // A MAPPING-END event.
 )
 
-<<<<<<< HEAD
 var eventStrings = []string{
 	yaml_NO_EVENT:             "none",
 	yaml_STREAM_START_EVENT:   "stream start",
@@ -265,8 +261,6 @@ func (e yaml_event_type_t) String() string {
 	return eventStrings[e]
 }
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // The event structure.
 type yaml_event_t struct {
 
@@ -549,15 +543,9 @@ type yaml_parser_t struct {
 
 	read_handler yaml_read_handler_t // Read handler.
 
-<<<<<<< HEAD
 	input_reader io.Reader // File input data.
 	input        []byte    // String input data.
 	input_pos    int
-=======
-	input_file io.Reader // File input data.
-	input      []byte    // String input data.
-	input_pos  int
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	eof bool // EOF flag
 
@@ -666,11 +654,7 @@ type yaml_emitter_t struct {
 	write_handler yaml_write_handler_t // Write handler.
 
 	output_buffer *[]byte   // String output data.
-<<<<<<< HEAD
 	output_writer io.Writer // File output data.
-=======
-	output_file   io.Writer // File output data.
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	buffer     []byte // The working buffer.
 	buffer_pos int    // The current position of the buffer.

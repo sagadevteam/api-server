@@ -3,20 +3,14 @@ package yaml
 import (
 	"encoding"
 	"fmt"
-<<<<<<< HEAD
 	"io"
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"reflect"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
-<<<<<<< HEAD
 	"unicode/utf8"
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 type encoder struct {
@@ -24,7 +18,6 @@ type encoder struct {
 	event   yaml_event_t
 	out     []byte
 	flow    bool
-<<<<<<< HEAD
 	// doneInit holds whether the initial stream_start_event has been
 	// emitted.
 	doneInit bool
@@ -58,27 +51,6 @@ func (e *encoder) init() {
 func (e *encoder) finish() {
 	e.emitter.open_ended = false
 	yaml_stream_end_event_initialize(&e.event)
-=======
-}
-
-func newEncoder() (e *encoder) {
-	e = &encoder{}
-	e.must(yaml_emitter_initialize(&e.emitter))
-	yaml_emitter_set_output_string(&e.emitter, &e.out)
-	yaml_emitter_set_unicode(&e.emitter, true)
-	e.must(yaml_stream_start_event_initialize(&e.event, yaml_UTF8_ENCODING))
-	e.emit()
-	e.must(yaml_document_start_event_initialize(&e.event, nil, nil, true))
-	e.emit()
-	return e
-}
-
-func (e *encoder) finish() {
-	e.must(yaml_document_end_event_initialize(&e.event, true))
-	e.emit()
-	e.emitter.open_ended = false
-	e.must(yaml_stream_end_event_initialize(&e.event))
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e.emit()
 }
 
@@ -88,13 +60,7 @@ func (e *encoder) destroy() {
 
 func (e *encoder) emit() {
 	// This will internally delete the e.event value.
-<<<<<<< HEAD
 	e.must(yaml_emitter_emit(&e.emitter, &e.event))
-=======
-	if !yaml_emitter_emit(&e.emitter, &e.event) && e.event.typ != yaml_DOCUMENT_END_EVENT && e.event.typ != yaml_STREAM_END_EVENT {
-		e.must(false)
-	}
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (e *encoder) must(ok bool) {
@@ -107,7 +73,6 @@ func (e *encoder) must(ok bool) {
 	}
 }
 
-<<<<<<< HEAD
 func (e *encoder) marshalDoc(tag string, in reflect.Value) {
 	e.init()
 	yaml_document_start_event_initialize(&e.event, nil, nil, true)
@@ -119,15 +84,10 @@ func (e *encoder) marshalDoc(tag string, in reflect.Value) {
 
 func (e *encoder) marshal(tag string, in reflect.Value) {
 	if !in.IsValid() || in.Kind() == reflect.Ptr && in.IsNil() {
-=======
-func (e *encoder) marshal(tag string, in reflect.Value) {
-	if !in.IsValid() {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		e.nilv()
 		return
 	}
 	iface := in.Interface()
-<<<<<<< HEAD
 	switch m := iface.(type) {
 	case time.Time, *time.Time:
 		// Although time.Time implements TextMarshaler,
@@ -135,9 +95,6 @@ func (e *encoder) marshal(tag string, in reflect.Value) {
 		// purposes because YAML has special support for
 		// timestamps.
 	case Marshaler:
-=======
-	if m, ok := iface.(Marshaler); ok {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		v, err := m.MarshalYAML()
 		if err != nil {
 			fail(err)
@@ -147,17 +104,12 @@ func (e *encoder) marshal(tag string, in reflect.Value) {
 			return
 		}
 		in = reflect.ValueOf(v)
-<<<<<<< HEAD
 	case encoding.TextMarshaler:
-=======
-	} else if m, ok := iface.(encoding.TextMarshaler); ok {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		text, err := m.MarshalText()
 		if err != nil {
 			fail(err)
 		}
 		in = reflect.ValueOf(string(text))
-<<<<<<< HEAD
 	case nil:
 		e.nilv()
 		return
@@ -170,36 +122,16 @@ func (e *encoder) marshal(tag string, in reflect.Value) {
 	case reflect.Ptr:
 		if in.Type() == ptrTimeType {
 			e.timev(tag, in.Elem())
-=======
-	}
-	switch in.Kind() {
-	case reflect.Interface:
-		if in.IsNil() {
-			e.nilv()
-		} else {
-			e.marshal(tag, in.Elem())
-		}
-	case reflect.Map:
-		e.mapv(tag, in)
-	case reflect.Ptr:
-		if in.IsNil() {
-			e.nilv()
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		} else {
 			e.marshal(tag, in.Elem())
 		}
 	case reflect.Struct:
-<<<<<<< HEAD
 		if in.Type() == timeType {
 			e.timev(tag, in)
 		} else {
 			e.structv(tag, in)
 		}
 	case reflect.Slice, reflect.Array:
-=======
-		e.structv(tag, in)
-	case reflect.Slice:
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		if in.Type().Elem() == mapItemType {
 			e.itemsv(tag, in)
 		} else {
@@ -291,17 +223,10 @@ func (e *encoder) mappingv(tag string, f func()) {
 		e.flow = false
 		style = yaml_FLOW_MAPPING_STYLE
 	}
-<<<<<<< HEAD
 	yaml_mapping_start_event_initialize(&e.event, nil, []byte(tag), implicit, style)
 	e.emit()
 	f()
 	yaml_mapping_end_event_initialize(&e.event)
-=======
-	e.must(yaml_mapping_start_event_initialize(&e.event, nil, []byte(tag), implicit, style))
-	e.emit()
-	f()
-	e.must(yaml_mapping_end_event_initialize(&e.event))
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e.emit()
 }
 
@@ -347,7 +272,6 @@ var base60float = regexp.MustCompile(`^[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+(?:\.[0
 func (e *encoder) stringv(tag string, in reflect.Value) {
 	var style yaml_scalar_style_t
 	s := in.String()
-<<<<<<< HEAD
 	canUsePlain := true
 	switch {
 	case !utf8.ValidString(s):
@@ -378,25 +302,6 @@ func (e *encoder) stringv(tag string, in reflect.Value) {
 		style = yaml_PLAIN_SCALAR_STYLE
 	default:
 		style = yaml_DOUBLE_QUOTED_SCALAR_STYLE
-=======
-	rtag, rs := resolve("", s)
-	if rtag == yaml_BINARY_TAG {
-		if tag == "" || tag == yaml_STR_TAG {
-			tag = rtag
-			s = rs.(string)
-		} else if tag == yaml_BINARY_TAG {
-			failf("explicitly tagged !!binary data must be base64-encoded")
-		} else {
-			failf("cannot marshal invalid UTF-8 data as %s", shortTag(tag))
-		}
-	}
-	if tag == "" && (rtag != yaml_STR_TAG || isBase60Float(s)) {
-		style = yaml_DOUBLE_QUOTED_SCALAR_STYLE
-	} else if strings.Contains(s, "\n") {
-		style = yaml_LITERAL_SCALAR_STYLE
-	} else {
-		style = yaml_PLAIN_SCALAR_STYLE
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 	e.emitScalar(s, "", tag, style)
 }
@@ -421,7 +326,6 @@ func (e *encoder) uintv(tag string, in reflect.Value) {
 	e.emitScalar(s, "", tag, yaml_PLAIN_SCALAR_STYLE)
 }
 
-<<<<<<< HEAD
 func (e *encoder) timev(tag string, in reflect.Value) {
 	t := in.Interface().(time.Time)
 	s := t.Format(time.RFC3339Nano)
@@ -436,11 +340,6 @@ func (e *encoder) floatv(tag string, in reflect.Value) {
 	}
 
 	s := strconv.FormatFloat(in.Float(), 'g', -1, precision)
-=======
-func (e *encoder) floatv(tag string, in reflect.Value) {
-	// FIXME: Handle 64 bits here.
-	s := strconv.FormatFloat(float64(in.Float()), 'g', -1, 32)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	switch s {
 	case "+Inf":
 		s = ".inf"

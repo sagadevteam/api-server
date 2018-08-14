@@ -74,7 +74,6 @@ option objc_class_prefix = "GPB";
 //       any.Unpack(foo)
 //       ...
 //
-<<<<<<< HEAD
 //  Example 4: Pack and unpack a message in Go
 //
 //      foo := &pb.Foo{...}
@@ -85,8 +84,6 @@ option objc_class_prefix = "GPB";
 //        ...
 //      }
 //
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // The pack methods provided by protobuf library will by default use
 // 'type.googleapis.com/full.type.name' as the type URL and the unpack
 // methods only use the fully qualified type name after the last '/'

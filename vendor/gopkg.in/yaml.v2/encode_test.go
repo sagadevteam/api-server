@@ -1,28 +1,18 @@
 package yaml_test
 
 import (
-<<<<<<< HEAD
 	"bytes"
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"fmt"
 	"math"
 	"strconv"
 	"strings"
 	"time"
 
-<<<<<<< HEAD
 	"net"
 	"os"
 
 	. "gopkg.in/check.v1"
 	"gopkg.in/yaml.v2"
-=======
-	. "gopkg.in/check.v1"
-	"gopkg.in/yaml.v2"
-	"net"
-	"os"
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 var marshalIntTest = 123
@@ -35,12 +25,9 @@ var marshalTests = []struct {
 		nil,
 		"null\n",
 	}, {
-<<<<<<< HEAD
 		(*marshalerType)(nil),
 		"null\n",
 	}, {
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		&struct{}{},
 		"{}\n",
 	}, {
@@ -89,12 +76,9 @@ var marshalTests = []struct {
 		map[string]interface{}{"v": float64(0.1)},
 		"v: 0.1\n",
 	}, {
-<<<<<<< HEAD
 		map[string]interface{}{"v": float32(0.99)},
 		"v: 0.99\n",
 	}, {
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		map[string]interface{}{"v": -0.1},
 		"v: -0.1\n",
 	}, {
@@ -167,12 +151,9 @@ var marshalTests = []struct {
 		&struct{ A []int }{[]int{1, 2}},
 		"a:\n- 1\n- 2\n",
 	}, {
-<<<<<<< HEAD
 		&struct{ A [2]int }{[2]int{1, 2}},
 		"a:\n- 1\n- 2\n",
 	}, {
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		&struct {
 			B int "a"
 		}{1},
@@ -227,7 +208,6 @@ var marshalTests = []struct {
 		}{1, 0},
 		"a: 1\n",
 	},
-<<<<<<< HEAD
 	{
 		&struct {
 			T1 time.Time  "t1,omitempty"
@@ -247,8 +227,6 @@ var marshalTests = []struct {
 		},
 		"a: null\n",
 	},
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	// Flow flag
 	{
@@ -354,7 +332,6 @@ var marshalTests = []struct {
 		map[string]net.IP{"a": net.IPv4(1, 2, 3, 4)},
 		"a: 1.2.3.4\n",
 	},
-<<<<<<< HEAD
 	// time.Time gets a timestamp tag.
 	{
 		map[string]time.Time{"a": time.Date(2015, 2, 24, 18, 19, 39, 0, time.UTC)},
@@ -374,12 +351,6 @@ var marshalTests = []struct {
 		map[string]string{"a": "2015-02-24T18:19:39Z"},
 		"a: \"2015-02-24T18:19:39Z\"\n",
 	},
-=======
-	{
-		map[string]time.Time{"a": time.Unix(1424801979, 0)},
-		"a: 2015-02-24T18:19:39Z\n",
-	},
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	// Ensure strings containing ": " are quoted (reported as PR #43, but not reproducible).
 	{
@@ -401,19 +372,14 @@ var marshalTests = []struct {
 func (s *S) TestMarshal(c *C) {
 	defer os.Setenv("TZ", os.Getenv("TZ"))
 	os.Setenv("TZ", "UTC")
-<<<<<<< HEAD
 	for i, item := range marshalTests {
 		c.Logf("test %d: %q", i, item.data)
-=======
-	for _, item := range marshalTests {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		data, err := yaml.Marshal(item.value)
 		c.Assert(err, IsNil)
 		c.Assert(string(data), Equals, item.data)
 	}
 }
 
-<<<<<<< HEAD
 func (s *S) TestEncoderSingleDocument(c *C) {
 	for i, item := range marshalTests {
 		c.Logf("test %d. %q", i, item.data)
@@ -451,8 +417,6 @@ func (errorWriter) Write([]byte) (int, error) {
 	return 0, fmt.Errorf("some write error")
 }
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 var marshalErrorTests = []struct {
 	value interface{}
 	error string
@@ -574,7 +538,6 @@ func (s *S) TestSortedOutput(c *C) {
 		"1",
 		"2",
 		"a!10",
-<<<<<<< HEAD
 		"a/0001",
 		"a/002",
 		"a/3",
@@ -582,10 +545,6 @@ func (s *S) TestSortedOutput(c *C) {
 		"a/11",
 		"a/0012",
 		"a/100",
-=======
-		"a/2",
-		"a/10",
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		"a~10",
 		"ab/1",
 		"b/1",
@@ -600,11 +559,8 @@ func (s *S) TestSortedOutput(c *C) {
 		"c2.10",
 		"c10.2",
 		"d1",
-<<<<<<< HEAD
 		"d7",
 		"d7abc",
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		"d12",
 		"d12a",
 	}
@@ -633,10 +589,7 @@ func (s *S) TestSortedOutput(c *C) {
 		last = index
 	}
 }
-<<<<<<< HEAD
 
 func newTime(t time.Time) *time.Time {
 	return &t
 }
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

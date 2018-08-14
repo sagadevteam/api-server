@@ -59,9 +59,10 @@ func TestCamelCase(t *testing.T) {
 
 func TestGoPackageOption(t *testing.T) {
 	tests := []struct {
-		in           string
-		impPath, pkg string
-		ok           bool
+		in      string
+		impPath GoImportPath
+		pkg     GoPackageName
+		ok      bool
 	}{
 		{"", "", "", false},
 		{"foo", "", "foo", true},
@@ -83,12 +84,11 @@ func TestGoPackageOption(t *testing.T) {
 		}
 	}
 }
-<<<<<<< HEAD
 
 func TestUnescape(t *testing.T) {
 	tests := []struct {
-		in   string
-		out  string
+		in  string
+		out string
 	}{
 		// successful cases, including all kinds of escapes
 		{"", ""},
@@ -113,5 +113,3 @@ func TestUnescape(t *testing.T) {
 		}
 	}
 }
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

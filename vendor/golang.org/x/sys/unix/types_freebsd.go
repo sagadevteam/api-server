@@ -17,10 +17,7 @@ package unix
 #define KERNEL
 #include <dirent.h>
 #include <fcntl.h>
-<<<<<<< HEAD
 #include <poll.h>
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <signal.h>
 #include <termios.h>
 #include <stdio.h>
@@ -39,10 +36,7 @@ package unix
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/un.h>
-<<<<<<< HEAD
 #include <sys/utsname.h>
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <sys/wait.h>
 #include <net/bpf.h>
 #include <net/if.h>
@@ -222,15 +216,12 @@ type Dirent C.struct_dirent
 
 type Fsid C.struct_fsid
 
-<<<<<<< HEAD
 // File system limits
 
 const (
 	PathMax = C.PATH_MAX
 )
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Advice to Fadvise
 
 const (
@@ -373,7 +364,6 @@ type BpfZbufHeader C.struct_bpf_zbuf_header
 
 type Termios C.struct_termios
 
-<<<<<<< HEAD
 type Winsize C.struct_winsize
 
 // fchmodat-like syscalls.
@@ -410,8 +400,3 @@ type CapRights C.struct_cap_rights
 // Uname
 
 type Utsname C.struct_utsname
-=======
-// Capabilities
-
-type CapRights C.struct_cap_rights
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

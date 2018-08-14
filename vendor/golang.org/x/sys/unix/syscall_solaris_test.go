@@ -9,15 +9,11 @@ package unix_test
 import (
 	"os/exec"
 	"testing"
-<<<<<<< HEAD
 	"time"
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	"golang.org/x/sys/unix"
 )
 
-<<<<<<< HEAD
 func TestSelect(t *testing.T) {
 	err := unix.Select(0, nil, nil, nil, &unix.Timeval{Sec: 0, Usec: 0})
 	if err != nil {
@@ -38,8 +34,6 @@ func TestSelect(t *testing.T) {
 	}
 }
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func TestStatvfs(t *testing.T) {
 	if err := unix.Statvfs("", nil); err == nil {
 		t.Fatal(`Statvfs("") expected failure`)

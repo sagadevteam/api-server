@@ -7,10 +7,7 @@
 package windows_test
 
 import (
-<<<<<<< HEAD
 	"syscall"
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"testing"
 
 	"golang.org/x/sys/windows"
@@ -35,7 +32,6 @@ func TestEnv(t *testing.T) {
 	// make sure TESTENV gets set to "", not deleted
 	testSetGetenv(t, "TESTENV", "")
 }
-<<<<<<< HEAD
 
 func TestGetProcAddressByOrdinal(t *testing.T) {
 	// Attempt calling shlwapi.dll:IsOS, resolving it by ordinal, as
@@ -55,5 +51,3 @@ func TestGetProcAddressByOrdinal(t *testing.T) {
 		t.Error("shlwapi.dll:IsOS(OS_NT) returned 0, expected non-zero value")
 	}
 }
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

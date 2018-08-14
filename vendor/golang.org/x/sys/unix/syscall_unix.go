@@ -7,11 +7,9 @@
 package unix
 
 import (
-<<<<<<< HEAD
 	"bytes"
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"runtime"
+	"sort"
 	"sync"
 	"syscall"
 	"unsafe"
@@ -54,7 +52,28 @@ func errnoErr(e syscall.Errno) error {
 	return e
 }
 
-<<<<<<< HEAD
+// ErrnoName returns the error name for error number e.
+func ErrnoName(e syscall.Errno) string {
+	i := sort.Search(len(errorList), func(i int) bool {
+		return errorList[i].num >= e
+	})
+	if i < len(errorList) && errorList[i].num == e {
+		return errorList[i].name
+	}
+	return ""
+}
+
+// SignalName returns the signal name for signal number s.
+func SignalName(s syscall.Signal) string {
+	i := sort.Search(len(signalList), func(i int) bool {
+		return signalList[i].num >= s
+	})
+	if i < len(signalList) && signalList[i].num == s {
+		return signalList[i].name
+	}
+	return ""
+}
+
 // clen returns the index of the first NULL byte in n or len(n) if n contains no NULL byte.
 func clen(n []byte) int {
 	i := bytes.IndexByte(n, 0)
@@ -64,8 +83,6 @@ func clen(n []byte) int {
 	return i
 }
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Mmap manager, for use by operating system-specific implementations.
 
 type mmapper struct {
@@ -154,28 +171,19 @@ func Write(fd int, p []byte) (n int, err error) {
 // creation of IPv6 sockets to return EAFNOSUPPORT.
 var SocketDisableIPv6 bool
 
-<<<<<<< HEAD
 // Sockaddr represents a socket address.
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type Sockaddr interface {
 	sockaddr() (ptr unsafe.Pointer, len _Socklen, err error) // lowercase; only we can define Sockaddrs
 }
 
-<<<<<<< HEAD
 // SockaddrInet4 implements the Sockaddr interface for AF_INET type sockets.
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrInet4 struct {
 	Port int
 	Addr [4]byte
 	raw  RawSockaddrInet4
 }
 
-<<<<<<< HEAD
 // SockaddrInet6 implements the Sockaddr interface for AF_INET6 type sockets.
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrInet6 struct {
 	Port   int
 	ZoneId uint32
@@ -183,10 +191,7 @@ type SockaddrInet6 struct {
 	raw    RawSockaddrInet6
 }
 
-<<<<<<< HEAD
 // SockaddrUnix implements the Sockaddr interface for AF_UNIX type sockets.
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrUnix struct {
 	Name string
 	raw  RawSockaddrUnix
@@ -217,11 +222,66 @@ func Getpeername(fd int) (sa Sockaddr, err error) {
 	return anyToSockaddr(&rsa)
 }
 
+func GetsockoptByte(fd, level, opt int) (value byte, err error) {
+	var n byte
+	vallen := _Socklen(1)
+	err = getsockopt(fd, level, opt, unsafe.Pointer(&n), &vallen)
+	return n, err
+}
+
 func GetsockoptInt(fd, level, opt int) (value int, err error) {
 	var n int32
 	vallen := _Socklen(4)
 	err = getsockopt(fd, level, opt, unsafe.Pointer(&n), &vallen)
 	return int(n), err
+}
+
+func GetsockoptInet4Addr(fd, level, opt int) (value [4]byte, err error) {
+	vallen := _Socklen(4)
+	err = getsockopt(fd, level, opt, unsafe.Pointer(&value[0]), &vallen)
+	return value, err
+}
+
+func GetsockoptIPMreq(fd, level, opt int) (*IPMreq, error) {
+	var value IPMreq
+	vallen := _Socklen(SizeofIPMreq)
+	err := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
+	return &value, err
+}
+
+func GetsockoptIPv6Mreq(fd, level, opt int) (*IPv6Mreq, error) {
+	var value IPv6Mreq
+	vallen := _Socklen(SizeofIPv6Mreq)
+	err := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
+	return &value, err
+}
+
+func GetsockoptIPv6MTUInfo(fd, level, opt int) (*IPv6MTUInfo, error) {
+	var value IPv6MTUInfo
+	vallen := _Socklen(SizeofIPv6MTUInfo)
+	err := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
+	return &value, err
+}
+
+func GetsockoptICMPv6Filter(fd, level, opt int) (*ICMPv6Filter, error) {
+	var value ICMPv6Filter
+	vallen := _Socklen(SizeofICMPv6Filter)
+	err := getsockopt(fd, level, opt, unsafe.Pointer(&value), &vallen)
+	return &value, err
+}
+
+func GetsockoptLinger(fd, level, opt int) (*Linger, error) {
+	var linger Linger
+	vallen := _Socklen(SizeofLinger)
+	err := getsockopt(fd, level, opt, unsafe.Pointer(&linger), &vallen)
+	return &linger, err
+}
+
+func GetsockoptTimeval(fd, level, opt int) (*Timeval, error) {
+	var tv Timeval
+	vallen := _Socklen(unsafe.Sizeof(tv))
+	err := getsockopt(fd, level, opt, unsafe.Pointer(&tv), &vallen)
+	return &tv, err
 }
 
 func Recvfrom(fd int, p []byte, flags int) (n int, from Sockaddr, err error) {
@@ -323,7 +383,6 @@ func SetNonblock(fd int, nonblocking bool) (err error) {
 	_, err = fcntl(fd, F_SETFL, flag)
 	return err
 }
-<<<<<<< HEAD
 
 // Exec calls execve(2), which replaces the calling executable in the process
 // tree. argv0 should be the full path to an executable ("/bin/ls") and the
@@ -333,5 +392,3 @@ func SetNonblock(fd int, nonblocking bool) (err error) {
 func Exec(argv0 string, argv []string, envv []string) error {
 	return syscall.Exec(argv0, argv, envv)
 }
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

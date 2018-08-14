@@ -4,12 +4,9 @@ go:
     - 1.4
     - 1.5
     - 1.6
-<<<<<<< HEAD
     - 1.7
     - 1.8
     - 1.9
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
     - tip
 
 go_import_path: gopkg.in/yaml.v2

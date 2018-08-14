@@ -1,33 +1,22 @@
-<<<<<<< HEAD
 // +build !safe
 // +build !appengine
 // +build go1.7
 
 // Copyright (c) 2012-2018 Ugorji Nwoke. All rights reserved.
-=======
-// +build unsafe
-
-// Copyright (c) 2012-2015 Ugorji Nwoke. All rights reserved.
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Use of this source code is governed by a MIT license found in the LICENSE file.
 
 package codec
 
 import (
-<<<<<<< HEAD
 	"reflect"
 	"sync/atomic"
 	"time"
-=======
-	"runtime"
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"unsafe"
 )
 
 // This file has unsafe variants of some helper methods.
 // NOTE: See helper_not_unsafe.go for the usage information.
 
-<<<<<<< HEAD
 // var zeroRTv [4]uintptr
 
 const safeMode = false
@@ -35,24 +24,15 @@ const unsafeFlagIndir = 1 << 7 // keep in sync with GO_ROOT/src/reflect/value.go
 
 type unsafeString struct {
 	Data unsafe.Pointer
-=======
-type unsafeString struct {
-	Data uintptr
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	Len  int
 }
 
 type unsafeSlice struct {
-<<<<<<< HEAD
 	Data unsafe.Pointer
-=======
-	Data uintptr
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	Len  int
 	Cap  int
 }
 
-<<<<<<< HEAD
 type unsafeIntf struct {
 	typ  unsafe.Pointer
 	word unsafe.Pointer
@@ -64,28 +44,18 @@ type unsafeReflectValue struct {
 	flag uintptr
 }
 
-=======
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func stringView(v []byte) string {
 	if len(v) == 0 {
 		return ""
 	}
-<<<<<<< HEAD
 	bx := (*unsafeSlice)(unsafe.Pointer(&v))
 	return *(*string)(unsafe.Pointer(&unsafeString{bx.Data, bx.Len}))
-=======
-
-	bx := (*unsafeSlice)(unsafe.Pointer(&v))
-	sx := unsafeString{bx.Data, bx.Len}
-	return *(*string)(unsafe.Pointer(&sx))
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func bytesView(v string) []byte {
 	if len(v) == 0 {
 		return zeroByteSlice
 	}
-<<<<<<< HEAD
 	sx := (*unsafeString)(unsafe.Pointer(&v))
 	return *(*[]byte)(unsafe.Pointer(&unsafeSlice{sx.Data, sx.Len, sx.Len}))
 }
@@ -187,7 +157,8 @@ func isEmptyValue(v reflect.Value, tinfos *TypeInfos, deref, checkStruct bool) b
 		}
 		return isnil
 	case reflect.Ptr:
-		isnil := urv.ptr == nil
+		// isnil := urv.ptr == nil (not sufficient, as a pointer value encodes the type)
+		isnil := urv.ptr == nil || *(*unsafe.Pointer)(urv.ptr) == nil
 		if deref {
 			if isnil {
 				return true
@@ -666,18 +637,3 @@ func (e *Encoder) kUintptr(f *codecFnInfo, rv reflect.Value) {
 // 	return *(*interface{})(unsafe.Pointer(&ui))
 // 	// return i
 // }
-=======
-
-	sx := (*unsafeString)(unsafe.Pointer(&v))
-	bx := unsafeSlice{sx.Data, sx.Len, sx.Len}
-	return *(*[]byte)(unsafe.Pointer(&bx))
-}
-
-func keepAlive4BytesView(v string) {
-	runtime.KeepAlive(v)
-}
-
-func keepAlive4StringView(v []byte) {
-	runtime.KeepAlive(v)
-}
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

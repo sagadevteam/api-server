@@ -7,49 +7,15 @@
 package unix_test
 
 import (
-<<<<<<< HEAD
 	"os"
 	"runtime"
 	"runtime/debug"
-=======
-	"io/ioutil"
-	"os"
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"testing"
 	"time"
 
 	"golang.org/x/sys/unix"
 )
 
-<<<<<<< HEAD
-=======
-func TestFchmodat(t *testing.T) {
-	defer chtmpdir(t)()
-
-	touch(t, "file1")
-	os.Symlink("file1", "symlink1")
-
-	err := unix.Fchmodat(unix.AT_FDCWD, "symlink1", 0444, 0)
-	if err != nil {
-		t.Fatalf("Fchmodat: unexpected error: %v", err)
-	}
-
-	fi, err := os.Stat("file1")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if fi.Mode() != 0444 {
-		t.Errorf("Fchmodat: failed to change mode: expected %v, got %v", 0444, fi.Mode())
-	}
-
-	err = unix.Fchmodat(unix.AT_FDCWD, "symlink1", 0444, unix.AT_SYMLINK_NOFOLLOW)
-	if err != unix.EOPNOTSUPP {
-		t.Fatalf("Fchmodat: unexpected error: %v, expected EOPNOTSUPP", err)
-	}
-}
-
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func TestIoctlGetInt(t *testing.T) {
 	f, err := os.Open("/dev/random")
 	if err != nil {
@@ -65,38 +31,11 @@ func TestIoctlGetInt(t *testing.T) {
 	t.Logf("%d bits of entropy available", v)
 }
 
-<<<<<<< HEAD
-=======
-func TestPoll(t *testing.T) {
-	f, cleanup := mktmpfifo(t)
-	defer cleanup()
-
-	const timeout = 100
-
-	ok := make(chan bool, 1)
-	go func() {
-		select {
-		case <-time.After(10 * timeout * time.Millisecond):
-			t.Errorf("Poll: failed to timeout after %d milliseconds", 10*timeout)
-		case <-ok:
-		}
-	}()
-
-	fds := []unix.PollFd{{Fd: int32(f.Fd()), Events: unix.POLLIN}}
-	n, err := unix.Poll(fds, timeout)
-	ok <- true
-	if err != nil {
-		t.Errorf("Poll: unexpected error: %v", err)
-		return
-	}
-	if n != 0 {
-		t.Errorf("Poll: wrong number of events: got %v, expected %v", n, 0)
-		return
-	}
-}
-
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func TestPpoll(t *testing.T) {
+	if runtime.GOOS == "android" {
+		t.Skip("mkfifo syscall is not available on android, skipping test")
+	}
+
 	f, cleanup := mktmpfifo(t)
 	defer cleanup()
 
@@ -125,28 +64,6 @@ func TestPpoll(t *testing.T) {
 	}
 }
 
-<<<<<<< HEAD
-=======
-// mktmpfifo creates a temporary FIFO and provides a cleanup function.
-func mktmpfifo(t *testing.T) (*os.File, func()) {
-	err := unix.Mkfifo("fifo", 0666)
-	if err != nil {
-		t.Fatalf("mktmpfifo: failed to create FIFO: %v", err)
-	}
-
-	f, err := os.OpenFile("fifo", os.O_RDWR, 0666)
-	if err != nil {
-		os.Remove("fifo")
-		t.Fatalf("mktmpfifo: failed to open FIFO: %v", err)
-	}
-
-	return f, func() {
-		f.Close()
-		os.Remove("fifo")
-	}
-}
-
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func TestTime(t *testing.T) {
 	var ut unix.Time_t
 	ut2, err := unix.Time(&ut)
@@ -199,7 +116,6 @@ func TestUtime(t *testing.T) {
 	}
 }
 
-<<<<<<< HEAD
 func TestUtimesNanoAt(t *testing.T) {
 	defer chtmpdir(t)()
 
@@ -236,15 +152,11 @@ func TestRlimitAs(t *testing.T) {
 	// disable GC during to avoid flaky test
 	defer debug.SetGCPercent(debug.SetGCPercent(-1))
 
-=======
-func TestGetrlimit(t *testing.T) {
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	var rlim unix.Rlimit
 	err := unix.Getrlimit(unix.RLIMIT_AS, &rlim)
 	if err != nil {
 		t.Fatalf("Getrlimit: %v", err)
 	}
-<<<<<<< HEAD
 	var zero unix.Rlimit
 	if zero == rlim {
 		t.Fatalf("Getrlimit: got zero value %#v", rlim)
@@ -351,6 +263,9 @@ func TestSchedSetaffinity(t *testing.T) {
 	if runtime.NumCPU() < 2 {
 		t.Skip("skipping setaffinity tests on single CPU system")
 	}
+	if runtime.GOOS == "android" {
+		t.Skip("skipping setaffinity tests on android")
+	}
 
 	err = unix.SchedSetaffinity(0, &newMask)
 	if err != nil {
@@ -377,7 +292,7 @@ func TestSchedSetaffinity(t *testing.T) {
 func TestStatx(t *testing.T) {
 	var stx unix.Statx_t
 	err := unix.Statx(unix.AT_FDCWD, ".", 0, 0, &stx)
-	if err == unix.ENOSYS {
+	if err == unix.ENOSYS || err == unix.EPERM {
 		t.Skip("statx syscall is not available, skipping test")
 	} else if err != nil {
 		t.Fatalf("Statx: %v", err)
@@ -402,13 +317,9 @@ func TestStatx(t *testing.T) {
 		t.Errorf("Statx: returned stat mode does not match Stat")
 	}
 
-	atime := unix.StatxTimestamp{Sec: int64(st.Atim.Sec), Nsec: uint32(st.Atim.Nsec)}
 	ctime := unix.StatxTimestamp{Sec: int64(st.Ctim.Sec), Nsec: uint32(st.Ctim.Nsec)}
 	mtime := unix.StatxTimestamp{Sec: int64(st.Mtim.Sec), Nsec: uint32(st.Mtim.Nsec)}
 
-	if stx.Atime != atime {
-		t.Errorf("Statx: returned stat atime does not match Stat")
-	}
 	if stx.Ctime != ctime {
 		t.Errorf("Statx: returned stat ctime does not match Stat")
 	}
@@ -449,52 +360,27 @@ func TestStatx(t *testing.T) {
 		t.Errorf("Statx: returned stat mode does not match Lstat")
 	}
 
-	atime = unix.StatxTimestamp{Sec: int64(st.Atim.Sec), Nsec: uint32(st.Atim.Nsec)}
 	ctime = unix.StatxTimestamp{Sec: int64(st.Ctim.Sec), Nsec: uint32(st.Ctim.Nsec)}
 	mtime = unix.StatxTimestamp{Sec: int64(st.Mtim.Sec), Nsec: uint32(st.Mtim.Nsec)}
 
-	if stx.Atime != atime {
-		t.Errorf("Statx: returned stat atime does not match Lstat")
-	}
 	if stx.Ctime != ctime {
 		t.Errorf("Statx: returned stat ctime does not match Lstat")
 	}
 	if stx.Mtime != mtime {
 		t.Errorf("Statx: returned stat mtime does not match Lstat")
-=======
-}
-
-// utilities taken from os/os_test.go
-
-func touch(t *testing.T, name string) {
-	f, err := os.Create(name)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err := f.Close(); err != nil {
-		t.Fatal(err)
 	}
 }
 
-// chtmpdir changes the working directory to a new temporary directory and
-// provides a cleanup function. Used when PWD is read-only.
-func chtmpdir(t *testing.T) func() {
-	oldwd, err := os.Getwd()
-	if err != nil {
-		t.Fatalf("chtmpdir: %v", err)
-	}
-	d, err := ioutil.TempDir("", "test")
-	if err != nil {
-		t.Fatalf("chtmpdir: %v", err)
-	}
-	if err := os.Chdir(d); err != nil {
-		t.Fatalf("chtmpdir: %v", err)
-	}
-	return func() {
-		if err := os.Chdir(oldwd); err != nil {
-			t.Fatalf("chtmpdir: %v", err)
+// stringsFromByteSlice converts a sequence of attributes to a []string.
+// On Linux, each entry is a NULL-terminated string.
+func stringsFromByteSlice(buf []byte) []string {
+	var result []string
+	off := 0
+	for i, b := range buf {
+		if b == 0 {
+			result = append(result, string(buf[off:i]))
+			off = i + 1
 		}
-		os.RemoveAll(d)
->>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
+	return result
 }
