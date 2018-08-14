@@ -84,7 +84,11 @@ def doRpcServer(port, stopTimeSec):
         def EchoStruct(self, msg):
             return ("%s" % msg)
     
+<<<<<<< HEAD
     addr = msgpackrpc.Address('127.0.0.1', port)
+=======
+    addr = msgpackrpc.Address('localhost', port)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
     server = msgpackrpc.Server(EchoHandler())
     server.listen(addr)
     # run thread to stop it after stopTimeSec seconds if > 0
@@ -96,14 +100,22 @@ def doRpcServer(port, stopTimeSec):
     server.start()
 
 def doRpcClientToPythonSvc(port):
+<<<<<<< HEAD
     address = msgpackrpc.Address('127.0.0.1', port)
+=======
+    address = msgpackrpc.Address('localhost', port)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
     client = msgpackrpc.Client(address, unpack_encoding='utf-8')
     print client.call("Echo123", "A1", "B2", "C3")
     print client.call("EchoStruct", {"A" :"Aa", "B":"Bb", "C":"Cc"})
    
 def doRpcClientToGoSvc(port):
     # print ">>>> port: ", port, " <<<<<"
+<<<<<<< HEAD
     address = msgpackrpc.Address('127.0.0.1', port)
+=======
+    address = msgpackrpc.Address('localhost', port)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
     client = msgpackrpc.Client(address, unpack_encoding='utf-8')
     print client.call("TestRpcInt.Echo123", ["A1", "B2", "C3"])
     print client.call("TestRpcInt.EchoStruct", {"A" :"Aa", "B":"Bb", "C":"Cc"})

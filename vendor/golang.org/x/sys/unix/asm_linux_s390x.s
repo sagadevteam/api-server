@@ -21,6 +21,7 @@ TEXT ·Syscall(SB),NOSPLIT,$0-56
 TEXT ·Syscall6(SB),NOSPLIT,$0-80
 	BR	syscall·Syscall6(SB)
 
+<<<<<<< HEAD
 TEXT ·SyscallNoError(SB),NOSPLIT,$0-48
 	BL	runtime·entersyscall(SB)
 	MOVD	a1+8(FP), R2
@@ -36,11 +37,14 @@ TEXT ·SyscallNoError(SB),NOSPLIT,$0-48
 	BL	runtime·exitsyscall(SB)
 	RET
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 TEXT ·RawSyscall(SB),NOSPLIT,$0-56
 	BR	syscall·RawSyscall(SB)
 
 TEXT ·RawSyscall6(SB),NOSPLIT,$0-80
 	BR	syscall·RawSyscall6(SB)
+<<<<<<< HEAD
 
 TEXT ·RawSyscallNoError(SB),NOSPLIT,$0-48
 	MOVD	a1+8(FP), R2
@@ -54,3 +58,5 @@ TEXT ·RawSyscallNoError(SB),NOSPLIT,$0-48
 	MOVD	R2, r1+32(FP)
 	MOVD	R3, r2+40(FP)
 	RET
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

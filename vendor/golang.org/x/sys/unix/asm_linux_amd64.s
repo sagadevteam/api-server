@@ -13,12 +13,17 @@
 // Just jump to package syscall's implementation for all these functions.
 // The runtime may know about them.
 
+<<<<<<< HEAD
 TEXT ·Syscall(SB),NOSPLIT,$0-56
+=======
+TEXT	·Syscall(SB),NOSPLIT,$0-56
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	JMP	syscall·Syscall(SB)
 
 TEXT ·Syscall6(SB),NOSPLIT,$0-80
 	JMP	syscall·Syscall6(SB)
 
+<<<<<<< HEAD
 TEXT ·SyscallNoError(SB),NOSPLIT,$0-48
 	CALL	runtime·entersyscall(SB)
 	MOVQ	a1+8(FP), DI
@@ -34,12 +39,15 @@ TEXT ·SyscallNoError(SB),NOSPLIT,$0-48
 	CALL	runtime·exitsyscall(SB)
 	RET
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 TEXT ·RawSyscall(SB),NOSPLIT,$0-56
 	JMP	syscall·RawSyscall(SB)
 
 TEXT ·RawSyscall6(SB),NOSPLIT,$0-80
 	JMP	syscall·RawSyscall6(SB)
 
+<<<<<<< HEAD
 TEXT ·RawSyscallNoError(SB),NOSPLIT,$0-48
 	MOVQ	a1+8(FP), DI
 	MOVQ	a2+16(FP), SI
@@ -53,5 +61,7 @@ TEXT ·RawSyscallNoError(SB),NOSPLIT,$0-48
 	MOVQ	DX, r2+40(FP)
 	RET
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 TEXT ·gettimeofday(SB),NOSPLIT,$0-16
 	JMP	syscall·gettimeofday(SB)

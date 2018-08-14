@@ -17,8 +17,13 @@ if test -z "$GOARCH" -o -z "$GOOS"; then
 fi
 
 # Check that we are using the new build system if we should
+<<<<<<< HEAD
 if [[ "$GOOS" = "linux" ]] && [[ "$GOARCH" != "sparc64" ]]; then
 	if [[ "$GOLANG_SYS_BUILD" != "docker" ]]; then
+=======
+if [[ "$GOOS" -eq "linux" ]] && [[ "$GOARCH" != "sparc64" ]]; then
+	if [[ "$GOLANG_SYS_BUILD" -ne "docker" ]]; then
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		echo 1>&2 "In the new build system, mkerrors should not be called directly."
 		echo 1>&2 "See README.md"
 		exit 1
@@ -27,7 +32,11 @@ fi
 
 CC=${CC:-cc}
 
+<<<<<<< HEAD
 if [[ "$GOOS" = "solaris" ]]; then
+=======
+if [[ "$GOOS" -eq "solaris" ]]; then
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	# Assumes GNU versions of utilities in PATH.
 	export PATH=/usr/gnu/bin:$PATH
 fi
@@ -38,8 +47,11 @@ includes_Darwin='
 #define _DARWIN_C_SOURCE
 #define KERNEL
 #define _DARWIN_USE_64_BIT_INODE
+<<<<<<< HEAD
 #include <stdint.h>
 #include <sys/attr.h>
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <sys/types.h>
 #include <sys/event.h>
 #include <sys/ptrace.h>
@@ -47,8 +59,11 @@ includes_Darwin='
 #include <sys/sockio.h>
 #include <sys/sysctl.h>
 #include <sys/mman.h>
+<<<<<<< HEAD
 #include <sys/mount.h>
 #include <sys/utsname.h>
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <sys/wait.h>
 #include <net/bpf.h>
 #include <net/if.h>
@@ -87,7 +102,10 @@ includes_FreeBSD='
 #include <sys/sockio.h>
 #include <sys/sysctl.h>
 #include <sys/mman.h>
+<<<<<<< HEAD
 #include <sys/mount.h>
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <sys/wait.h>
 #include <sys/ioctl.h>
 #include <net/bpf.h>
@@ -185,10 +203,13 @@ struct ltchars {
 #include <linux/serial.h>
 #include <linux/can.h>
 #include <linux/vm_sockets.h>
+<<<<<<< HEAD
 #include <linux/taskstats.h>
 #include <linux/genetlink.h>
 #include <linux/stat.h>
 #include <linux/watchdog.h>
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <net/route.h>
 #include <asm/termbits.h>
 
@@ -289,7 +310,10 @@ includes_SunOS='
 #include <sys/mman.h>
 #include <sys/wait.h>
 #include <sys/ioctl.h>
+<<<<<<< HEAD
 #include <sys/mkdev.h>
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <net/bpf.h>
 #include <net/if.h>
 #include <net/if_arp.h>
@@ -354,7 +378,10 @@ ccflags="$@"
 		$2 !~ /^EXPR_/ &&
 		$2 ~ /^E[A-Z0-9_]+$/ ||
 		$2 ~ /^B[0-9_]+$/ ||
+<<<<<<< HEAD
 		$2 ~ /^(OLD|NEW)DEV$/ ||
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		$2 == "BOTHER" ||
 		$2 ~ /^CI?BAUD(EX)?$/ ||
 		$2 == "IBSHIFT" ||
@@ -364,7 +391,10 @@ ccflags="$@"
 		$2 ~ /^IGN/ ||
 		$2 ~ /^IX(ON|ANY|OFF)$/ ||
 		$2 ~ /^IN(LCR|PCK)$/ ||
+<<<<<<< HEAD
 		$2 !~ "X86_CR3_PCID_NOFLUSH" &&
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		$2 ~ /(^FLU?SH)|(FLU?SH$)/ ||
 		$2 ~ /^C(LOCAL|READ|MSPAR|RTSCTS)$/ ||
 		$2 == "BRKINT" ||
@@ -389,9 +419,13 @@ ccflags="$@"
 		$2 == "SOMAXCONN" ||
 		$2 == "NAME_MAX" ||
 		$2 == "IFNAMSIZ" ||
+<<<<<<< HEAD
 		$2 ~ /^CTL_(HW|KERN|MAXNAME|NET|QUERY)$/ ||
 		$2 ~ /^KERN_(HOSTNAME|OS(RELEASE|TYPE)|VERSION)$/ ||
 		$2 ~ /^HW_MACHINE$/ ||
+=======
+		$2 ~ /^CTL_(MAXNAME|NET|QUERY)$/ ||
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		$2 ~ /^SYSCTL_VERS/ ||
 		$2 ~ /^(MS|MNT|UMOUNT)_/ ||
 		$2 ~ /^TUN(SET|GET|ATTACH|DETACH)/ ||
@@ -426,6 +460,7 @@ ccflags="$@"
 		$2 ~ /^SECCOMP_MODE_/ ||
 		$2 ~ /^SPLICE_/ ||
 		$2 ~ /^(VM|VMADDR)_/ ||
+<<<<<<< HEAD
 		$2 ~ /^IOCTL_VM_SOCKETS_/ ||
 		$2 ~ /^(TASKSTATS|TS)_/ ||
 		$2 ~ /^CGROUPSTATS_/ ||
@@ -436,6 +471,9 @@ ccflags="$@"
 		$2 ~ /^ATTR_(BIT_MAP_COUNT|(CMN|VOL|FILE)_)/ ||
 		$2 ~ /^FSOPT_/ ||
 		$2 ~ /^WDIOC_/ ||
+=======
+		$2 ~ /^XATTR_(CREATE|REPLACE)/ ||
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		$2 !~ "WMESGLEN" &&
 		$2 ~ /^W[A-Z0-9]+$/ ||
 		$2 ~ /^BLK[A-Z]*(GET$|SET$|BUF$|PART$|SIZE)/ {printf("\t%s = C.%s\n", $2, $2)}

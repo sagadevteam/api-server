@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Copyright 2009 The Go Authors. All rights reserved.
+=======
+// Copyright 2009 The Go Authors.  All rights reserved.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -16,6 +20,7 @@ import (
 
 type Handle uintptr
 
+<<<<<<< HEAD
 const (
 	InvalidHandle = ^Handle(0)
 
@@ -56,6 +61,9 @@ const (
 	FILE_VOLUME_IS_COMPRESSED         = 0x00008000
 	FILE_VOLUME_QUOTAS                = 0x00000020
 )
+=======
+const InvalidHandle = ^Handle(0)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 // StringToUTF16 is deprecated. Use UTF16FromString instead.
 // If s contains a NUL byte this function panics instead of
@@ -110,6 +118,7 @@ func UTF16PtrFromString(s string) (*uint16, error) {
 
 func Getpagesize() int { return 4096 }
 
+<<<<<<< HEAD
 // NewCallback converts a Go function to a function pointer conforming to the stdcall calling convention.
 // This is useful when interoperating with Windows code requiring callbacks.
 func NewCallback(fn interface{}) uintptr {
@@ -121,6 +130,14 @@ func NewCallback(fn interface{}) uintptr {
 func NewCallbackCDecl(fn interface{}) uintptr {
 	return syscall.NewCallbackCDecl(fn)
 }
+=======
+// Converts a Go function to a function pointer conforming
+// to the stdcall or cdecl calling convention.  This is useful when
+// interoperating with Windows code requiring callbacks.
+// Implemented in runtime/syscall_windows.goc
+func NewCallback(fn interface{}) uintptr
+func NewCallbackCDecl(fn interface{}) uintptr
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 // windows api calls
 
@@ -220,8 +237,11 @@ func NewCallbackCDecl(fn interface{}) uintptr {
 //sys	RegQueryValueEx(key Handle, name *uint16, reserved *uint32, valtype *uint32, buf *byte, buflen *uint32) (regerrno error) = advapi32.RegQueryValueExW
 //sys	getCurrentProcessId() (pid uint32) = kernel32.GetCurrentProcessId
 //sys	GetConsoleMode(console Handle, mode *uint32) (err error) = kernel32.GetConsoleMode
+<<<<<<< HEAD
 //sys	SetConsoleMode(console Handle, mode uint32) (err error) = kernel32.SetConsoleMode
 //sys	GetConsoleScreenBufferInfo(console Handle, info *ConsoleScreenBufferInfo) (err error) = kernel32.GetConsoleScreenBufferInfo
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	WriteConsole(console Handle, buf *uint16, towrite uint32, written *uint32, reserved *byte) (err error) = kernel32.WriteConsoleW
 //sys	ReadConsole(console Handle, buf *uint16, toread uint32, read *uint32, inputControl *byte) (err error) = kernel32.ReadConsoleW
 //sys	CreateToolhelp32Snapshot(flags uint32, processId uint32) (handle Handle, err error) [failretval==InvalidHandle] = kernel32.CreateToolhelp32Snapshot
@@ -232,6 +252,7 @@ func NewCallbackCDecl(fn interface{}) uintptr {
 //sys	CreateSymbolicLink(symlinkfilename *uint16, targetfilename *uint16, flags uint32) (err error) [failretval&0xff==0] = CreateSymbolicLinkW
 //sys	CreateHardLink(filename *uint16, existingfilename *uint16, reserved uintptr) (err error) [failretval&0xff==0] = CreateHardLinkW
 //sys	GetCurrentThreadId() (id uint32)
+<<<<<<< HEAD
 //sys	CreateEvent(eventAttrs *SecurityAttributes, manualReset uint32, initialState uint32, name *uint16) (handle Handle, err error) = kernel32.CreateEventW
 //sys	CreateEventEx(eventAttrs *SecurityAttributes, name *uint16, flags uint32, desiredAccess uint32) (handle Handle, err error) = kernel32.CreateEventExW
 //sys	OpenEvent(desiredAccess uint32, inheritHandle bool, name *uint16) (handle Handle, err error) = kernel32.OpenEventW
@@ -277,6 +298,13 @@ func GetProcAddressByOrdinal(module Handle, ordinal uintptr) (proc uintptr, err 
 	return
 }
 
+=======
+//sys	CreateEvent(eventAttrs *syscall.SecurityAttributes, manualReset uint32, initialState uint32, name *uint16) (handle Handle, err error) = kernel32.CreateEventW
+//sys	SetEvent(event Handle) (err error) = kernel32.SetEvent
+
+// syscall interface implementation for other packages
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func Exit(code int) { ExitProcess(uint32(code)) }
 
 func makeInheritSa() *SecurityAttributes {
@@ -856,6 +884,7 @@ func ConnectEx(fd Handle, sa Sockaddr, sendBuf *byte, sendDataLen uint32, bytesS
 	return connectEx(fd, ptr, n, sendBuf, sendDataLen, bytesSent, overlapped)
 }
 
+<<<<<<< HEAD
 var sendRecvMsgFunc struct {
 	once     sync.Once
 	sendAddr uintptr
@@ -925,6 +954,8 @@ func WSARecvMsg(fd Handle, msg *WSAMsg, bytesReceived *uint32, overlapped *Overl
 	return err
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Invented structures to support what package os expects.
 type Rusage struct {
 	CreationTime Filetime

@@ -14,7 +14,10 @@ package unix
 
 import "unsafe"
 
+<<<<<<< HEAD
 // SockaddrDatalink implements the Sockaddr interface for AF_LINK type sockets.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrDatalink struct {
 	Len    uint8
 	Family uint8
@@ -33,7 +36,11 @@ func nametomib(name string) (mib []_C_int, err error) {
 
 	// NOTE(rsc): It seems strange to set the buffer to have
 	// size CTL_MAXNAME+2 but use only CTL_MAXNAME
+<<<<<<< HEAD
 	// as the size. I don't know why the +2 is here, but the
+=======
+	// as the size.  I don't know why the +2 is here, but the
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// kernel uses +2 for its own implementation of this function.
 	// I am scared that if we don't include the +2 here, the kernel
 	// will silently write 2 words farther than we specify
@@ -55,6 +62,21 @@ func nametomib(name string) (mib []_C_int, err error) {
 	return buf[0 : n/siz], nil
 }
 
+<<<<<<< HEAD
+=======
+func direntIno(buf []byte) (uint64, bool) {
+	return readInt(buf, unsafe.Offsetof(Dirent{}.Fileno), unsafe.Sizeof(Dirent{}.Fileno))
+}
+
+func direntReclen(buf []byte) (uint64, bool) {
+	return readInt(buf, unsafe.Offsetof(Dirent{}.Reclen), unsafe.Sizeof(Dirent{}.Reclen))
+}
+
+func direntNamlen(buf []byte) (uint64, bool) {
+	return readInt(buf, unsafe.Offsetof(Dirent{}.Namlen), unsafe.Sizeof(Dirent{}.Namlen))
+}
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sysnb pipe() (r int, w int, err error)
 
 func Pipe(p []int) (err error) {
@@ -94,6 +116,7 @@ func Accept4(fd, flags int) (nfd int, sa Sockaddr, err error) {
 	return
 }
 
+<<<<<<< HEAD
 const ImplementsGetwd = true
 
 //sys	Getcwd(buf []byte) (n int, err error) = SYS___GETCWD
@@ -111,6 +134,8 @@ func Getwd() (string, error) {
 	return string(buf[:n]), nil
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func Getfsstat(buf []Statfs_t, flags int) (n int, err error) {
 	var _p0 unsafe.Pointer
 	var bufsize uintptr
@@ -126,11 +151,14 @@ func Getfsstat(buf []Statfs_t, flags int) (n int, err error) {
 	return
 }
 
+<<<<<<< HEAD
 func setattrlistTimes(path string, times []Timespec, flags int) error {
 	// used on Darwin for UtimesNano
 	return ENOSYS
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Derive extattr namespace and attribute name
 
 func xattrnamespace(fullattr string) (ns int, attr string, err error) {
@@ -282,6 +310,10 @@ func Listxattr(file string, dest []byte) (sz int, err error) {
 
 	// FreeBSD won't allow you to list xattrs from multiple namespaces
 	s := 0
+<<<<<<< HEAD
+=======
+	var e error
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	for _, nsid := range [...]int{EXTATTR_NAMESPACE_USER, EXTATTR_NAMESPACE_SYSTEM} {
 		stmp, e := ExtattrListFile(file, nsid, uintptr(d), destsiz)
 
@@ -293,6 +325,10 @@ func Listxattr(file string, dest []byte) (sz int, err error) {
 		 * we don't have read permissions on, so don't ignore those errors
 		 */
 		if e != nil && e == EPERM && nsid != EXTATTR_NAMESPACE_USER {
+<<<<<<< HEAD
+=======
+			e = nil
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			continue
 		} else if e != nil {
 			return s, e
@@ -306,7 +342,11 @@ func Listxattr(file string, dest []byte) (sz int, err error) {
 		d = initxattrdest(dest, s)
 	}
 
+<<<<<<< HEAD
 	return s, nil
+=======
+	return s, e
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func Flistxattr(fd int, dest []byte) (sz int, err error) {
@@ -314,9 +354,17 @@ func Flistxattr(fd int, dest []byte) (sz int, err error) {
 	destsiz := len(dest)
 
 	s := 0
+<<<<<<< HEAD
 	for _, nsid := range [...]int{EXTATTR_NAMESPACE_USER, EXTATTR_NAMESPACE_SYSTEM} {
 		stmp, e := ExtattrListFd(fd, nsid, uintptr(d), destsiz)
 		if e != nil && e == EPERM && nsid != EXTATTR_NAMESPACE_USER {
+=======
+	var e error
+	for _, nsid := range [...]int{EXTATTR_NAMESPACE_USER, EXTATTR_NAMESPACE_SYSTEM} {
+		stmp, e := ExtattrListFd(fd, nsid, uintptr(d), destsiz)
+		if e != nil && e == EPERM && nsid != EXTATTR_NAMESPACE_USER {
+			e = nil
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			continue
 		} else if e != nil {
 			return s, e
@@ -330,7 +378,11 @@ func Flistxattr(fd int, dest []byte) (sz int, err error) {
 		d = initxattrdest(dest, s)
 	}
 
+<<<<<<< HEAD
 	return s, nil
+=======
+	return s, e
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func Llistxattr(link string, dest []byte) (sz int, err error) {
@@ -338,9 +390,17 @@ func Llistxattr(link string, dest []byte) (sz int, err error) {
 	destsiz := len(dest)
 
 	s := 0
+<<<<<<< HEAD
 	for _, nsid := range [...]int{EXTATTR_NAMESPACE_USER, EXTATTR_NAMESPACE_SYSTEM} {
 		stmp, e := ExtattrListLink(link, nsid, uintptr(d), destsiz)
 		if e != nil && e == EPERM && nsid != EXTATTR_NAMESPACE_USER {
+=======
+	var e error
+	for _, nsid := range [...]int{EXTATTR_NAMESPACE_USER, EXTATTR_NAMESPACE_SYSTEM} {
+		stmp, e := ExtattrListLink(link, nsid, uintptr(d), destsiz)
+		if e != nil && e == EPERM && nsid != EXTATTR_NAMESPACE_USER {
+			e = nil
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			continue
 		} else if e != nil {
 			return s, e
@@ -354,6 +414,7 @@ func Llistxattr(link string, dest []byte) (sz int, err error) {
 		d = initxattrdest(dest, s)
 	}
 
+<<<<<<< HEAD
 	return s, nil
 }
 
@@ -440,6 +501,9 @@ func Uname(uname *Utsname) error {
 	}
 
 	return nil
+=======
+	return s, e
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 /*
@@ -472,6 +536,7 @@ func Uname(uname *Utsname) error {
 //sys	ExtattrDeleteLink(link string, attrnamespace int, attrname string) (err error)
 //sys	ExtattrListLink(link string, attrnamespace int, data uintptr, nbytes int) (ret int, err error)
 //sys	Fadvise(fd int, offset int64, length int64, advice int) (err error) = SYS_POSIX_FADVISE
+<<<<<<< HEAD
 //sys	Faccessat(dirfd int, path string, mode uint32, flags int) (err error)
 //sys	Fchdir(fd int) (err error)
 //sys	Fchflags(fd int, flags int) (err error)
@@ -487,6 +552,18 @@ func Uname(uname *Utsname) error {
 //sys	Fsync(fd int) (err error)
 //sys	Ftruncate(fd int, length int64) (err error)
 //sys	Getdents(fd int, buf []byte) (n int, err error)
+=======
+//sys	Fchdir(fd int) (err error)
+//sys	Fchflags(fd int, flags int) (err error)
+//sys	Fchmod(fd int, mode uint32) (err error)
+//sys	Fchown(fd int, uid int, gid int) (err error)
+//sys	Flock(fd int, how int) (err error)
+//sys	Fpathconf(fd int, name int) (val int, err error)
+//sys	Fstat(fd int, stat *Stat_t) (err error)
+//sys	Fstatfs(fd int, stat *Statfs_t) (err error)
+//sys	Fsync(fd int) (err error)
+//sys	Ftruncate(fd int, length int64) (err error)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Getdirentries(fd int, buf []byte, basep *uintptr) (n int, err error)
 //sys	Getdtablesize() (size int)
 //sysnb	Getegid() (egid int)
@@ -507,6 +584,7 @@ func Uname(uname *Utsname) error {
 //sys	Kqueue() (fd int, err error)
 //sys	Lchown(path string, uid int, gid int) (err error)
 //sys	Link(path string, link string) (err error)
+<<<<<<< HEAD
 //sys	Linkat(pathfd int, path string, linkfd int, link string, flags int) (err error)
 //sys	Listen(s int, backlog int) (err error)
 //sys	Lstat(path string, stat *Stat_t) (err error)
@@ -514,6 +592,18 @@ func Uname(uname *Utsname) error {
 //sys	Mkdirat(dirfd int, path string, mode uint32) (err error)
 //sys	Mkfifo(path string, mode uint32) (err error)
 //sys	Mknod(path string, mode uint32, dev int) (err error)
+=======
+//sys	Listen(s int, backlog int) (err error)
+//sys	Lstat(path string, stat *Stat_t) (err error)
+//sys	Mkdir(path string, mode uint32) (err error)
+//sys	Mkfifo(path string, mode uint32) (err error)
+//sys	Mknod(path string, mode uint32, dev int) (err error)
+//sys	Mlock(b []byte) (err error)
+//sys	Mlockall(flags int) (err error)
+//sys	Mprotect(b []byte, prot int) (err error)
+//sys	Munlock(b []byte) (err error)
+//sys	Munlockall() (err error)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Nanosleep(time *Timespec, leftover *Timespec) (err error)
 //sys	Open(path string, mode int, perm uint32) (fd int, err error)
 //sys	Openat(fdat int, path string, mode int, perm uint32) (fd int, err error)
@@ -522,9 +612,13 @@ func Uname(uname *Utsname) error {
 //sys	Pwrite(fd int, p []byte, offset int64) (n int, err error)
 //sys	read(fd int, p []byte) (n int, err error)
 //sys	Readlink(path string, buf []byte) (n int, err error)
+<<<<<<< HEAD
 //sys	Readlinkat(dirfd int, path string, buf []byte) (n int, err error)
 //sys	Rename(from string, to string) (err error)
 //sys	Renameat(fromfd int, from string, tofd int, to string) (err error)
+=======
+//sys	Rename(from string, to string) (err error)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Revoke(path string) (err error)
 //sys	Rmdir(path string) (err error)
 //sys	Seek(fd int, offset int64, whence int) (newoffset int64, err error) = SYS_LSEEK
@@ -546,13 +640,19 @@ func Uname(uname *Utsname) error {
 //sys	Stat(path string, stat *Stat_t) (err error)
 //sys	Statfs(path string, stat *Statfs_t) (err error)
 //sys	Symlink(path string, link string) (err error)
+<<<<<<< HEAD
 //sys	Symlinkat(oldpath string, newdirfd int, newpath string) (err error)
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Sync() (err error)
 //sys	Truncate(path string, length int64) (err error)
 //sys	Umask(newmask int) (oldmask int)
 //sys	Undelete(path string) (err error)
 //sys	Unlink(path string) (err error)
+<<<<<<< HEAD
 //sys	Unlinkat(dirfd int, path string, flags int) (err error)
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Unmount(path string, flags int) (err error)
 //sys	write(fd int, p []byte) (n int, err error)
 //sys   mmap(addr uintptr, length uintptr, prot int, flag int, fd int, pos int64) (ret uintptr, err error)
@@ -560,7 +660,10 @@ func Uname(uname *Utsname) error {
 //sys	readlen(fd int, buf *byte, nbuf int) (n int, err error) = SYS_READ
 //sys	writelen(fd int, buf *byte, nbuf int) (n int, err error) = SYS_WRITE
 //sys	accept4(fd int, rsa *RawSockaddrAny, addrlen *_Socklen, flags int) (nfd int, err error)
+<<<<<<< HEAD
 //sys	utimensat(dirfd int, path string, times *[2]Timespec, flags int) (err error)
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 /*
  * Unimplemented
@@ -594,6 +697,12 @@ func Uname(uname *Utsname) error {
 // Add_profil
 // Kdebug_trace
 // Sigreturn
+<<<<<<< HEAD
+=======
+// Mmap
+// Mlock
+// Munlock
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Atsocket
 // Kqueue_from_portset_np
 // Kqueue_portset
@@ -603,6 +712,10 @@ func Uname(uname *Utsname) error {
 // Searchfs
 // Delete
 // Copyfile
+<<<<<<< HEAD
+=======
+// Poll
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Watchevent
 // Waitevent
 // Modwatch
@@ -685,6 +798,11 @@ func Uname(uname *Utsname) error {
 // Lio_listio
 // __pthread_cond_wait
 // Iopolicysys
+<<<<<<< HEAD
+=======
+// Mlockall
+// Munlockall
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // __pthread_kill
 // __pthread_sigmask
 // __sigwait
@@ -737,6 +855,10 @@ func Uname(uname *Utsname) error {
 // Sendmsg_nocancel
 // Recvfrom_nocancel
 // Accept_nocancel
+<<<<<<< HEAD
+=======
+// Msync_nocancel
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Fcntl_nocancel
 // Select_nocancel
 // Fsync_nocancel

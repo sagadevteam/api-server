@@ -664,8 +664,11 @@ const (
 	MS_OLDSYNC                    = 0x0
 	MS_SYNC                       = 0x4
 	M_FLUSH                       = 0x86
+<<<<<<< HEAD
 	NAME_MAX                      = 0xff
 	NEWDEV                        = 0x1
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	NL0                           = 0x0
 	NL1                           = 0x100
 	NLDLY                         = 0x100
@@ -674,9 +677,12 @@ const (
 	OFDEL                         = 0x80
 	OFILL                         = 0x40
 	OLCUC                         = 0x2
+<<<<<<< HEAD
 	OLDDEV                        = 0x0
 	ONBITSMAJOR                   = 0x7
 	ONBITSMINOR                   = 0x8
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	ONLCR                         = 0x4
 	ONLRET                        = 0x20
 	ONOCR                         = 0x10
@@ -1110,7 +1116,10 @@ const (
 	VEOL                          = 0x5
 	VEOL2                         = 0x6
 	VERASE                        = 0x2
+<<<<<<< HEAD
 	VERASE2                       = 0x11
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	VINTR                         = 0x0
 	VKILL                         = 0x3
 	VLNEXT                        = 0xf

@@ -49,6 +49,7 @@ const (
 	AF_UNSPEC                         = 0x0
 	AF_UTUN                           = 0x26
 	ALTWERASE                         = 0x200
+<<<<<<< HEAD
 	ATTR_BIT_MAP_COUNT                = 0x5
 	ATTR_CMN_ACCESSMASK               = 0x20000
 	ATTR_CMN_ACCTIME                  = 0x1000
@@ -129,6 +130,8 @@ const (
 	ATTR_VOL_SPACEFREE                = 0x8
 	ATTR_VOL_UUID                     = 0x40000
 	ATTR_VOL_VALIDMASK                = 0xf007ffff
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	B0                                = 0x0
 	B110                              = 0x6e
 	B115200                           = 0x1c200
@@ -249,8 +252,11 @@ const (
 	CSTOP                             = 0x13
 	CSTOPB                            = 0x400
 	CSUSP                             = 0x1a
+<<<<<<< HEAD
 	CTL_HW                            = 0x6
 	CTL_KERN                          = 0x1
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	CTL_MAXNAME                       = 0xc
 	CTL_NET                           = 0x4
 	DLT_A429                          = 0xb8
@@ -472,11 +478,14 @@ const (
 	FF1                               = 0x4000
 	FFDLY                             = 0x4000
 	FLUSHO                            = 0x800000
+<<<<<<< HEAD
 	FSOPT_ATTR_CMN_EXTENDED           = 0x20
 	FSOPT_NOFOLLOW                    = 0x1
 	FSOPT_NOINMEMUPDATE               = 0x2
 	FSOPT_PACK_INVAL_ATTRS            = 0x8
 	FSOPT_REPORT_FULLSIZE             = 0x4
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	F_ADDFILESIGS                     = 0x3d
 	F_ADDFILESIGS_FOR_DYLD_SIM        = 0x53
 	F_ADDFILESIGS_RETURN              = 0x61
@@ -512,7 +521,10 @@ const (
 	F_PATHPKG_CHECK                   = 0x34
 	F_PEOFPOSMODE                     = 0x3
 	F_PREALLOCATE                     = 0x2a
+<<<<<<< HEAD
 	F_PUNCHHOLE                       = 0x63
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	F_RDADVISE                        = 0x2c
 	F_RDAHEAD                         = 0x2d
 	F_RDLCK                           = 0x1
@@ -529,12 +541,18 @@ const (
 	F_SINGLE_WRITER                   = 0x4c
 	F_THAW_FS                         = 0x36
 	F_TRANSCODEKEY                    = 0x4b
+<<<<<<< HEAD
 	F_TRIM_ACTIVE_FILE                = 0x64
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	F_UNLCK                           = 0x2
 	F_VOLPOSMODE                      = 0x4
 	F_WRLCK                           = 0x3
 	HUPCL                             = 0x4000
+<<<<<<< HEAD
 	HW_MACHINE                        = 0x1
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	ICANON                            = 0x100
 	ICMP6_FILTER                      = 0x12
 	ICRNL                             = 0x100
@@ -771,7 +789,10 @@ const (
 	IPV6_FAITH                        = 0x1d
 	IPV6_FLOWINFO_MASK                = 0xffffff0f
 	IPV6_FLOWLABEL_MASK               = 0xffff0f00
+<<<<<<< HEAD
 	IPV6_FLOW_ECN_MASK                = 0x300
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	IPV6_FRAGTTL                      = 0x3c
 	IPV6_FW_ADD                       = 0x1e
 	IPV6_FW_DEL                       = 0x1f
@@ -862,7 +883,10 @@ const (
 	IP_RECVOPTS                       = 0x5
 	IP_RECVPKTINFO                    = 0x1a
 	IP_RECVRETOPTS                    = 0x6
+<<<<<<< HEAD
 	IP_RECVTOS                        = 0x1b
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	IP_RECVTTL                        = 0x18
 	IP_RETOPTS                        = 0x8
 	IP_RF                             = 0x8000
@@ -881,10 +905,13 @@ const (
 	IXANY                             = 0x800
 	IXOFF                             = 0x400
 	IXON                              = 0x200
+<<<<<<< HEAD
 	KERN_HOSTNAME                     = 0xa
 	KERN_OSRELEASE                    = 0x2
 	KERN_OSTYPE                       = 0x1
 	KERN_VERSION                      = 0x4
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	LOCK_EX                           = 0x2
 	LOCK_NB                           = 0x4
 	LOCK_SH                           = 0x1
@@ -918,6 +945,7 @@ const (
 	MAP_SHARED                        = 0x1
 	MCL_CURRENT                       = 0x1
 	MCL_FUTURE                        = 0x2
+<<<<<<< HEAD
 	MNT_ASYNC                         = 0x40
 	MNT_AUTOMOUNTED                   = 0x400000
 	MNT_CMDFLAGS                      = 0xf0000
@@ -950,6 +978,8 @@ const (
 	MNT_UPDATE                        = 0x10000
 	MNT_VISFLAGMASK                   = 0x17f0f5ff
 	MNT_WAIT                          = 0x1
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	MSG_CTRUNC                        = 0x20
 	MSG_DONTROUTE                     = 0x4
 	MSG_DONTWAIT                      = 0x80

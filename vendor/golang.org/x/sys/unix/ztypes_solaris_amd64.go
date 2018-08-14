@@ -93,6 +93,7 @@ const (
 )
 
 type Stat_t struct {
+<<<<<<< HEAD
 	Dev     uint64
 	Ino     uint64
 	Mode    uint32
@@ -127,6 +128,42 @@ type Dirent struct {
 	Reclen uint16
 	Name   [1]int8
 	_      [5]byte
+=======
+	Dev       uint64
+	Ino       uint64
+	Mode      uint32
+	Nlink     uint32
+	Uid       uint32
+	Gid       uint32
+	Rdev      uint64
+	Size      int64
+	Atim      Timespec
+	Mtim      Timespec
+	Ctim      Timespec
+	Blksize   int32
+	Pad_cgo_0 [4]byte
+	Blocks    int64
+	Fstype    [16]int8
+}
+
+type Flock_t struct {
+	Type      int16
+	Whence    int16
+	Pad_cgo_0 [4]byte
+	Start     int64
+	Len       int64
+	Sysid     int32
+	Pid       int32
+	Pad       [4]int64
+}
+
+type Dirent struct {
+	Ino       uint64
+	Off       int64
+	Reclen    uint16
+	Name      [1]int8
+	Pad_cgo_0 [5]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type _Fsblkcnt_t uint64
@@ -213,6 +250,7 @@ type IPv6Mreq struct {
 type Msghdr struct {
 	Name         *byte
 	Namelen      uint32
+<<<<<<< HEAD
 	_            [4]byte
 	Iov          *Iovec
 	Iovlen       int32
@@ -220,6 +258,15 @@ type Msghdr struct {
 	Accrights    *int8
 	Accrightslen int32
 	_            [4]byte
+=======
+	Pad_cgo_0    [4]byte
+	Iov          *Iovec
+	Iovlen       int32
+	Pad_cgo_1    [4]byte
+	Accrights    *int8
+	Accrightslen int32
+	Pad_cgo_2    [4]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type Cmsghdr struct {
@@ -263,6 +310,7 @@ type FdSet struct {
 }
 
 type Utsname struct {
+<<<<<<< HEAD
 	Sysname  [257]byte
 	Nodename [257]byte
 	Release  [257]byte
@@ -276,6 +324,21 @@ type Ustat_t struct {
 	Fname  [6]int8
 	Fpack  [6]int8
 	_      [4]byte
+=======
+	Sysname  [257]int8
+	Nodename [257]int8
+	Release  [257]int8
+	Version  [257]int8
+	Machine  [257]int8
+}
+
+type Ustat_t struct {
+	Tfree     int64
+	Tinode    uint64
+	Fname     [6]int8
+	Fpack     [6]int8
+	Pad_cgo_0 [4]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 const (
@@ -295,6 +358,7 @@ const (
 )
 
 type IfMsghdr struct {
+<<<<<<< HEAD
 	Msglen  uint16
 	Version uint8
 	Type    uint8
@@ -303,13 +367,27 @@ type IfMsghdr struct {
 	Index   uint16
 	_       [2]byte
 	Data    IfData
+=======
+	Msglen    uint16
+	Version   uint8
+	Type      uint8
+	Addrs     int32
+	Flags     int32
+	Index     uint16
+	Pad_cgo_0 [2]byte
+	Data      IfData
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type IfData struct {
 	Type       uint8
 	Addrlen    uint8
 	Hdrlen     uint8
+<<<<<<< HEAD
 	_          [1]byte
+=======
+	Pad_cgo_0  [1]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	Mtu        uint32
 	Metric     uint32
 	Baudrate   uint32
@@ -328,6 +406,7 @@ type IfData struct {
 }
 
 type IfaMsghdr struct {
+<<<<<<< HEAD
 	Msglen  uint16
 	Version uint8
 	Type    uint8
@@ -352,6 +431,32 @@ type RtMsghdr struct {
 	Use     int32
 	Inits   uint32
 	Rmx     RtMetrics
+=======
+	Msglen    uint16
+	Version   uint8
+	Type      uint8
+	Addrs     int32
+	Flags     int32
+	Index     uint16
+	Pad_cgo_0 [2]byte
+	Metric    int32
+}
+
+type RtMsghdr struct {
+	Msglen    uint16
+	Version   uint8
+	Type      uint8
+	Index     uint16
+	Pad_cgo_0 [2]byte
+	Flags     int32
+	Addrs     int32
+	Pid       int32
+	Seq       int32
+	Errno     int32
+	Use       int32
+	Inits     uint32
+	Rmx       RtMetrics
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type RtMetrics struct {
@@ -388,9 +493,15 @@ type BpfStat struct {
 }
 
 type BpfProgram struct {
+<<<<<<< HEAD
 	Len   uint32
 	_     [4]byte
 	Insns *BpfInsn
+=======
+	Len       uint32
+	Pad_cgo_0 [4]byte
+	Insns     *BpfInsn
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type BpfInsn struct {
@@ -406,6 +517,7 @@ type BpfTimeval struct {
 }
 
 type BpfHdr struct {
+<<<<<<< HEAD
 	Tstamp  BpfTimeval
 	Caplen  uint32
 	Datalen uint32
@@ -430,6 +542,34 @@ type Termio struct {
 	Line  int8
 	Cc    [8]uint8
 	_     [1]byte
+=======
+	Tstamp    BpfTimeval
+	Caplen    uint32
+	Datalen   uint32
+	Hdrlen    uint16
+	Pad_cgo_0 [2]byte
+}
+
+const _SC_PAGESIZE = 0xb
+
+type Termios struct {
+	Iflag     uint32
+	Oflag     uint32
+	Cflag     uint32
+	Lflag     uint32
+	Cc        [19]uint8
+	Pad_cgo_0 [1]byte
+}
+
+type Termio struct {
+	Iflag     uint16
+	Oflag     uint16
+	Cflag     uint16
+	Lflag     uint16
+	Line      int8
+	Cc        [8]uint8
+	Pad_cgo_0 [1]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type Winsize struct {
@@ -438,6 +578,7 @@ type Winsize struct {
 	Xpixel uint16
 	Ypixel uint16
 }
+<<<<<<< HEAD
 
 type PollFd struct {
 	Fd      int32
@@ -457,3 +598,5 @@ const (
 	POLLWRBAND = 0x100
 	POLLWRNORM = 0x4
 )
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

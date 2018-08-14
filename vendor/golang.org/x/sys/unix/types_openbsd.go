@@ -17,7 +17,10 @@ package unix
 #define KERNEL
 #include <dirent.h>
 #include <fcntl.h>
+<<<<<<< HEAD
 #include <poll.h>
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <signal.h>
 #include <termios.h>
 #include <stdio.h>
@@ -36,7 +39,10 @@ package unix
 #include <sys/time.h>
 #include <sys/uio.h>
 #include <sys/un.h>
+<<<<<<< HEAD
 #include <sys/utsname.h>
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <sys/wait.h>
 #include <net/bpf.h>
 #include <net/if.h>
@@ -128,12 +134,15 @@ type Dirent C.struct_dirent
 
 type Fsid C.fsid_t
 
+<<<<<<< HEAD
 // File system limits
 
 const (
 	PathMax = C.PATH_MAX
 )
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Sockets
 
 type RawSockaddrInet4 C.struct_sockaddr_in
@@ -250,6 +259,7 @@ type BpfTimeval C.struct_bpf_timeval
 // Terminal handling
 
 type Termios C.struct_termios
+<<<<<<< HEAD
 
 type Winsize C.struct_winsize
 
@@ -280,3 +290,5 @@ const (
 // Uname
 
 type Utsname C.struct_utsname
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

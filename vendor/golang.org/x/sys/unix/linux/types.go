@@ -24,7 +24,10 @@ package unix
 #include <netinet/tcp.h>
 #include <netpacket/packet.h>
 #include <poll.h>
+<<<<<<< HEAD
 #include <sched.h>
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <signal.h>
 #include <stdio.h>
 #include <sys/epoll.h>
@@ -47,12 +50,19 @@ package unix
 #include <sys/utsname.h>
 #include <sys/wait.h>
 #include <linux/filter.h>
+<<<<<<< HEAD
 #include <linux/icmpv6.h>
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <linux/keyctl.h>
 #include <linux/netlink.h>
 #include <linux/perf_event.h>
 #include <linux/rtnetlink.h>
+<<<<<<< HEAD
 #include <linux/stat.h>
+=======
+#include <linux/icmpv6.h>
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 #include <asm/termbits.h>
 #include <asm/ptrace.h>
 #include <time.h>
@@ -64,9 +74,12 @@ package unix
 #include <linux/fs.h>
 #include <linux/vm_sockets.h>
 #include <linux/random.h>
+<<<<<<< HEAD
 #include <linux/taskstats.h>
 #include <linux/cgroupstats.h>
 #include <linux/genetlink.h>
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 // On mips64, the glibc stat and kernel stat do not agree
 #if (defined(__mips__) && _MIPS_SIM == _MIPS_SIM_ABI64)
@@ -117,6 +130,7 @@ struct stat {
 
 #endif
 
+<<<<<<< HEAD
 // These are defined in linux/fcntl.h, but including it globally causes
 // conflicts with fcntl.h
 #ifndef AT_STATX_SYNC_TYPE
@@ -131,6 +145,15 @@ struct stat {
 #ifndef AT_STATX_DONT_SYNC
 # define AT_STATX_DONT_SYNC	0x4000	// - Don't sync attributes with the server
 #endif
+=======
+// Certain constants and structs are missing from the fs/crypto UAPI
+#define FS_MAX_KEY_SIZE                 64
+struct fscrypt_key {
+  __u32 mode;
+  __u8 raw[FS_MAX_KEY_SIZE];
+  __u32 size;
+};
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 #ifdef TCSETS2
 // On systems that have "struct termios2" use this as type Termios.
@@ -162,6 +185,7 @@ struct sockaddr_hci {
         sa_family_t     hci_family;
         unsigned short  hci_dev;
         unsigned short  hci_channel;
+<<<<<<< HEAD
 };
 
 // copied from /usr/include/bluetooth/bluetooth.h
@@ -177,6 +201,9 @@ struct sockaddr_l2 {
 	unsigned short	l2_cid;
 	uint8_t		l2_bdaddr_type;
 };
+=======
+};;
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 // copied from /usr/include/linux/un.h
 struct my_sockaddr_un {
@@ -279,10 +306,13 @@ type Stat_t C.struct_stat
 
 type Statfs_t C.struct_statfs
 
+<<<<<<< HEAD
 type StatxTimestamp C.struct_statx_timestamp
 
 type Statx_t C.struct_statx
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type Dirent C.struct_dirent
 
 type Fsid C.fsid_t
@@ -324,8 +354,11 @@ type RawSockaddrNetlink C.struct_sockaddr_nl
 
 type RawSockaddrHCI C.struct_sockaddr_hci
 
+<<<<<<< HEAD
 type RawSockaddrL2 C.struct_sockaddr_l2
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type RawSockaddrCAN C.struct_sockaddr_can
 
 type RawSockaddrALG C.struct_sockaddr_alg
@@ -348,8 +381,11 @@ type IPMreqn C.struct_ip_mreqn
 
 type IPv6Mreq C.struct_ipv6_mreq
 
+<<<<<<< HEAD
 type PacketMreq C.struct_packet_mreq
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type Msghdr C.struct_msghdr
 
 type Cmsghdr C.struct_cmsghdr
@@ -374,16 +410,25 @@ const (
 	SizeofSockaddrLinklayer = C.sizeof_struct_sockaddr_ll
 	SizeofSockaddrNetlink   = C.sizeof_struct_sockaddr_nl
 	SizeofSockaddrHCI       = C.sizeof_struct_sockaddr_hci
+<<<<<<< HEAD
 	SizeofSockaddrL2        = C.sizeof_struct_sockaddr_l2
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	SizeofSockaddrCAN       = C.sizeof_struct_sockaddr_can
 	SizeofSockaddrALG       = C.sizeof_struct_sockaddr_alg
 	SizeofSockaddrVM        = C.sizeof_struct_sockaddr_vm
 	SizeofLinger            = C.sizeof_struct_linger
+<<<<<<< HEAD
 	SizeofIovec             = C.sizeof_struct_iovec
 	SizeofIPMreq            = C.sizeof_struct_ip_mreq
 	SizeofIPMreqn           = C.sizeof_struct_ip_mreqn
 	SizeofIPv6Mreq          = C.sizeof_struct_ipv6_mreq
 	SizeofPacketMreq        = C.sizeof_struct_packet_mreq
+=======
+	SizeofIPMreq            = C.sizeof_struct_ip_mreq
+	SizeofIPMreqn           = C.sizeof_struct_ip_mreqn
+	SizeofIPv6Mreq          = C.sizeof_struct_ipv6_mreq
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	SizeofMsghdr            = C.sizeof_struct_msghdr
 	SizeofCmsghdr           = C.sizeof_struct_cmsghdr
 	SizeofInet4Pktinfo      = C.sizeof_struct_in_pktinfo
@@ -397,6 +442,7 @@ const (
 // Netlink routing and interface messages
 
 const (
+<<<<<<< HEAD
 	IFA_UNSPEC           = C.IFA_UNSPEC
 	IFA_ADDRESS          = C.IFA_ADDRESS
 	IFA_LOCAL            = C.IFA_LOCAL
@@ -514,6 +560,99 @@ const (
 	SizeofIfAddrmsg      = C.sizeof_struct_ifaddrmsg
 	SizeofRtMsg          = C.sizeof_struct_rtmsg
 	SizeofRtNexthop      = C.sizeof_struct_rtnexthop
+=======
+	IFA_UNSPEC          = C.IFA_UNSPEC
+	IFA_ADDRESS         = C.IFA_ADDRESS
+	IFA_LOCAL           = C.IFA_LOCAL
+	IFA_LABEL           = C.IFA_LABEL
+	IFA_BROADCAST       = C.IFA_BROADCAST
+	IFA_ANYCAST         = C.IFA_ANYCAST
+	IFA_CACHEINFO       = C.IFA_CACHEINFO
+	IFA_MULTICAST       = C.IFA_MULTICAST
+	IFLA_UNSPEC         = C.IFLA_UNSPEC
+	IFLA_ADDRESS        = C.IFLA_ADDRESS
+	IFLA_BROADCAST      = C.IFLA_BROADCAST
+	IFLA_IFNAME         = C.IFLA_IFNAME
+	IFLA_MTU            = C.IFLA_MTU
+	IFLA_LINK           = C.IFLA_LINK
+	IFLA_QDISC          = C.IFLA_QDISC
+	IFLA_STATS          = C.IFLA_STATS
+	IFLA_COST           = C.IFLA_COST
+	IFLA_PRIORITY       = C.IFLA_PRIORITY
+	IFLA_MASTER         = C.IFLA_MASTER
+	IFLA_WIRELESS       = C.IFLA_WIRELESS
+	IFLA_PROTINFO       = C.IFLA_PROTINFO
+	IFLA_TXQLEN         = C.IFLA_TXQLEN
+	IFLA_MAP            = C.IFLA_MAP
+	IFLA_WEIGHT         = C.IFLA_WEIGHT
+	IFLA_OPERSTATE      = C.IFLA_OPERSTATE
+	IFLA_LINKMODE       = C.IFLA_LINKMODE
+	IFLA_LINKINFO       = C.IFLA_LINKINFO
+	IFLA_NET_NS_PID     = C.IFLA_NET_NS_PID
+	IFLA_IFALIAS        = C.IFLA_IFALIAS
+	IFLA_MAX            = C.IFLA_MAX
+	RT_SCOPE_UNIVERSE   = C.RT_SCOPE_UNIVERSE
+	RT_SCOPE_SITE       = C.RT_SCOPE_SITE
+	RT_SCOPE_LINK       = C.RT_SCOPE_LINK
+	RT_SCOPE_HOST       = C.RT_SCOPE_HOST
+	RT_SCOPE_NOWHERE    = C.RT_SCOPE_NOWHERE
+	RT_TABLE_UNSPEC     = C.RT_TABLE_UNSPEC
+	RT_TABLE_COMPAT     = C.RT_TABLE_COMPAT
+	RT_TABLE_DEFAULT    = C.RT_TABLE_DEFAULT
+	RT_TABLE_MAIN       = C.RT_TABLE_MAIN
+	RT_TABLE_LOCAL      = C.RT_TABLE_LOCAL
+	RT_TABLE_MAX        = C.RT_TABLE_MAX
+	RTA_UNSPEC          = C.RTA_UNSPEC
+	RTA_DST             = C.RTA_DST
+	RTA_SRC             = C.RTA_SRC
+	RTA_IIF             = C.RTA_IIF
+	RTA_OIF             = C.RTA_OIF
+	RTA_GATEWAY         = C.RTA_GATEWAY
+	RTA_PRIORITY        = C.RTA_PRIORITY
+	RTA_PREFSRC         = C.RTA_PREFSRC
+	RTA_METRICS         = C.RTA_METRICS
+	RTA_MULTIPATH       = C.RTA_MULTIPATH
+	RTA_FLOW            = C.RTA_FLOW
+	RTA_CACHEINFO       = C.RTA_CACHEINFO
+	RTA_TABLE           = C.RTA_TABLE
+	RTN_UNSPEC          = C.RTN_UNSPEC
+	RTN_UNICAST         = C.RTN_UNICAST
+	RTN_LOCAL           = C.RTN_LOCAL
+	RTN_BROADCAST       = C.RTN_BROADCAST
+	RTN_ANYCAST         = C.RTN_ANYCAST
+	RTN_MULTICAST       = C.RTN_MULTICAST
+	RTN_BLACKHOLE       = C.RTN_BLACKHOLE
+	RTN_UNREACHABLE     = C.RTN_UNREACHABLE
+	RTN_PROHIBIT        = C.RTN_PROHIBIT
+	RTN_THROW           = C.RTN_THROW
+	RTN_NAT             = C.RTN_NAT
+	RTN_XRESOLVE        = C.RTN_XRESOLVE
+	RTNLGRP_NONE        = C.RTNLGRP_NONE
+	RTNLGRP_LINK        = C.RTNLGRP_LINK
+	RTNLGRP_NOTIFY      = C.RTNLGRP_NOTIFY
+	RTNLGRP_NEIGH       = C.RTNLGRP_NEIGH
+	RTNLGRP_TC          = C.RTNLGRP_TC
+	RTNLGRP_IPV4_IFADDR = C.RTNLGRP_IPV4_IFADDR
+	RTNLGRP_IPV4_MROUTE = C.RTNLGRP_IPV4_MROUTE
+	RTNLGRP_IPV4_ROUTE  = C.RTNLGRP_IPV4_ROUTE
+	RTNLGRP_IPV4_RULE   = C.RTNLGRP_IPV4_RULE
+	RTNLGRP_IPV6_IFADDR = C.RTNLGRP_IPV6_IFADDR
+	RTNLGRP_IPV6_MROUTE = C.RTNLGRP_IPV6_MROUTE
+	RTNLGRP_IPV6_ROUTE  = C.RTNLGRP_IPV6_ROUTE
+	RTNLGRP_IPV6_IFINFO = C.RTNLGRP_IPV6_IFINFO
+	RTNLGRP_IPV6_PREFIX = C.RTNLGRP_IPV6_PREFIX
+	RTNLGRP_IPV6_RULE   = C.RTNLGRP_IPV6_RULE
+	RTNLGRP_ND_USEROPT  = C.RTNLGRP_ND_USEROPT
+	SizeofNlMsghdr      = C.sizeof_struct_nlmsghdr
+	SizeofNlMsgerr      = C.sizeof_struct_nlmsgerr
+	SizeofRtGenmsg      = C.sizeof_struct_rtgenmsg
+	SizeofNlAttr        = C.sizeof_struct_nlattr
+	SizeofRtAttr        = C.sizeof_struct_rtattr
+	SizeofIfInfomsg     = C.sizeof_struct_ifinfomsg
+	SizeofIfAddrmsg     = C.sizeof_struct_ifaddrmsg
+	SizeofRtMsg         = C.sizeof_struct_rtmsg
+	SizeofRtNexthop     = C.sizeof_struct_rtnexthop
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 type NlMsghdr C.struct_nlmsghdr
@@ -576,6 +715,7 @@ type Ustat_t C.struct_ustat
 type EpollEvent C.struct_my_epoll_event
 
 const (
+<<<<<<< HEAD
 	AT_EMPTY_PATH   = C.AT_EMPTY_PATH
 	AT_FDCWD        = C.AT_FDCWD
 	AT_NO_AUTOMOUNT = C.AT_NO_AUTOMOUNT
@@ -585,6 +725,10 @@ const (
 	AT_STATX_FORCE_SYNC   = C.AT_STATX_FORCE_SYNC
 	AT_STATX_DONT_SYNC    = C.AT_STATX_DONT_SYNC
 
+=======
+	AT_FDCWD            = C.AT_FDCWD
+	AT_REMOVEDIR        = C.AT_REMOVEDIR
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	AT_SYMLINK_FOLLOW   = C.AT_SYMLINK_FOLLOW
 	AT_SYMLINK_NOFOLLOW = C.AT_SYMLINK_NOFOLLOW
 )
@@ -607,11 +751,19 @@ const RNDGETENTCNT = C.RNDGETENTCNT
 
 const PERF_IOC_FLAG_GROUP = C.PERF_IOC_FLAG_GROUP
 
+<<<<<<< HEAD
+=======
+// sysconf information
+
+const _SC_PAGESIZE = C._SC_PAGESIZE
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Terminal handling
 
 type Termios C.termios_t
 
 type Winsize C.struct_winsize
+<<<<<<< HEAD
 
 // Taskstats and cgroup stats.
 
@@ -694,3 +846,5 @@ const (
 	BDADDR_LE_PUBLIC = C.BDADDR_LE_PUBLIC
 	BDADDR_LE_RANDOM = C.BDADDR_LE_RANDOM
 )
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

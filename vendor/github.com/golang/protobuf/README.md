@@ -1,7 +1,10 @@
 # Go support for Protocol Buffers
 
 [![Build Status](https://travis-ci.org/golang/protobuf.svg?branch=master)](https://travis-ci.org/golang/protobuf)
+<<<<<<< HEAD
 [![GoDoc](https://godoc.org/github.com/golang/protobuf?status.svg)](https://godoc.org/github.com/golang/protobuf)
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 Google's data interchange format.
 Copyright 2010 The Go Authors.
@@ -112,7 +115,10 @@ When the .proto file specifies `syntax="proto3"`, there are some differences:
 Consider file test.proto, containing
 
 ```proto
+<<<<<<< HEAD
 	syntax = "proto2";
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	package example;
 	
 	enum FOO { X = 17; };

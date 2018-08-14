@@ -161,8 +161,11 @@ var (
 	procRegQueryValueExW                   = modadvapi32.NewProc("RegQueryValueExW")
 	procGetCurrentProcessId                = modkernel32.NewProc("GetCurrentProcessId")
 	procGetConsoleMode                     = modkernel32.NewProc("GetConsoleMode")
+<<<<<<< HEAD
 	procSetConsoleMode                     = modkernel32.NewProc("SetConsoleMode")
 	procGetConsoleScreenBufferInfo         = modkernel32.NewProc("GetConsoleScreenBufferInfo")
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	procWriteConsoleW                      = modkernel32.NewProc("WriteConsoleW")
 	procReadConsoleW                       = modkernel32.NewProc("ReadConsoleW")
 	procCreateToolhelp32Snapshot           = modkernel32.NewProc("CreateToolhelp32Snapshot")
@@ -173,6 +176,7 @@ var (
 	procCreateHardLinkW                    = modkernel32.NewProc("CreateHardLinkW")
 	procGetCurrentThreadId                 = modkernel32.NewProc("GetCurrentThreadId")
 	procCreateEventW                       = modkernel32.NewProc("CreateEventW")
+<<<<<<< HEAD
 	procCreateEventExW                     = modkernel32.NewProc("CreateEventExW")
 	procOpenEventW                         = modkernel32.NewProc("OpenEventW")
 	procSetEvent                           = modkernel32.NewProc("SetEvent")
@@ -197,6 +201,9 @@ var (
 	procQueryDosDeviceW                    = modkernel32.NewProc("QueryDosDeviceW")
 	procSetVolumeLabelW                    = modkernel32.NewProc("SetVolumeLabelW")
 	procSetVolumeMountPointW               = modkernel32.NewProc("SetVolumeMountPointW")
+=======
+	procSetEvent                           = modkernel32.NewProc("SetEvent")
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	procWSAStartup                         = modws2_32.NewProc("WSAStartup")
 	procWSACleanup                         = modws2_32.NewProc("WSACleanup")
 	procWSAIoctl                           = modws2_32.NewProc("WSAIoctl")
@@ -246,7 +253,10 @@ var (
 	procAllocateAndInitializeSid           = modadvapi32.NewProc("AllocateAndInitializeSid")
 	procFreeSid                            = modadvapi32.NewProc("FreeSid")
 	procEqualSid                           = modadvapi32.NewProc("EqualSid")
+<<<<<<< HEAD
 	procCheckTokenMembership               = modadvapi32.NewProc("CheckTokenMembership")
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	procOpenProcessToken                   = modadvapi32.NewProc("OpenProcessToken")
 	procGetTokenInformation                = modadvapi32.NewProc("GetTokenInformation")
 	procGetUserProfileDirectoryW           = moduserenv.NewProc("GetUserProfileDirectoryW")
@@ -1655,6 +1665,7 @@ func GetConsoleMode(console Handle, mode *uint32) (err error) {
 	return
 }
 
+<<<<<<< HEAD
 func SetConsoleMode(console Handle, mode uint32) (err error) {
 	r1, _, e1 := syscall.Syscall(procSetConsoleMode.Addr(), 2, uintptr(console), uintptr(mode), 0)
 	if r1 == 0 {
@@ -1679,6 +1690,8 @@ func GetConsoleScreenBufferInfo(console Handle, info *ConsoleScreenBufferInfo) (
 	return
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func WriteConsole(console Handle, buf *uint16, towrite uint32, written *uint32, reserved *byte) (err error) {
 	r1, _, e1 := syscall.Syscall6(procWriteConsoleW.Addr(), 5, uintptr(console), uintptr(unsafe.Pointer(buf)), uintptr(towrite), uintptr(unsafe.Pointer(written)), uintptr(unsafe.Pointer(reserved)), 0)
 	if r1 == 0 {
@@ -1782,7 +1795,11 @@ func GetCurrentThreadId() (id uint32) {
 	return
 }
 
+<<<<<<< HEAD
 func CreateEvent(eventAttrs *SecurityAttributes, manualReset uint32, initialState uint32, name *uint16) (handle Handle, err error) {
+=======
+func CreateEvent(eventAttrs *syscall.SecurityAttributes, manualReset uint32, initialState uint32, name *uint16) (handle Handle, err error) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	r0, _, e1 := syscall.Syscall6(procCreateEventW.Addr(), 4, uintptr(unsafe.Pointer(eventAttrs)), uintptr(manualReset), uintptr(initialState), uintptr(unsafe.Pointer(name)), 0, 0)
 	handle = Handle(r0)
 	if handle == 0 {
@@ -1795,6 +1812,7 @@ func CreateEvent(eventAttrs *SecurityAttributes, manualReset uint32, initialStat
 	return
 }
 
+<<<<<<< HEAD
 func CreateEventEx(eventAttrs *SecurityAttributes, name *uint16, flags uint32, desiredAccess uint32) (handle Handle, err error) {
 	r0, _, e1 := syscall.Syscall6(procCreateEventExW.Addr(), 4, uintptr(unsafe.Pointer(eventAttrs)), uintptr(unsafe.Pointer(name)), uintptr(flags), uintptr(desiredAccess), 0, 0)
 	handle = Handle(r0)
@@ -1827,6 +1845,8 @@ func OpenEvent(desiredAccess uint32, inheritHandle bool, name *uint16) (handle H
 	return
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func SetEvent(event Handle) (err error) {
 	r1, _, e1 := syscall.Syscall(procSetEvent.Addr(), 1, uintptr(event), 0, 0)
 	if r1 == 0 {
@@ -1839,6 +1859,7 @@ func SetEvent(event Handle) (err error) {
 	return
 }
 
+<<<<<<< HEAD
 func ResetEvent(event Handle) (err error) {
 	r1, _, e1 := syscall.Syscall(procResetEvent.Addr(), 1, uintptr(event), 0, 0)
 	if r1 == 0 {
@@ -2090,6 +2111,8 @@ func SetVolumeMountPoint(volumeMountPoint *uint16, volumeName *uint16) (err erro
 	return
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func WSAStartup(verreq uint32, data *WSAData) (sockerr error) {
 	r0, _, _ := syscall.Syscall(procWSAStartup.Addr(), 2, uintptr(verreq), uintptr(unsafe.Pointer(data)), 0)
 	if r0 != 0 {
@@ -2638,6 +2661,7 @@ func EqualSid(sid1 *SID, sid2 *SID) (isEqual bool) {
 	return
 }
 
+<<<<<<< HEAD
 func checkTokenMembership(tokenHandle Token, sidToCheck *SID, isMember *int32) (err error) {
 	r1, _, e1 := syscall.Syscall(procCheckTokenMembership.Addr(), 3, uintptr(tokenHandle), uintptr(unsafe.Pointer(sidToCheck)), uintptr(unsafe.Pointer(isMember)))
 	if r1 == 0 {
@@ -2650,6 +2674,8 @@ func checkTokenMembership(tokenHandle Token, sidToCheck *SID, isMember *int32) (
 	return
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func OpenProcessToken(h Handle, access uint32, token *Token) (err error) {
 	r1, _, e1 := syscall.Syscall(procOpenProcessToken.Addr(), 3, uintptr(h), uintptr(access), uintptr(unsafe.Pointer(token)))
 	if r1 == 0 {

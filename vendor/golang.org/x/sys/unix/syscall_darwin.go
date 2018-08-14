@@ -36,7 +36,10 @@ func Getwd() (string, error) {
 	return "", ENOTSUP
 }
 
+<<<<<<< HEAD
 // SockaddrDatalink implements the Sockaddr interface for AF_LINK type sockets.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrDatalink struct {
 	Len    uint8
 	Family uint8
@@ -55,7 +58,11 @@ func nametomib(name string) (mib []_C_int, err error) {
 
 	// NOTE(rsc): It seems strange to set the buffer to have
 	// size CTL_MAXNAME+2 but use only CTL_MAXNAME
+<<<<<<< HEAD
 	// as the size. I don't know why the +2 is here, but the
+=======
+	// as the size.  I don't know why the +2 is here, but the
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// kernel uses +2 for its own implementation of this function.
 	// I am scared that if we don't include the +2 here, the kernel
 	// will silently write 2 words farther than we specify
@@ -77,6 +84,21 @@ func nametomib(name string) (mib []_C_int, err error) {
 	return buf[0 : n/siz], nil
 }
 
+<<<<<<< HEAD
+=======
+func direntIno(buf []byte) (uint64, bool) {
+	return readInt(buf, unsafe.Offsetof(Dirent{}.Ino), unsafe.Sizeof(Dirent{}.Ino))
+}
+
+func direntReclen(buf []byte) (uint64, bool) {
+	return readInt(buf, unsafe.Offsetof(Dirent{}.Reclen), unsafe.Sizeof(Dirent{}.Reclen))
+}
+
+func direntNamlen(buf []byte) (uint64, bool) {
+	return readInt(buf, unsafe.Offsetof(Dirent{}.Namlen), unsafe.Sizeof(Dirent{}.Namlen))
+}
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys   ptrace(request int, pid int, addr uintptr, data uintptr) (err error)
 func PtraceAttach(pid int) (err error) { return ptrace(PT_ATTACH, pid, 0, 0) }
 func PtraceDetach(pid int) (err error) { return ptrace(PT_DETACH, pid, 0, 0) }
@@ -176,6 +198,7 @@ func Getfsstat(buf []Statfs_t, flags int) (n int, err error) {
 	return
 }
 
+<<<<<<< HEAD
 func setattrlistTimes(path string, times []Timespec, flags int) error {
 	_p0, err := BytePtrFromString(path)
 	if err != nil {
@@ -212,6 +235,8 @@ func utimensat(dirfd int, path string, times *[2]Timespec, flags int) error {
 	return ENOSYS
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 /*
  * Wrapped
  */
@@ -220,6 +245,7 @@ func utimensat(dirfd int, path string, times *[2]Timespec, flags int) error {
 
 func Kill(pid int, signum syscall.Signal) (err error) { return kill(pid, int(signum), 1) }
 
+<<<<<<< HEAD
 //sys	ioctl(fd int, req uint, arg uintptr) (err error)
 
 // ioctl itself should not be exposed directly, but additional get/set
@@ -305,6 +331,8 @@ func Uname(uname *Utsname) error {
 	return nil
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 /*
  * Exposed directly
  */
@@ -330,7 +358,10 @@ func Uname(uname *Utsname) error {
 //sys	Flock(fd int, how int) (err error)
 //sys	Fpathconf(fd int, name int) (val int, err error)
 //sys	Fstat(fd int, stat *Stat_t) (err error) = SYS_FSTAT64
+<<<<<<< HEAD
 //sys	Fstatat(fd int, path string, stat *Stat_t, flags int) (err error) = SYS_FSTATAT64
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Fstatfs(fd int, stat *Statfs_t) (err error) = SYS_FSTATFS64
 //sys	Fsync(fd int) (err error)
 //sys	Ftruncate(fd int, length int64) (err error)
@@ -359,6 +390,15 @@ func Uname(uname *Utsname) error {
 //sys	Mkdirat(dirfd int, path string, mode uint32) (err error)
 //sys	Mkfifo(path string, mode uint32) (err error)
 //sys	Mknod(path string, mode uint32, dev int) (err error)
+<<<<<<< HEAD
+=======
+//sys	Mlock(b []byte) (err error)
+//sys	Mlockall(flags int) (err error)
+//sys	Mprotect(b []byte, prot int) (err error)
+//sys	Msync(b []byte, flags int) (err error)
+//sys	Munlock(b []byte) (err error)
+//sys	Munlockall() (err error)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Open(path string, mode int, perm uint32) (fd int, err error)
 //sys	Openat(dirfd int, path string, mode int, perm uint32) (fd int, err error)
 //sys	Pathconf(path string, name int) (val int, err error)
@@ -435,6 +475,12 @@ func Uname(uname *Utsname) error {
 // Add_profil
 // Kdebug_trace
 // Sigreturn
+<<<<<<< HEAD
+=======
+// Mmap
+// Mlock
+// Munlock
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Atsocket
 // Kqueue_from_portset_np
 // Kqueue_portset
@@ -444,6 +490,10 @@ func Uname(uname *Utsname) error {
 // Searchfs
 // Delete
 // Copyfile
+<<<<<<< HEAD
+=======
+// Poll
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Watchevent
 // Waitevent
 // Modwatch
@@ -526,6 +576,11 @@ func Uname(uname *Utsname) error {
 // Lio_listio
 // __pthread_cond_wait
 // Iopolicysys
+<<<<<<< HEAD
+=======
+// Mlockall
+// Munlockall
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // __pthread_kill
 // __pthread_sigmask
 // __sigwait

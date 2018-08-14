@@ -6,12 +6,28 @@
 
 package unix
 
+<<<<<<< HEAD
 func setTimespec(sec, nsec int64) Timespec {
 	return Timespec{Sec: sec, Nsec: nsec}
 }
 
 func setTimeval(sec, usec int64) Timeval {
 	return Timeval{Sec: sec, Usec: usec}
+=======
+func TimespecToNsec(ts Timespec) int64 { return int64(ts.Sec)*1e9 + int64(ts.Nsec) }
+
+func NsecToTimespec(nsec int64) (ts Timespec) {
+	ts.Sec = nsec / 1e9
+	ts.Nsec = nsec % 1e9
+	return
+}
+
+func NsecToTimeval(nsec int64) (tv Timeval) {
+	nsec += 999 // round up to microsecond
+	tv.Usec = nsec % 1e9 / 1e3
+	tv.Sec = int64(nsec / 1e9)
+	return
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (iov *Iovec) SetLen(length int) {

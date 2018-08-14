@@ -141,10 +141,13 @@ type Fsid struct {
 }
 
 const (
+<<<<<<< HEAD
 	PathMax = 0x400
 )
 
 const (
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	FADV_NORMAL     = 0x0
 	FADV_RANDOM     = 0x1
 	FADV_SEQUENTIAL = 0x2
@@ -509,6 +512,7 @@ type Termios struct {
 	Ospeed uint32
 }
 
+<<<<<<< HEAD
 type Winsize struct {
 	Row    uint16
 	Col    uint16
@@ -554,3 +558,8 @@ type Utsname struct {
 	Version  [256]byte
 	Machine  [256]byte
 }
+=======
+type CapRights struct {
+	Rights [2]uint64
+}
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

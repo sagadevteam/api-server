@@ -34,7 +34,10 @@
 # Also we need to fix an import.
 regenerate:
 	@echo WARNING! THIS RULE IS PROBABLY NOT RIGHT FOR YOUR INSTALLATION
+<<<<<<< HEAD
 	cp $(HOME)/src/protobuf/include/google/protobuf/compiler/plugin.proto .
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	protoc --go_out=Mgoogle/protobuf/descriptor.proto=github.com/golang/protobuf/protoc-gen-go/descriptor:../../../../.. \
 		-I$(HOME)/src/protobuf/include $(HOME)/src/protobuf/include/google/protobuf/compiler/plugin.proto
 

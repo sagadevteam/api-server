@@ -17,7 +17,10 @@ import (
 	"unsafe"
 )
 
+<<<<<<< HEAD
 // SockaddrDatalink implements the Sockaddr interface for AF_LINK type sockets.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrDatalink struct {
 	Len    uint8
 	Family uint8
@@ -56,6 +59,10 @@ func sysctlNodes(mib []_C_int) (nodes []Sysctlnode, err error) {
 }
 
 func nametomib(name string) (mib []_C_int, err error) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// Split name into components.
 	var parts []string
 	last := 0
@@ -93,6 +100,21 @@ func nametomib(name string) (mib []_C_int, err error) {
 	return mib, nil
 }
 
+<<<<<<< HEAD
+=======
+func direntIno(buf []byte) (uint64, bool) {
+	return readInt(buf, unsafe.Offsetof(Dirent{}.Fileno), unsafe.Sizeof(Dirent{}.Fileno))
+}
+
+func direntReclen(buf []byte) (uint64, bool) {
+	return readInt(buf, unsafe.Offsetof(Dirent{}.Reclen), unsafe.Sizeof(Dirent{}.Reclen))
+}
+
+func direntNamlen(buf []byte) (uint64, bool) {
+	return readInt(buf, unsafe.Offsetof(Dirent{}.Namlen), unsafe.Sizeof(Dirent{}.Namlen))
+}
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sysnb pipe() (fd1 int, fd2 int, err error)
 func Pipe(p []int) (err error) {
 	if len(p) != 2 {
@@ -107,6 +129,7 @@ func Getdirentries(fd int, buf []byte, basep *uintptr) (n int, err error) {
 	return getdents(fd, buf)
 }
 
+<<<<<<< HEAD
 const ImplementsGetwd = true
 
 //sys	Getcwd(buf []byte) (n int, err error) = SYS___GETCWD
@@ -124,11 +147,14 @@ func Getwd() (string, error) {
 	return string(buf[:n]), nil
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // TODO
 func sendfile(outfd int, infd int, offset *int64, count int) (written int, err error) {
 	return -1, ENOSYS
 }
 
+<<<<<<< HEAD
 func setattrlistTimes(path string, times []Timespec, flags int) error {
 	// used on Darwin for UtimesNano
 	return ENOSYS
@@ -219,6 +245,8 @@ func Uname(uname *Utsname) error {
 	return nil
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 /*
  * Exposed directly
  */
@@ -236,12 +264,18 @@ func Uname(uname *Utsname) error {
 //sys	Fchdir(fd int) (err error)
 //sys	Fchflags(fd int, flags int) (err error)
 //sys	Fchmod(fd int, mode uint32) (err error)
+<<<<<<< HEAD
 //sys	Fchmodat(dirfd int, path string, mode uint32, flags int) (err error)
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Fchown(fd int, uid int, gid int) (err error)
 //sys	Flock(fd int, how int) (err error)
 //sys	Fpathconf(fd int, name int) (val int, err error)
 //sys	Fstat(fd int, stat *Stat_t) (err error)
+<<<<<<< HEAD
 //sys	Fstatat(fd int, path string, stat *Stat_t, flags int) (err error)
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Fsync(fd int) (err error)
 //sys	Ftruncate(fd int, length int64) (err error)
 //sysnb	Getegid() (egid int)
@@ -267,6 +301,14 @@ func Uname(uname *Utsname) error {
 //sys	Mkdir(path string, mode uint32) (err error)
 //sys	Mkfifo(path string, mode uint32) (err error)
 //sys	Mknod(path string, mode uint32, dev int) (err error)
+<<<<<<< HEAD
+=======
+//sys	Mlock(b []byte) (err error)
+//sys	Mlockall(flags int) (err error)
+//sys	Mprotect(b []byte, prot int) (err error)
+//sys	Munlock(b []byte) (err error)
+//sys	Munlockall() (err error)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Nanosleep(time *Timespec, leftover *Timespec) (err error)
 //sys	Open(path string, mode int, perm uint32) (fd int, err error)
 //sys	Pathconf(path string, name int) (val int, err error)
@@ -302,7 +344,10 @@ func Uname(uname *Utsname) error {
 //sys	munmap(addr uintptr, length uintptr) (err error)
 //sys	readlen(fd int, buf *byte, nbuf int) (n int, err error) = SYS_READ
 //sys	writelen(fd int, buf *byte, nbuf int) (n int, err error) = SYS_WRITE
+<<<<<<< HEAD
 //sys	utimensat(dirfd int, path string, times *[2]Timespec, flags int) (err error)
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 /*
  * Unimplemented
@@ -481,6 +526,10 @@ func Uname(uname *Utsname) error {
 // getitimer
 // getvfsstat
 // getxattr
+<<<<<<< HEAD
+=======
+// ioctl
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // ktrace
 // lchflags
 // lchmod
@@ -518,6 +567,10 @@ func Uname(uname *Utsname) error {
 // ntp_adjtime
 // pmc_control
 // pmc_get_info
+<<<<<<< HEAD
+=======
+// poll
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // pollts
 // preadv
 // profil

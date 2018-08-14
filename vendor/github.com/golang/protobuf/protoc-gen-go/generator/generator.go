@@ -1984,7 +1984,11 @@ func (g *Generator) generateMessage(message *Descriptor) {
 		case typename == "string":
 			def = strconv.Quote(def)
 		case typename == "[]byte":
+<<<<<<< HEAD
 			def = "[]byte(" + strconv.Quote(unescape(def)) + ")"
+=======
+			def = "[]byte(" + strconv.Quote(def) + ")"
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			kind = "var "
 		case def == "inf", def == "-inf", def == "nan":
 			// These names are known to, and defined by, the protocol language.
@@ -2029,11 +2033,15 @@ func (g *Generator) generateMessage(message *Descriptor) {
 	// TODO: Revisit this and consider reverting back to anonymous interfaces.
 	for oi := range message.OneofDecl {
 		dname := oneofDisc[int32(oi)]
+<<<<<<< HEAD
 		g.P("type ", dname, " interface {")
 		g.In()
 		g.P(dname, "()")
 		g.Out()
 		g.P("}")
+=======
+		g.P("type ", dname, " interface { ", dname, "() }")
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 	g.P()
 	for _, field := range message.Field {
@@ -2512,6 +2520,7 @@ func (g *Generator) generateMessage(message *Descriptor) {
 	g.addInitf("%s.RegisterType((*%s)(nil), %q)", g.Pkg["proto"], ccTypeName, fullName)
 }
 
+<<<<<<< HEAD
 var escapeChars = [256]byte{
 	'a': '\a', 'b': '\b', 'f': '\f', 'n': '\n', 'r': '\r', 't': '\t', 'v': '\v', '\\': '\\', '"': '"', '\'': '\'', '?': '?',
 }
@@ -2573,6 +2582,8 @@ func unescape(s string) string {
 	return string(out)
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (g *Generator) generateExtension(ext *ExtensionDescriptor) {
 	ccTypeName := ext.DescName()
 

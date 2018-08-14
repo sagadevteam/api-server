@@ -52,7 +52,11 @@ type Timex struct {
 	Errcnt    int32
 	Stbcnt    int32
 	Tai       int32
+<<<<<<< HEAD
 	_         [44]byte
+=======
+	Pad_cgo_0 [44]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type Time_t int32
@@ -116,6 +120,7 @@ type Stat_t struct {
 }
 
 type Statfs_t struct {
+<<<<<<< HEAD
 	Type    int32
 	Bsize   int32
 	Frsize  int32
@@ -169,6 +174,31 @@ type Dirent struct {
 	Type   uint8
 	Name   [256]int8
 	_      [5]byte
+=======
+	Type      int32
+	Bsize     int32
+	Frsize    int32
+	Pad_cgo_0 [4]byte
+	Blocks    uint64
+	Bfree     uint64
+	Files     uint64
+	Ffree     uint64
+	Bavail    uint64
+	Fsid      Fsid
+	Namelen   int32
+	Flags     int32
+	Spare     [5]int32
+	Pad_cgo_1 [4]byte
+}
+
+type Dirent struct {
+	Ino       uint64
+	Off       int64
+	Reclen    uint16
+	Type      uint8
+	Name      [256]int8
+	Pad_cgo_0 [5]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type Fsid struct {
@@ -176,6 +206,7 @@ type Fsid struct {
 }
 
 type Flock_t struct {
+<<<<<<< HEAD
 	Type   int16
 	Whence int16
 	_      [4]byte
@@ -183,6 +214,15 @@ type Flock_t struct {
 	Len    int64
 	Pid    int32
 	_      [4]byte
+=======
+	Type      int16
+	Whence    int16
+	Pad_cgo_0 [4]byte
+	Start     int64
+	Len       int64
+	Pid       int32
+	Pad_cgo_1 [4]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type FscryptPolicy struct {
@@ -257,6 +297,7 @@ type RawSockaddrHCI struct {
 	Channel uint16
 }
 
+<<<<<<< HEAD
 type RawSockaddrL2 struct {
 	Family      uint16
 	Psm         uint16
@@ -271,6 +312,13 @@ type RawSockaddrCAN struct {
 	_       [2]byte
 	Ifindex int32
 	Addr    [8]byte
+=======
+type RawSockaddrCAN struct {
+	Family    uint16
+	Pad_cgo_0 [2]byte
+	Ifindex   int32
+	Addr      [8]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type RawSockaddrALG struct {
@@ -327,6 +375,7 @@ type IPv6Mreq struct {
 	Interface uint32
 }
 
+<<<<<<< HEAD
 type PacketMreq struct {
 	Ifindex int32
 	Type    uint16
@@ -334,6 +383,8 @@ type PacketMreq struct {
 	Address [8]uint8
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type Msghdr struct {
 	Name       *byte
 	Namelen    uint32
@@ -383,7 +434,11 @@ type TCPInfo struct {
 	Probes         uint8
 	Backoff        uint8
 	Options        uint8
+<<<<<<< HEAD
 	_              [2]byte
+=======
+	Pad_cgo_0      [2]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	Rto            uint32
 	Ato            uint32
 	Snd_mss        uint32
@@ -418,16 +473,25 @@ const (
 	SizeofSockaddrLinklayer = 0x14
 	SizeofSockaddrNetlink   = 0xc
 	SizeofSockaddrHCI       = 0x6
+<<<<<<< HEAD
 	SizeofSockaddrL2        = 0xe
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	SizeofSockaddrCAN       = 0x10
 	SizeofSockaddrALG       = 0x58
 	SizeofSockaddrVM        = 0x10
 	SizeofLinger            = 0x8
+<<<<<<< HEAD
 	SizeofIovec             = 0x8
 	SizeofIPMreq            = 0x8
 	SizeofIPMreqn           = 0xc
 	SizeofIPv6Mreq          = 0x14
 	SizeofPacketMreq        = 0x10
+=======
+	SizeofIPMreq            = 0x8
+	SizeofIPMreqn           = 0xc
+	SizeofIPv6Mreq          = 0x14
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	SizeofMsghdr            = 0x1c
 	SizeofCmsghdr           = 0xc
 	SizeofInet4Pktinfo      = 0xc
@@ -439,6 +503,7 @@ const (
 )
 
 const (
+<<<<<<< HEAD
 	IFA_UNSPEC           = 0x0
 	IFA_ADDRESS          = 0x1
 	IFA_LOCAL            = 0x2
@@ -556,6 +621,99 @@ const (
 	SizeofIfAddrmsg      = 0x8
 	SizeofRtMsg          = 0xc
 	SizeofRtNexthop      = 0x8
+=======
+	IFA_UNSPEC          = 0x0
+	IFA_ADDRESS         = 0x1
+	IFA_LOCAL           = 0x2
+	IFA_LABEL           = 0x3
+	IFA_BROADCAST       = 0x4
+	IFA_ANYCAST         = 0x5
+	IFA_CACHEINFO       = 0x6
+	IFA_MULTICAST       = 0x7
+	IFLA_UNSPEC         = 0x0
+	IFLA_ADDRESS        = 0x1
+	IFLA_BROADCAST      = 0x2
+	IFLA_IFNAME         = 0x3
+	IFLA_MTU            = 0x4
+	IFLA_LINK           = 0x5
+	IFLA_QDISC          = 0x6
+	IFLA_STATS          = 0x7
+	IFLA_COST           = 0x8
+	IFLA_PRIORITY       = 0x9
+	IFLA_MASTER         = 0xa
+	IFLA_WIRELESS       = 0xb
+	IFLA_PROTINFO       = 0xc
+	IFLA_TXQLEN         = 0xd
+	IFLA_MAP            = 0xe
+	IFLA_WEIGHT         = 0xf
+	IFLA_OPERSTATE      = 0x10
+	IFLA_LINKMODE       = 0x11
+	IFLA_LINKINFO       = 0x12
+	IFLA_NET_NS_PID     = 0x13
+	IFLA_IFALIAS        = 0x14
+	IFLA_MAX            = 0x2b
+	RT_SCOPE_UNIVERSE   = 0x0
+	RT_SCOPE_SITE       = 0xc8
+	RT_SCOPE_LINK       = 0xfd
+	RT_SCOPE_HOST       = 0xfe
+	RT_SCOPE_NOWHERE    = 0xff
+	RT_TABLE_UNSPEC     = 0x0
+	RT_TABLE_COMPAT     = 0xfc
+	RT_TABLE_DEFAULT    = 0xfd
+	RT_TABLE_MAIN       = 0xfe
+	RT_TABLE_LOCAL      = 0xff
+	RT_TABLE_MAX        = 0xffffffff
+	RTA_UNSPEC          = 0x0
+	RTA_DST             = 0x1
+	RTA_SRC             = 0x2
+	RTA_IIF             = 0x3
+	RTA_OIF             = 0x4
+	RTA_GATEWAY         = 0x5
+	RTA_PRIORITY        = 0x6
+	RTA_PREFSRC         = 0x7
+	RTA_METRICS         = 0x8
+	RTA_MULTIPATH       = 0x9
+	RTA_FLOW            = 0xb
+	RTA_CACHEINFO       = 0xc
+	RTA_TABLE           = 0xf
+	RTN_UNSPEC          = 0x0
+	RTN_UNICAST         = 0x1
+	RTN_LOCAL           = 0x2
+	RTN_BROADCAST       = 0x3
+	RTN_ANYCAST         = 0x4
+	RTN_MULTICAST       = 0x5
+	RTN_BLACKHOLE       = 0x6
+	RTN_UNREACHABLE     = 0x7
+	RTN_PROHIBIT        = 0x8
+	RTN_THROW           = 0x9
+	RTN_NAT             = 0xa
+	RTN_XRESOLVE        = 0xb
+	RTNLGRP_NONE        = 0x0
+	RTNLGRP_LINK        = 0x1
+	RTNLGRP_NOTIFY      = 0x2
+	RTNLGRP_NEIGH       = 0x3
+	RTNLGRP_TC          = 0x4
+	RTNLGRP_IPV4_IFADDR = 0x5
+	RTNLGRP_IPV4_MROUTE = 0x6
+	RTNLGRP_IPV4_ROUTE  = 0x7
+	RTNLGRP_IPV4_RULE   = 0x8
+	RTNLGRP_IPV6_IFADDR = 0x9
+	RTNLGRP_IPV6_MROUTE = 0xa
+	RTNLGRP_IPV6_ROUTE  = 0xb
+	RTNLGRP_IPV6_IFINFO = 0xc
+	RTNLGRP_IPV6_PREFIX = 0x12
+	RTNLGRP_IPV6_RULE   = 0x13
+	RTNLGRP_ND_USEROPT  = 0x14
+	SizeofNlMsghdr      = 0x10
+	SizeofNlMsgerr      = 0x14
+	SizeofRtGenmsg      = 0x1
+	SizeofNlAttr        = 0x4
+	SizeofRtAttr        = 0x4
+	SizeofIfInfomsg     = 0x10
+	SizeofIfAddrmsg     = 0x8
+	SizeofRtMsg         = 0xc
+	SizeofRtNexthop     = 0x8
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 type NlMsghdr struct {
@@ -634,9 +792,15 @@ type SockFilter struct {
 }
 
 type SockFprog struct {
+<<<<<<< HEAD
 	Len    uint16
 	_      [2]byte
 	Filter *SockFilter
+=======
+	Len       uint16
+	Pad_cgo_0 [2]byte
+	Filter    *SockFilter
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type InotifyEvent struct {
@@ -680,12 +844,21 @@ type Sysinfo_t struct {
 }
 
 type Utsname struct {
+<<<<<<< HEAD
 	Sysname    [65]byte
 	Nodename   [65]byte
 	Release    [65]byte
 	Version    [65]byte
 	Machine    [65]byte
 	Domainname [65]byte
+=======
+	Sysname    [65]int8
+	Nodename   [65]int8
+	Release    [65]int8
+	Version    [65]int8
+	Machine    [65]int8
+	Domainname [65]int8
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type Ustat_t struct {
@@ -703,6 +876,7 @@ type EpollEvent struct {
 }
 
 const (
+<<<<<<< HEAD
 	AT_EMPTY_PATH   = 0x1000
 	AT_FDCWD        = -0x64
 	AT_NO_AUTOMOUNT = 0x800
@@ -712,6 +886,10 @@ const (
 	AT_STATX_FORCE_SYNC   = 0x2000
 	AT_STATX_DONT_SYNC    = 0x4000
 
+=======
+	AT_FDCWD            = -0x64
+	AT_REMOVEDIR        = 0x200
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	AT_SYMLINK_FOLLOW   = 0x400
 	AT_SYMLINK_NOFOLLOW = 0x100
 )
@@ -740,6 +918,11 @@ const RNDGETENTCNT = 0x40045200
 
 const PERF_IOC_FLAG_GROUP = 0x1
 
+<<<<<<< HEAD
+=======
+const _SC_PAGESIZE = 0x1e
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type Termios struct {
 	Iflag  uint32
 	Oflag  uint32
@@ -757,6 +940,7 @@ type Winsize struct {
 	Xpixel uint16
 	Ypixel uint16
 }
+<<<<<<< HEAD
 
 type Taskstats struct {
 	Version                   uint16
@@ -889,3 +1073,5 @@ const (
 	BDADDR_LE_PUBLIC = 0x1
 	BDADDR_LE_RANDOM = 0x2
 )
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

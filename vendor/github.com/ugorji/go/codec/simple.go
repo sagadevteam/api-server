@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Copyright (c) 2012-2018 Ugorji Nwoke. All rights reserved.
+=======
+// Copyright (c) 2012-2015 Ugorji Nwoke. All rights reserved.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Use of this source code is governed by a MIT license found in the LICENSE file.
 
 package codec
@@ -6,7 +10,10 @@ package codec
 import (
 	"math"
 	"reflect"
+<<<<<<< HEAD
 	"time"
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 const (
@@ -21,8 +28,11 @@ const (
 	simpleVdPosInt = 8
 	simpleVdNegInt = 12
 
+<<<<<<< HEAD
 	simpleVdTime = 24
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// containers: each lasts for 4 (ie n, n+1, n+2, ... n+7)
 	simpleVdString    = 216
 	simpleVdByteArray = 224
@@ -33,15 +43,22 @@ const (
 
 type simpleEncDriver struct {
 	noBuiltInTypes
+<<<<<<< HEAD
 	// encNoSeparator
+=======
+	encNoSeparator
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e *Encoder
 	h *SimpleHandle
 	w encWriter
 	b [8]byte
+<<<<<<< HEAD
 	// c containerState
 	encDriverTrackContainerWriter
 	// encDriverNoopContainerWriter
 	_ [2]uint64 // padding
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (e *simpleEncDriver) EncodeNil() {
@@ -49,10 +66,13 @@ func (e *simpleEncDriver) EncodeNil() {
 }
 
 func (e *simpleEncDriver) EncodeBool(b bool) {
+<<<<<<< HEAD
 	if e.h.EncZeroValuesAsNil && e.c != containerMapKey && !b {
 		e.EncodeNil()
 		return
 	}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if b {
 		e.w.writen1(simpleVdTrue)
 	} else {
@@ -61,19 +81,25 @@ func (e *simpleEncDriver) EncodeBool(b bool) {
 }
 
 func (e *simpleEncDriver) EncodeFloat32(f float32) {
+<<<<<<< HEAD
 	if e.h.EncZeroValuesAsNil && e.c != containerMapKey && f == 0.0 {
 		e.EncodeNil()
 		return
 	}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e.w.writen1(simpleVdFloat32)
 	bigenHelper{e.b[:4], e.w}.writeUint32(math.Float32bits(f))
 }
 
 func (e *simpleEncDriver) EncodeFloat64(f float64) {
+<<<<<<< HEAD
 	if e.h.EncZeroValuesAsNil && e.c != containerMapKey && f == 0.0 {
 		e.EncodeNil()
 		return
 	}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e.w.writen1(simpleVdFloat64)
 	bigenHelper{e.b[:8], e.w}.writeUint64(math.Float64bits(f))
 }
@@ -91,10 +117,13 @@ func (e *simpleEncDriver) EncodeUint(v uint64) {
 }
 
 func (e *simpleEncDriver) encUint(v uint64, bd uint8) {
+<<<<<<< HEAD
 	if e.h.EncZeroValuesAsNil && e.c != containerMapKey && v == 0 {
 		e.EncodeNil()
 		return
 	}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if v <= math.MaxUint8 {
 		e.w.writen2(bd, uint8(v))
 	} else if v <= math.MaxUint16 {
@@ -147,6 +176,7 @@ func (e *simpleEncDriver) encodeExtPreamble(xtag byte, length int) {
 	e.w.writen1(xtag)
 }
 
+<<<<<<< HEAD
 func (e *simpleEncDriver) WriteArrayStart(length int) {
 	e.c = containerArrayStart
 	e.encLen(simpleVdArray, length)
@@ -154,18 +184,29 @@ func (e *simpleEncDriver) WriteArrayStart(length int) {
 
 func (e *simpleEncDriver) WriteMapStart(length int) {
 	e.c = containerMapStart
+=======
+func (e *simpleEncDriver) EncodeArrayStart(length int) {
+	e.encLen(simpleVdArray, length)
+}
+
+func (e *simpleEncDriver) EncodeMapStart(length int) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e.encLen(simpleVdMap, length)
 }
 
 func (e *simpleEncDriver) EncodeString(c charEncoding, v string) {
+<<<<<<< HEAD
 	if false && e.h.EncZeroValuesAsNil && e.c != containerMapKey && v == "" {
 		e.EncodeNil()
 		return
 	}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e.encLen(simpleVdString, len(v))
 	e.w.writestr(v)
 }
 
+<<<<<<< HEAD
 // func (e *simpleEncDriver) EncodeSymbol(v string) {
 // 	e.EncodeString(cUTF8, v)
 // }
@@ -176,10 +217,18 @@ func (e *simpleEncDriver) EncodeStringBytes(c charEncoding, v []byte) {
 		e.EncodeNil()
 		return
 	}
+=======
+func (e *simpleEncDriver) EncodeSymbol(v string) {
+	e.EncodeString(c_UTF8, v)
+}
+
+func (e *simpleEncDriver) EncodeStringBytes(c charEncoding, v []byte) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e.encLen(simpleVdByteArray, len(v))
 	e.w.writeb(v)
 }
 
+<<<<<<< HEAD
 func (e *simpleEncDriver) EncodeTime(t time.Time) {
 	// if e.h.EncZeroValuesAsNil && e.c != containerMapKey && t.IsZero() {
 	if t.IsZero() {
@@ -196,6 +245,8 @@ func (e *simpleEncDriver) EncodeTime(t time.Time) {
 	e.w.writeb(v)
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //------------------------------------
 
 type simpleDecDriver struct {
@@ -204,6 +255,7 @@ type simpleDecDriver struct {
 	r      decReader
 	bdRead bool
 	bd     byte
+<<<<<<< HEAD
 	br     bool // a bytes reader?
 	c      containerState
 	// b      [scratchByteArrayLen]byte
@@ -211,6 +263,13 @@ type simpleDecDriver struct {
 	// noStreamingCodec
 	decDriverNoopContainerReader
 	_ [3]uint64 // padding
+=======
+	br     bool // bytes reader
+	noBuiltInTypes
+	noStreamingCodec
+	decNoSeparator
+	b [scratchByteArrayLen]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (d *simpleDecDriver) readNextBd() {
@@ -229,6 +288,7 @@ func (d *simpleDecDriver) ContainerType() (vt valueType) {
 	if !d.bdRead {
 		d.readNextBd()
 	}
+<<<<<<< HEAD
 	switch d.bd {
 	case simpleVdNil:
 		return valueTypeNil
@@ -250,6 +310,25 @@ func (d *simpleDecDriver) ContainerType() (vt valueType) {
 	// else {
 	// d.d.errorf("isContainerType: unsupported parameter: %v", vt)
 	// }
+=======
+	if d.bd == simpleVdNil {
+		return valueTypeNil
+	} else if d.bd == simpleVdByteArray || d.bd == simpleVdByteArray+1 ||
+		d.bd == simpleVdByteArray+2 || d.bd == simpleVdByteArray+3 || d.bd == simpleVdByteArray+4 {
+		return valueTypeBytes
+	} else if d.bd == simpleVdString || d.bd == simpleVdString+1 ||
+		d.bd == simpleVdString+2 || d.bd == simpleVdString+3 || d.bd == simpleVdString+4 {
+		return valueTypeString
+	} else if d.bd == simpleVdArray || d.bd == simpleVdArray+1 ||
+		d.bd == simpleVdArray+2 || d.bd == simpleVdArray+3 || d.bd == simpleVdArray+4 {
+		return valueTypeArray
+	} else if d.bd == simpleVdMap || d.bd == simpleVdMap+1 ||
+		d.bd == simpleVdMap+2 || d.bd == simpleVdMap+3 || d.bd == simpleVdMap+4 {
+		return valueTypeMap
+	} else {
+		// d.d.errorf("isContainerType: unsupported parameter: %v", vt)
+	}
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return valueTypeUnset
 }
 
@@ -290,7 +369,11 @@ func (d *simpleDecDriver) decCheckInteger() (ui uint64, neg bool) {
 		ui = uint64(bigen.Uint64(d.r.readx(8)))
 		neg = true
 	default:
+<<<<<<< HEAD
 		d.d.errorf("integer only valid from pos/neg integer1..8. Invalid descriptor: %v", d.bd)
+=======
+		d.d.errorf("decIntAny: Integer only valid from pos/neg integer1..8. Invalid descriptor: %v", d.bd)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 	// don't do this check, because callers may only want the unsigned value.
@@ -301,27 +384,59 @@ func (d *simpleDecDriver) decCheckInteger() (ui uint64, neg bool) {
 	return
 }
 
+<<<<<<< HEAD
 func (d *simpleDecDriver) DecodeInt64() (i int64) {
 	ui, neg := d.decCheckInteger()
 	i = chkOvf.SignedIntV(ui)
 	if neg {
 		i = -i
 	}
+=======
+func (d *simpleDecDriver) DecodeInt(bitsize uint8) (i int64) {
+	ui, neg := d.decCheckInteger()
+	i, overflow := chkOvf.SignedInt(ui)
+	if overflow {
+		d.d.errorf("simple: overflow converting %v to signed integer", ui)
+		return
+	}
+	if neg {
+		i = -i
+	}
+	if chkOvf.Int(i, bitsize) {
+		d.d.errorf("simple: overflow integer: %v", i)
+		return
+	}
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	d.bdRead = false
 	return
 }
 
+<<<<<<< HEAD
 func (d *simpleDecDriver) DecodeUint64() (ui uint64) {
 	ui, neg := d.decCheckInteger()
 	if neg {
 		d.d.errorf("assigning negative signed value to unsigned type")
+=======
+func (d *simpleDecDriver) DecodeUint(bitsize uint8) (ui uint64) {
+	ui, neg := d.decCheckInteger()
+	if neg {
+		d.d.errorf("Assigning negative signed value to unsigned type")
+		return
+	}
+	if chkOvf.Uint(ui, bitsize) {
+		d.d.errorf("simple: overflow integer: %v", ui)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 	d.bdRead = false
 	return
 }
 
+<<<<<<< HEAD
 func (d *simpleDecDriver) DecodeFloat64() (f float64) {
+=======
+func (d *simpleDecDriver) DecodeFloat(chkOverflow32 bool) (f float64) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if !d.bdRead {
 		d.readNextBd()
 	}
@@ -331,12 +446,25 @@ func (d *simpleDecDriver) DecodeFloat64() (f float64) {
 		f = math.Float64frombits(bigen.Uint64(d.r.readx(8)))
 	} else {
 		if d.bd >= simpleVdPosInt && d.bd <= simpleVdNegInt+3 {
+<<<<<<< HEAD
 			f = float64(d.DecodeInt64())
 		} else {
 			d.d.errorf("float only valid from float32/64: Invalid descriptor: %v", d.bd)
 			return
 		}
 	}
+=======
+			f = float64(d.DecodeInt(64))
+		} else {
+			d.d.errorf("Float only valid from float32/64: Invalid descriptor: %v", d.bd)
+			return
+		}
+	}
+	if chkOverflow32 && chkOvf.Float32(f) {
+		d.d.errorf("msgpack: float32 overflow: %v", f)
+		return
+	}
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	d.bdRead = false
 	return
 }
@@ -350,7 +478,11 @@ func (d *simpleDecDriver) DecodeBool() (b bool) {
 		b = true
 	} else if d.bd == simpleVdFalse {
 	} else {
+<<<<<<< HEAD
 		d.d.errorf("cannot decode bool - %s: %x", msgBadDesc, d.bd)
+=======
+		d.d.errorf("Invalid single-byte value for bool: %s: %x", msgBadDesc, d.bd)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 	d.bdRead = false
@@ -362,7 +494,10 @@ func (d *simpleDecDriver) ReadMapStart() (length int) {
 		d.readNextBd()
 	}
 	d.bdRead = false
+<<<<<<< HEAD
 	d.c = containerMapStart
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return d.decLen()
 }
 
@@ -371,6 +506,7 @@ func (d *simpleDecDriver) ReadArrayStart() (length int) {
 		d.readNextBd()
 	}
 	d.bdRead = false
+<<<<<<< HEAD
 	d.c = containerArrayStart
 	return d.decLen()
 }
@@ -395,6 +531,11 @@ func (d *simpleDecDriver) ReadMapEnd() {
 	d.c = containerMapEnd
 }
 
+=======
+	return d.decLen()
+}
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (d *simpleDecDriver) decLen() int {
 	switch d.bd % 8 {
 	case 0:
@@ -406,23 +547,36 @@ func (d *simpleDecDriver) decLen() int {
 	case 3:
 		ui := uint64(bigen.Uint32(d.r.readx(4)))
 		if chkOvf.Uint(ui, intBitsize) {
+<<<<<<< HEAD
 			d.d.errorf("overflow integer: %v", ui)
+=======
+			d.d.errorf("simple: overflow integer: %v", ui)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			return 0
 		}
 		return int(ui)
 	case 4:
 		ui := bigen.Uint64(d.r.readx(8))
 		if chkOvf.Uint(ui, intBitsize) {
+<<<<<<< HEAD
 			d.d.errorf("overflow integer: %v", ui)
+=======
+			d.d.errorf("simple: overflow integer: %v", ui)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			return 0
 		}
 		return int(ui)
 	}
+<<<<<<< HEAD
 	d.d.errorf("cannot read length: bd%%8 must be in range 0..4. Got: %d", d.bd%8)
+=======
+	d.d.errorf("decLen: Cannot read length: bd%%8 must be in range 0..4. Got: %d", d.bd%8)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return -1
 }
 
 func (d *simpleDecDriver) DecodeString() (s string) {
+<<<<<<< HEAD
 	return string(d.DecodeBytes(d.d.b[:], true))
 }
 
@@ -431,6 +585,12 @@ func (d *simpleDecDriver) DecodeStringAsBytes() (s []byte) {
 }
 
 func (d *simpleDecDriver) DecodeBytes(bs []byte, zerocopy bool) (bsOut []byte) {
+=======
+	return string(d.DecodeBytes(d.b[:], true, true))
+}
+
+func (d *simpleDecDriver) DecodeBytes(bs []byte, isstring, zerocopy bool) (bsOut []byte) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if !d.bdRead {
 		d.readNextBd()
 	}
@@ -438,6 +598,7 @@ func (d *simpleDecDriver) DecodeBytes(bs []byte, zerocopy bool) (bsOut []byte) {
 		d.bdRead = false
 		return
 	}
+<<<<<<< HEAD
 	// check if an "array" of uint8's (see ContainerType for how to infer if an array)
 	if d.bd >= simpleVdArray && d.bd <= simpleVdMap+4 {
 		if len(bs) == 0 && zerocopy {
@@ -447,18 +608,25 @@ func (d *simpleDecDriver) DecodeBytes(bs []byte, zerocopy bool) (bsOut []byte) {
 		return
 	}
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	clen := d.decLen()
 	d.bdRead = false
 	if zerocopy {
 		if d.br {
 			return d.r.readx(clen)
 		} else if len(bs) == 0 {
+<<<<<<< HEAD
 			bs = d.d.b[:]
+=======
+			bs = d.b[:]
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 	}
 	return decByteSlice(d.r, clen, d.d.h.MaxInitLen, bs)
 }
 
+<<<<<<< HEAD
 func (d *simpleDecDriver) DecodeTime() (t time.Time) {
 	if !d.bdRead {
 		d.readNextBd()
@@ -483,6 +651,11 @@ func (d *simpleDecDriver) DecodeTime() (t time.Time) {
 func (d *simpleDecDriver) DecodeExt(rv interface{}, xtag uint64, ext Ext) (realxtag uint64) {
 	if xtag > 0xff {
 		d.d.errorf("ext: tag must be <= 0xff; got: %v", xtag)
+=======
+func (d *simpleDecDriver) DecodeExt(rv interface{}, xtag uint64, ext Ext) (realxtag uint64) {
+	if xtag > 0xff {
+		d.d.errorf("decodeExt: tag must be <= 0xff; got: %v", xtag)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 	realxtag1, xbs := d.decodeExtV(ext != nil, uint8(xtag))
@@ -506,6 +679,7 @@ func (d *simpleDecDriver) decodeExtV(verifyTag bool, tag byte) (xtag byte, xbs [
 		l := d.decLen()
 		xtag = d.r.readn1()
 		if verifyTag && xtag != tag {
+<<<<<<< HEAD
 			d.d.errorf("wrong extension tag. Got %b. Expecting: %v", xtag, tag)
 			return
 		}
@@ -515,6 +689,16 @@ func (d *simpleDecDriver) decodeExtV(verifyTag bool, tag byte) (xtag byte, xbs [
 		xbs = d.DecodeBytes(nil, true)
 	default:
 		d.d.errorf("ext - %s - expecting extensions/bytearray, got: 0x%x", msgBadDesc, d.bd)
+=======
+			d.d.errorf("Wrong extension tag. Got %b. Expecting: %v", xtag, tag)
+			return
+		}
+		xbs = d.r.readx(l)
+	case simpleVdByteArray, simpleVdByteArray + 1, simpleVdByteArray + 2, simpleVdByteArray + 3, simpleVdByteArray + 4:
+		xbs = d.DecodeBytes(nil, false, true)
+	default:
+		d.d.errorf("Invalid d.bd for extensions (Expecting extensions or byte array). Got: 0x%x", d.bd)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 	d.bdRead = false
@@ -526,7 +710,11 @@ func (d *simpleDecDriver) DecodeNaked() {
 		d.readNextBd()
 	}
 
+<<<<<<< HEAD
 	n := d.d.n
+=======
+	n := &d.d.n
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	var decodeFurther bool
 
 	switch d.bd {
@@ -541,6 +729,7 @@ func (d *simpleDecDriver) DecodeNaked() {
 	case simpleVdPosInt, simpleVdPosInt + 1, simpleVdPosInt + 2, simpleVdPosInt + 3:
 		if d.h.SignedInteger {
 			n.v = valueTypeInt
+<<<<<<< HEAD
 			n.i = d.DecodeInt64()
 		} else {
 			n.v = valueTypeUint
@@ -566,20 +755,50 @@ func (d *simpleDecDriver) DecodeNaked() {
 		simpleVdByteArray + 2, simpleVdByteArray + 3, simpleVdByteArray + 4:
 		n.v = valueTypeBytes
 		n.l = d.DecodeBytes(nil, false)
+=======
+			n.i = d.DecodeInt(64)
+		} else {
+			n.v = valueTypeUint
+			n.u = d.DecodeUint(64)
+		}
+	case simpleVdNegInt, simpleVdNegInt + 1, simpleVdNegInt + 2, simpleVdNegInt + 3:
+		n.v = valueTypeInt
+		n.i = d.DecodeInt(64)
+	case simpleVdFloat32:
+		n.v = valueTypeFloat
+		n.f = d.DecodeFloat(true)
+	case simpleVdFloat64:
+		n.v = valueTypeFloat
+		n.f = d.DecodeFloat(false)
+	case simpleVdString, simpleVdString + 1, simpleVdString + 2, simpleVdString + 3, simpleVdString + 4:
+		n.v = valueTypeString
+		n.s = d.DecodeString()
+	case simpleVdByteArray, simpleVdByteArray + 1, simpleVdByteArray + 2, simpleVdByteArray + 3, simpleVdByteArray + 4:
+		n.v = valueTypeBytes
+		n.l = d.DecodeBytes(nil, false, false)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	case simpleVdExt, simpleVdExt + 1, simpleVdExt + 2, simpleVdExt + 3, simpleVdExt + 4:
 		n.v = valueTypeExt
 		l := d.decLen()
 		n.u = uint64(d.r.readn1())
 		n.l = d.r.readx(l)
+<<<<<<< HEAD
 	case simpleVdArray, simpleVdArray + 1, simpleVdArray + 2,
 		simpleVdArray + 3, simpleVdArray + 4:
+=======
+	case simpleVdArray, simpleVdArray + 1, simpleVdArray + 2, simpleVdArray + 3, simpleVdArray + 4:
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		n.v = valueTypeArray
 		decodeFurther = true
 	case simpleVdMap, simpleVdMap + 1, simpleVdMap + 2, simpleVdMap + 3, simpleVdMap + 4:
 		n.v = valueTypeMap
 		decodeFurther = true
 	default:
+<<<<<<< HEAD
 		d.d.errorf("cannot infer value - %s 0x%x", msgBadDesc, d.bd)
+=======
+		d.d.errorf("decodeNaked: Unrecognized d.bd: 0x%x", d.bd)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 
 	if !decodeFurther {
@@ -598,7 +817,11 @@ func (d *simpleDecDriver) DecodeNaked() {
 //   - Integers (intXXX, uintXXX) are encoded in 1, 2, 4 or 8 bytes (plus a descriptor byte).
 //     There are positive (uintXXX and intXXX >= 0) and negative (intXXX < 0) integers.
 //   - Floats are encoded in 4 or 8 bytes (plus a descriptor byte)
+<<<<<<< HEAD
 //   - Length of containers (strings, bytes, array, map, extensions)
+=======
+//   - Lenght of containers (strings, bytes, array, map, extensions)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //     are encoded in 0, 1, 2, 4 or 8 bytes.
 //     Zero-length containers have no length encoded.
 //     For others, the number of bytes is given by pow(2, bd%3)
@@ -606,12 +829,16 @@ func (d *simpleDecDriver) DecodeNaked() {
 //   - arrays are encoded as [bd] [length] [value]...
 //   - extensions are encoded as [bd] [length] [tag] [byte]...
 //   - strings/bytearrays are encoded as [bd] [length] [byte]...
+<<<<<<< HEAD
 //   - time.Time are encoded as [bd] [length] [byte]...
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //
 // The full spec will be published soon.
 type SimpleHandle struct {
 	BasicHandle
 	binaryEncodingType
+<<<<<<< HEAD
 	noElemSeparators
 	// EncZeroValuesAsNil says to encode zero values for numbers, bool, string, etc as nil
 	EncZeroValuesAsNil bool
@@ -629,6 +856,14 @@ func (h *SimpleHandle) SetBytesExt(rt reflect.Type, tag uint64, ext BytesExt) (e
 
 func (h *SimpleHandle) hasElemSeparators() bool { return true } // as it implements Write(Map|Array)XXX
 
+=======
+}
+
+func (h *SimpleHandle) SetBytesExt(rt reflect.Type, tag uint64, ext BytesExt) (err error) {
+	return h.SetExt(rt, tag, &setExtWrapper{b: ext})
+}
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (h *SimpleHandle) newEncDriver(e *Encoder) encDriver {
 	return &simpleEncDriver{e: e, w: e.w, h: h}
 }
@@ -638,12 +873,18 @@ func (h *SimpleHandle) newDecDriver(d *Decoder) decDriver {
 }
 
 func (e *simpleEncDriver) reset() {
+<<<<<<< HEAD
 	e.c = 0
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e.w = e.e.w
 }
 
 func (d *simpleDecDriver) reset() {
+<<<<<<< HEAD
 	d.c = 0
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	d.r, d.br = d.d.r, d.d.bytes
 	d.bd, d.bdRead = 0, false
 }

@@ -14,14 +14,21 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+<<<<<<< HEAD
 	"runtime"
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"testing"
 
 	"golang.org/x/sys/unix"
 )
 
 func TestSysctlUint64(t *testing.T) {
+<<<<<<< HEAD
 	_, err := unix.SysctlUint64("vm.swap_total")
+=======
+	_, err := unix.SysctlUint64("security.mac.labeled")
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -158,9 +165,12 @@ func init() {
 }
 
 func TestCapEnter(t *testing.T) {
+<<<<<<< HEAD
 	if runtime.GOARCH != "amd64" {
 		t.Skipf("skipping test on %s", runtime.GOARCH)
 	}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	ExitsCorrectly(t, "cap_enter")
 }
 
@@ -257,9 +267,12 @@ func init() {
 }
 
 func TestOpenat(t *testing.T) {
+<<<<<<< HEAD
 	if runtime.GOARCH != "amd64" {
 		t.Skipf("skipping test on %s", runtime.GOARCH)
 	}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	ExitsCorrectly(t, "openat")
 }
 

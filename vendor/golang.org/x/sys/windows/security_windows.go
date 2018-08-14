@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Copyright 2012 The Go Authors. All rights reserved.
+=======
+// Copyright 2012 The Go Authors.  All rights reserved.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -132,6 +136,7 @@ const (
 	SECURITY_NT_NON_UNIQUE_RID          = 0x15
 )
 
+<<<<<<< HEAD
 // Predefined domain-relative RIDs for local groups.
 // See https://msdn.microsoft.com/en-us/library/windows/desktop/aa379649(v=vs.85).aspx
 const (
@@ -162,6 +167,8 @@ const (
 	DOMAIN_ALIAS_RID_CERTSVC_DCOM_ACCESS_GROUP      = 0x23e
 )
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	LookupAccountSid(systemName *uint16, sid *SID, name *uint16, nameLen *uint32, refdDomainName *uint16, refdDomainNameLen *uint32, use *uint32) (err error) = advapi32.LookupAccountSidW
 //sys	LookupAccountName(systemName *uint16, accountName *uint16, sid *SID, sidLen *uint32, refdDomainName *uint16, refdDomainNameLen *uint32, use *uint32) (err error) = advapi32.LookupAccountNameW
 //sys	ConvertSidToStringSid(sid *SID, stringSid **uint16) (err error) = advapi32.ConvertSidToStringSidW
@@ -365,8 +372,11 @@ type Tokengroups struct {
 	Groups     [1]SIDAndAttributes
 }
 
+<<<<<<< HEAD
 // Authorization Functions
 //sys checkTokenMembership(tokenHandle Token, sidToCheck *SID, isMember *int32) (err error) = advapi32.CheckTokenMembership
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	OpenProcessToken(h Handle, access uint32, token *Token) (err error) = advapi32.OpenProcessToken
 //sys	GetTokenInformation(t Token, infoClass uint32, info *byte, infoLen uint32, returnedLen *uint32) (err error) = advapi32.GetTokenInformation
 //sys	GetUserProfileDirectory(t Token, dir *uint16, dirLen *uint32) (err error) = userenv.GetUserProfileDirectoryW
@@ -465,6 +475,7 @@ func (t Token) GetUserProfileDirectory() (string, error) {
 		}
 	}
 }
+<<<<<<< HEAD
 
 // IsMember reports whether the access token t is a member of the provided SID.
 func (t Token) IsMember(sid *SID) (bool, error) {
@@ -474,3 +485,5 @@ func (t Token) IsMember(sid *SID) (bool, error) {
 	}
 	return b != 0, nil
 }
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

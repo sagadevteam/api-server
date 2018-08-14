@@ -10,7 +10,10 @@ import (
 	"os/exec"
 	"runtime"
 	"testing"
+<<<<<<< HEAD
 	"time"
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	"golang.org/x/sys/unix"
 )
@@ -51,6 +54,7 @@ func TestGetfsstat(t *testing.T) {
 	}
 }
 
+<<<<<<< HEAD
 func TestSelect(t *testing.T) {
 	err := unix.Select(0, nil, nil, nil, &unix.Timeval{Sec: 0, Usec: 0})
 	if err != nil {
@@ -73,6 +77,8 @@ func TestSelect(t *testing.T) {
 	}
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func TestSysctlRaw(t *testing.T) {
 	if runtime.GOOS == "openbsd" {
 		t.Skip("kern.proc.pid does not exist on OpenBSD")
@@ -83,6 +89,7 @@ func TestSysctlRaw(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+<<<<<<< HEAD
 
 func TestSysctlUint32(t *testing.T) {
 	maxproc, err := unix.SysctlUint32("kern.maxproc")
@@ -91,3 +98,5 @@ func TestSysctlUint32(t *testing.T) {
 	}
 	t.Logf("kern.maxproc: %v", maxproc)
 }
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

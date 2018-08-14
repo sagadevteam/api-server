@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Copyright (c) 2012-2018 Ugorji Nwoke. All rights reserved.
+=======
+// Copyright (c) 2012-2015 Ugorji Nwoke. All rights reserved.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Use of this source code is governed by a MIT license found in the LICENSE file.
 
 /*
@@ -15,8 +19,13 @@ For compatibility with behaviour of msgpack-c reference implementation:
   - Go intX (<0)
        IS ENCODED AS
     msgpack -ve fixnum, signed
+<<<<<<< HEAD
 */
 
+=======
+
+*/
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 package codec
 
 import (
@@ -25,7 +34,10 @@ import (
 	"math"
 	"net/rpc"
 	"reflect"
+<<<<<<< HEAD
 	"time"
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 const (
@@ -79,6 +91,7 @@ const (
 	mpNegFixNumMax = 0xff
 )
 
+<<<<<<< HEAD
 var mpTimeExtTag int8 = -1
 var mpTimeExtTagU = uint8(mpTimeExtTag)
 
@@ -162,6 +175,8 @@ func mpdesc(bd byte) string {
 	}
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // MsgpackSpecRpcMultiArgs is a special type which signifies to the MsgpackSpecRpcCodec
 // that the backend RPC service takes multiple arguments, which have been arranged
 // in sequence in the slice.
@@ -178,6 +193,7 @@ type msgpackContainerType struct {
 }
 
 var (
+<<<<<<< HEAD
 	msgpackContainerStr = msgpackContainerType{
 		32, mpFixStrMin, mpStr8, mpStr16, mpStr32, true, true, false,
 	}
@@ -190,19 +206,32 @@ var (
 	msgpackContainerMap = msgpackContainerType{
 		16, mpFixMapMin, 0, mpMap16, mpMap32, true, false, false,
 	}
+=======
+	msgpackContainerStr  = msgpackContainerType{32, mpFixStrMin, mpStr8, mpStr16, mpStr32, true, true, false}
+	msgpackContainerBin  = msgpackContainerType{0, 0, mpBin8, mpBin16, mpBin32, false, true, true}
+	msgpackContainerList = msgpackContainerType{16, mpFixArrayMin, 0, mpArray16, mpArray32, true, false, false}
+	msgpackContainerMap  = msgpackContainerType{16, mpFixMapMin, 0, mpMap16, mpMap32, true, false, false}
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 //---------------------------------------------
 
 type msgpackEncDriver struct {
 	noBuiltInTypes
+<<<<<<< HEAD
 	encDriverNoopContainerWriter
 	// encNoSeparator
+=======
+	encNoSeparator
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e *Encoder
 	w encWriter
 	h *MsgpackHandle
 	x [8]byte
+<<<<<<< HEAD
 	_ [3]uint64 // padding
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (e *msgpackEncDriver) EncodeNil() {
@@ -210,6 +239,7 @@ func (e *msgpackEncDriver) EncodeNil() {
 }
 
 func (e *msgpackEncDriver) EncodeInt(i int64) {
+<<<<<<< HEAD
 	// if i >= 0 {
 	// 	e.EncodeUint(uint64(i))
 	// } else if false &&
@@ -230,6 +260,12 @@ func (e *msgpackEncDriver) EncodeInt(i int64) {
 		} else {
 			e.w.writen1(byte(i))
 		}
+=======
+	if i >= 0 {
+		e.EncodeUint(uint64(i))
+	} else if i >= -32 {
+		e.w.writen1(byte(i))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	} else if i >= math.MinInt8 {
 		e.w.writen2(mpInt8, byte(i))
 	} else if i >= math.MinInt16 {
@@ -246,11 +282,15 @@ func (e *msgpackEncDriver) EncodeInt(i int64) {
 
 func (e *msgpackEncDriver) EncodeUint(i uint64) {
 	if i <= math.MaxInt8 {
+<<<<<<< HEAD
 		if e.h.NoFixedNum {
 			e.w.writen2(mpUint8, byte(i))
 		} else {
 			e.w.writen1(byte(i))
 		}
+=======
+		e.w.writen1(byte(i))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	} else if i <= math.MaxUint8 {
 		e.w.writen2(mpUint8, byte(i))
 	} else if i <= math.MaxUint16 {
@@ -283,6 +323,7 @@ func (e *msgpackEncDriver) EncodeFloat64(f float64) {
 	bigenHelper{e.x[:8], e.w}.writeUint64(math.Float64bits(f))
 }
 
+<<<<<<< HEAD
 func (e *msgpackEncDriver) EncodeTime(t time.Time) {
 	if t.IsZero() {
 		e.EncodeNil()
@@ -316,6 +357,8 @@ func (e *msgpackEncDriver) EncodeTime(t time.Time) {
 	}
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (e *msgpackEncDriver) EncodeExt(v interface{}, xtag uint64, ext Ext, _ *Encoder) {
 	bs := ext.WriteExt(v)
 	if bs == nil {
@@ -326,7 +369,11 @@ func (e *msgpackEncDriver) EncodeExt(v interface{}, xtag uint64, ext Ext, _ *Enc
 		e.encodeExtPreamble(uint8(xtag), len(bs))
 		e.w.writeb(bs)
 	} else {
+<<<<<<< HEAD
 		e.EncodeStringBytes(cRAW, bs)
+=======
+		e.EncodeStringBytes(c_RAW, bs)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 }
 
@@ -360,15 +407,24 @@ func (e *msgpackEncDriver) encodeExtPreamble(xtag byte, l int) {
 	}
 }
 
+<<<<<<< HEAD
 func (e *msgpackEncDriver) WriteArrayStart(length int) {
 	e.writeContainerLen(msgpackContainerList, length)
 }
 
 func (e *msgpackEncDriver) WriteMapStart(length int) {
+=======
+func (e *msgpackEncDriver) EncodeArrayStart(length int) {
+	e.writeContainerLen(msgpackContainerList, length)
+}
+
+func (e *msgpackEncDriver) EncodeMapStart(length int) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e.writeContainerLen(msgpackContainerMap, length)
 }
 
 func (e *msgpackEncDriver) EncodeString(c charEncoding, s string) {
+<<<<<<< HEAD
 	slen := len(s)
 	if c == cRAW && e.h.WriteExt {
 		e.writeContainerLen(msgpackContainerBin, slen)
@@ -376,10 +432,19 @@ func (e *msgpackEncDriver) EncodeString(c charEncoding, s string) {
 		e.writeContainerLen(msgpackContainerStr, slen)
 	}
 	if slen > 0 {
+=======
+	if c == c_RAW && e.h.WriteExt {
+		e.writeContainerLen(msgpackContainerBin, len(s))
+	} else {
+		e.writeContainerLen(msgpackContainerStr, len(s))
+	}
+	if len(s) > 0 {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		e.w.writestr(s)
 	}
 }
 
+<<<<<<< HEAD
 func (e *msgpackEncDriver) EncodeStringBytes(c charEncoding, bs []byte) {
 	if bs == nil {
 		e.EncodeNil()
@@ -392,6 +457,19 @@ func (e *msgpackEncDriver) EncodeStringBytes(c charEncoding, bs []byte) {
 		e.writeContainerLen(msgpackContainerStr, slen)
 	}
 	if slen > 0 {
+=======
+func (e *msgpackEncDriver) EncodeSymbol(v string) {
+	e.EncodeString(c_UTF8, v)
+}
+
+func (e *msgpackEncDriver) EncodeStringBytes(c charEncoding, bs []byte) {
+	if c == c_RAW && e.h.WriteExt {
+		e.writeContainerLen(msgpackContainerBin, len(bs))
+	} else {
+		e.writeContainerLen(msgpackContainerStr, len(bs))
+	}
+	if len(bs) > 0 {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		e.w.writeb(bs)
 	}
 }
@@ -413,18 +491,30 @@ func (e *msgpackEncDriver) writeContainerLen(ct msgpackContainerType, l int) {
 //---------------------------------------------
 
 type msgpackDecDriver struct {
+<<<<<<< HEAD
 	d *Decoder
 	r decReader // *Decoder decReader decReaderT
 	h *MsgpackHandle
 	// b      [scratchByteArrayLen]byte
+=======
+	d      *Decoder
+	r      decReader // *Decoder decReader decReaderT
+	h      *MsgpackHandle
+	b      [scratchByteArrayLen]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	bd     byte
 	bdRead bool
 	br     bool // bytes reader
 	noBuiltInTypes
+<<<<<<< HEAD
 	// noStreamingCodec
 	// decNoSeparator
 	decDriverNoopContainerReader
 	_ [3]uint64 // padding
+=======
+	noStreamingCodec
+	decNoSeparator
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // Note: This returns either a primitive (int, bool, etc) for non-containers,
@@ -437,7 +527,11 @@ func (d *msgpackDecDriver) DecodeNaked() {
 		d.readNextBd()
 	}
 	bd := d.bd
+<<<<<<< HEAD
 	n := d.d.n
+=======
+	n := &d.d.n
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	var decodeFurther bool
 
 	switch bd {
@@ -500,11 +594,19 @@ func (d *msgpackDecDriver) DecodeNaked() {
 				n.s = d.DecodeString()
 			} else {
 				n.v = valueTypeBytes
+<<<<<<< HEAD
 				n.l = d.DecodeBytes(nil, false)
 			}
 		case bd == mpBin8, bd == mpBin16, bd == mpBin32:
 			n.v = valueTypeBytes
 			n.l = d.DecodeBytes(nil, false)
+=======
+				n.l = d.DecodeBytes(nil, false, false)
+			}
+		case bd == mpBin8, bd == mpBin16, bd == mpBin32:
+			n.v = valueTypeBytes
+			n.l = d.DecodeBytes(nil, false, false)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		case bd == mpArray16, bd == mpArray32, bd >= mpFixArrayMin && bd <= mpFixArrayMax:
 			n.v = valueTypeArray
 			decodeFurther = true
@@ -515,6 +617,7 @@ func (d *msgpackDecDriver) DecodeNaked() {
 			n.v = valueTypeExt
 			clen := d.readExtLen()
 			n.u = uint64(d.r.readn1())
+<<<<<<< HEAD
 			if n.u == uint64(mpTimeExtTagU) {
 				n.v = valueTypeTime
 				n.t = d.decodeTime(clen)
@@ -523,6 +626,11 @@ func (d *msgpackDecDriver) DecodeNaked() {
 			}
 		default:
 			d.d.errorf("cannot infer value: %s: Ox%x/%d/%s", msgBadDesc, bd, bd, mpdesc(bd))
+=======
+			n.l = d.r.readx(clen)
+		default:
+			d.d.errorf("Nil-Deciphered DecodeValue: %s: hex: %x, dec: %d", msgBadDesc, bd, bd)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 	}
 	if !decodeFurther {
@@ -536,7 +644,11 @@ func (d *msgpackDecDriver) DecodeNaked() {
 }
 
 // int can be decoded from msgpack type: intXXX or uintXXX
+<<<<<<< HEAD
 func (d *msgpackDecDriver) DecodeInt64() (i int64) {
+=======
+func (d *msgpackDecDriver) DecodeInt(bitsize uint8) (i int64) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if !d.bdRead {
 		d.readNextBd()
 	}
@@ -564,7 +676,18 @@ func (d *msgpackDecDriver) DecodeInt64() (i int64) {
 		case d.bd >= mpNegFixNumMin && d.bd <= mpNegFixNumMax:
 			i = int64(int8(d.bd))
 		default:
+<<<<<<< HEAD
 			d.d.errorf("cannot decode signed integer: %s: %x/%s", msgBadDesc, d.bd, mpdesc(d.bd))
+=======
+			d.d.errorf("Unhandled single-byte unsigned integer value: %s: %x", msgBadDesc, d.bd)
+			return
+		}
+	}
+	// check overflow (logic adapted from std pkg reflect/value.go OverflowUint()
+	if bitsize > 0 {
+		if trunc := (i << (64 - bitsize)) >> (64 - bitsize); i != trunc {
+			d.d.errorf("Overflow int value: %v", i)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			return
 		}
 	}
@@ -573,7 +696,11 @@ func (d *msgpackDecDriver) DecodeInt64() (i int64) {
 }
 
 // uint can be decoded from msgpack type: intXXX or uintXXX
+<<<<<<< HEAD
 func (d *msgpackDecDriver) DecodeUint64() (ui uint64) {
+=======
+func (d *msgpackDecDriver) DecodeUint(bitsize uint8) (ui uint64) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if !d.bdRead {
 		d.readNextBd()
 	}
@@ -590,28 +717,44 @@ func (d *msgpackDecDriver) DecodeUint64() (ui uint64) {
 		if i := int64(int8(d.r.readn1())); i >= 0 {
 			ui = uint64(i)
 		} else {
+<<<<<<< HEAD
 			d.d.errorf("assigning negative signed value: %v, to unsigned type", i)
+=======
+			d.d.errorf("Assigning negative signed value: %v, to unsigned type", i)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			return
 		}
 	case mpInt16:
 		if i := int64(int16(bigen.Uint16(d.r.readx(2)))); i >= 0 {
 			ui = uint64(i)
 		} else {
+<<<<<<< HEAD
 			d.d.errorf("assigning negative signed value: %v, to unsigned type", i)
+=======
+			d.d.errorf("Assigning negative signed value: %v, to unsigned type", i)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			return
 		}
 	case mpInt32:
 		if i := int64(int32(bigen.Uint32(d.r.readx(4)))); i >= 0 {
 			ui = uint64(i)
 		} else {
+<<<<<<< HEAD
 			d.d.errorf("assigning negative signed value: %v, to unsigned type", i)
+=======
+			d.d.errorf("Assigning negative signed value: %v, to unsigned type", i)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			return
 		}
 	case mpInt64:
 		if i := int64(bigen.Uint64(d.r.readx(8))); i >= 0 {
 			ui = uint64(i)
 		} else {
+<<<<<<< HEAD
 			d.d.errorf("assigning negative signed value: %v, to unsigned type", i)
+=======
+			d.d.errorf("Assigning negative signed value: %v, to unsigned type", i)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			return
 		}
 	default:
@@ -619,10 +762,24 @@ func (d *msgpackDecDriver) DecodeUint64() (ui uint64) {
 		case d.bd >= mpPosFixNumMin && d.bd <= mpPosFixNumMax:
 			ui = uint64(d.bd)
 		case d.bd >= mpNegFixNumMin && d.bd <= mpNegFixNumMax:
+<<<<<<< HEAD
 			d.d.errorf("assigning negative signed value: %v, to unsigned type", int(d.bd))
 			return
 		default:
 			d.d.errorf("cannot decode unsigned integer: %s: %x/%s", msgBadDesc, d.bd, mpdesc(d.bd))
+=======
+			d.d.errorf("Assigning negative signed value: %v, to unsigned type", int(d.bd))
+			return
+		default:
+			d.d.errorf("Unhandled single-byte unsigned integer value: %s: %x", msgBadDesc, d.bd)
+			return
+		}
+	}
+	// check overflow (logic adapted from std pkg reflect/value.go OverflowUint()
+	if bitsize > 0 {
+		if trunc := (ui << (64 - bitsize)) >> (64 - bitsize); ui != trunc {
+			d.d.errorf("Overflow uint value: %v", ui)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			return
 		}
 	}
@@ -631,7 +788,11 @@ func (d *msgpackDecDriver) DecodeUint64() (ui uint64) {
 }
 
 // float can either be decoded from msgpack type: float, double or intX
+<<<<<<< HEAD
 func (d *msgpackDecDriver) DecodeFloat64() (f float64) {
+=======
+func (d *msgpackDecDriver) DecodeFloat(chkOverflow32 bool) (f float64) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if !d.bdRead {
 		d.readNextBd()
 	}
@@ -640,7 +801,15 @@ func (d *msgpackDecDriver) DecodeFloat64() (f float64) {
 	} else if d.bd == mpDouble {
 		f = math.Float64frombits(bigen.Uint64(d.r.readx(8)))
 	} else {
+<<<<<<< HEAD
 		f = float64(d.DecodeInt64())
+=======
+		f = float64(d.DecodeInt(0))
+	}
+	if chkOverflow32 && chkOvf.Float32(f) {
+		d.d.errorf("msgpack: float32 overflow: %v", f)
+		return
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 	d.bdRead = false
 	return
@@ -656,13 +825,18 @@ func (d *msgpackDecDriver) DecodeBool() (b bool) {
 	} else if d.bd == mpTrue || d.bd == 1 {
 		b = true
 	} else {
+<<<<<<< HEAD
 		d.d.errorf("cannot decode bool: %s: %x/%s", msgBadDesc, d.bd, mpdesc(d.bd))
+=======
+		d.d.errorf("Invalid single-byte value for bool: %s: %x", msgBadDesc, d.bd)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 	d.bdRead = false
 	return
 }
 
+<<<<<<< HEAD
 func (d *msgpackDecDriver) DecodeBytes(bs []byte, zerocopy bool) (bsOut []byte) {
 	if !d.bdRead {
 		d.readNextBd()
@@ -695,6 +869,20 @@ func (d *msgpackDecDriver) DecodeBytes(bs []byte, zerocopy bool) (bsOut []byte) 
 	}
 
 	// these are (bin|str)(8|16|32)
+=======
+func (d *msgpackDecDriver) DecodeBytes(bs []byte, isstring, zerocopy bool) (bsOut []byte) {
+	if !d.bdRead {
+		d.readNextBd()
+	}
+	var clen int
+	// ignore isstring. Expect that the bytes may be found from msgpackContainerStr or msgpackContainerBin
+	if bd := d.bd; bd == mpBin8 || bd == mpBin16 || bd == mpBin32 {
+		clen = d.readContainerLen(msgpackContainerBin)
+	} else {
+		clen = d.readContainerLen(msgpackContainerStr)
+	}
+	// println("DecodeBytes: clen: ", clen)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	d.bdRead = false
 	// bytes may be nil, so handle it. if nil, clen=-1.
 	if clen < 0 {
@@ -704,6 +892,7 @@ func (d *msgpackDecDriver) DecodeBytes(bs []byte, zerocopy bool) (bsOut []byte) 
 		if d.br {
 			return d.r.readx(clen)
 		} else if len(bs) == 0 {
+<<<<<<< HEAD
 			bs = d.d.b[:]
 		}
 	}
@@ -716,6 +905,16 @@ func (d *msgpackDecDriver) DecodeString() (s string) {
 
 func (d *msgpackDecDriver) DecodeStringAsBytes() (s []byte) {
 	return d.DecodeBytes(d.d.b[:], true)
+=======
+			bs = d.b[:]
+		}
+	}
+	return decByteSlice(d.r, clen, d.d.h.MaxInitLen, bs)
+}
+
+func (d *msgpackDecDriver) DecodeString() (s string) {
+	return string(d.DecodeBytes(d.b[:], true, true))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (d *msgpackDecDriver) readNextBd() {
@@ -748,10 +947,16 @@ func (d *msgpackDecDriver) ContainerType() (vt valueType) {
 		return valueTypeArray
 	} else if bd == mpMap16 || bd == mpMap32 || (bd >= mpFixMapMin && bd <= mpFixMapMax) {
 		return valueTypeMap
+<<<<<<< HEAD
 	}
 	// else {
 	// d.d.errorf("isContainerType: unsupported parameter: %v", vt)
 	// }
+=======
+	} else {
+		// d.d.errorf("isContainerType: unsupported parameter: %v", vt)
+	}
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return valueTypeUnset
 }
 
@@ -761,7 +966,11 @@ func (d *msgpackDecDriver) TryDecodeAsNil() (v bool) {
 	}
 	if d.bd == mpNil {
 		d.bdRead = false
+<<<<<<< HEAD
 		return true
+=======
+		v = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 	return
 }
@@ -779,7 +988,11 @@ func (d *msgpackDecDriver) readContainerLen(ct msgpackContainerType) (clen int) 
 	} else if (ct.bFixMin & bd) == ct.bFixMin {
 		clen = int(ct.bFixMin ^ bd)
 	} else {
+<<<<<<< HEAD
 		d.d.errorf("cannot read container length: %s: hex: %x, decimal: %d", msgBadDesc, bd, bd)
+=======
+		d.d.errorf("readContainerLen: %s: hex: %x, decimal: %d", msgBadDesc, bd, bd)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 	d.bdRead = false
@@ -827,6 +1040,7 @@ func (d *msgpackDecDriver) readExtLen() (clen int) {
 	return
 }
 
+<<<<<<< HEAD
 func (d *msgpackDecDriver) DecodeTime() (t time.Time) {
 	// decode time from string bytes or ext
 	if !d.bdRead {
@@ -881,6 +1095,11 @@ func (d *msgpackDecDriver) decodeTime(clen int) (t time.Time) {
 func (d *msgpackDecDriver) DecodeExt(rv interface{}, xtag uint64, ext Ext) (realxtag uint64) {
 	if xtag > 0xff {
 		d.d.errorf("ext: tag must be <= 0xff; got: %v", xtag)
+=======
+func (d *msgpackDecDriver) DecodeExt(rv interface{}, xtag uint64, ext Ext) (realxtag uint64) {
+	if xtag > 0xff {
+		d.d.errorf("decodeExt: tag must be <= 0xff; got: %v", xtag)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 	realxtag1, xbs := d.decodeExtV(ext != nil, uint8(xtag))
@@ -901,15 +1120,26 @@ func (d *msgpackDecDriver) decodeExtV(verifyTag bool, tag byte) (xtag byte, xbs 
 	}
 	xbd := d.bd
 	if xbd == mpBin8 || xbd == mpBin16 || xbd == mpBin32 {
+<<<<<<< HEAD
 		xbs = d.DecodeBytes(nil, true)
 	} else if xbd == mpStr8 || xbd == mpStr16 || xbd == mpStr32 ||
 		(xbd >= mpFixStrMin && xbd <= mpFixStrMax) {
 		xbs = d.DecodeStringAsBytes()
+=======
+		xbs = d.DecodeBytes(nil, false, true)
+	} else if xbd == mpStr8 || xbd == mpStr16 || xbd == mpStr32 ||
+		(xbd >= mpFixStrMin && xbd <= mpFixStrMax) {
+		xbs = d.DecodeBytes(nil, true, true)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	} else {
 		clen := d.readExtLen()
 		xtag = d.r.readn1()
 		if verifyTag && xtag != tag {
+<<<<<<< HEAD
 			d.d.errorf("wrong extension tag - got %b, expecting %v", xtag, tag)
+=======
+			d.d.errorf("Wrong extension tag. Got %b. Expecting: %v", xtag, tag)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			return
 		}
 		xbs = d.r.readx(clen)
@@ -927,9 +1157,12 @@ type MsgpackHandle struct {
 	// RawToString controls how raw bytes are decoded into a nil interface{}.
 	RawToString bool
 
+<<<<<<< HEAD
 	// NoFixedNum says to output all signed integers as 2-bytes, never as 1-byte fixednum.
 	NoFixedNum bool
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// WriteExt flag supports encoding configured extensions with extension tags.
 	// It also controls whether other elements of the new spec are encoded (ie Str8).
 	//
@@ -941,6 +1174,7 @@ type MsgpackHandle struct {
 	// type is provided (e.g. decoding into a nil interface{}), you get back
 	// a []byte or string based on the setting of RawToString.
 	WriteExt bool
+<<<<<<< HEAD
 
 	binaryEncodingType
 	noElemSeparators
@@ -954,6 +1188,13 @@ func (h *MsgpackHandle) Name() string { return "msgpack" }
 // SetBytesExt sets an extension
 func (h *MsgpackHandle) SetBytesExt(rt reflect.Type, tag uint64, ext BytesExt) (err error) {
 	return h.SetExt(rt, tag, &extWrapper{ext, interfaceExtFailer{}})
+=======
+	binaryEncodingType
+}
+
+func (h *MsgpackHandle) SetBytesExt(rt reflect.Type, tag uint64, ext BytesExt) (err error) {
+	return h.SetExt(rt, tag, &setExtWrapper{b: ext})
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (h *MsgpackHandle) newEncDriver(e *Encoder) encDriver {
@@ -991,7 +1232,11 @@ func (c *msgpackSpecRpcCodec) WriteRequest(r *rpc.Request, body interface{}) err
 		bodyArr = []interface{}{body}
 	}
 	r2 := []interface{}{0, uint32(r.Seq), r.ServiceMethod, bodyArr}
+<<<<<<< HEAD
 	return c.write(r2, nil, false)
+=======
+	return c.write(r2, nil, false, true)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (c *msgpackSpecRpcCodec) WriteResponse(r *rpc.Response, body interface{}) error {
@@ -1003,7 +1248,11 @@ func (c *msgpackSpecRpcCodec) WriteResponse(r *rpc.Response, body interface{}) e
 		body = nil
 	}
 	r2 := []interface{}{1, uint32(r.Seq), moe, body}
+<<<<<<< HEAD
 	return c.write(r2, nil, false)
+=======
+	return c.write(r2, nil, false, true)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (c *msgpackSpecRpcCodec) ReadResponseHeader(r *rpc.Response) error {
@@ -1023,6 +1272,10 @@ func (c *msgpackSpecRpcCodec) ReadRequestBody(body interface{}) error {
 }
 
 func (c *msgpackSpecRpcCodec) parseCustomHeader(expectTypeByte byte, msgid *uint64, methodOrError *string) (err error) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if c.isClosed() {
 		return io.EOF
 	}
@@ -1036,6 +1289,7 @@ func (c *msgpackSpecRpcCodec) parseCustomHeader(expectTypeByte byte, msgid *uint
 	// 	err = fmt.Errorf("Unexpected value for array descriptor: Expecting %v. Received %v", fia, bs1)
 	// 	return
 	// }
+<<<<<<< HEAD
 	var ba [1]byte
 	var n int
 	for {
@@ -1064,6 +1318,30 @@ func (c *msgpackSpecRpcCodec) parseCustomHeader(expectTypeByte byte, msgid *uint
 				}
 			}
 		}
+=======
+	var b byte
+	b, err = c.br.ReadByte()
+	if err != nil {
+		return
+	}
+	if b != fia {
+		err = fmt.Errorf("Unexpected value for array descriptor: Expecting %v. Received %v", fia, b)
+		return
+	}
+
+	if err = c.read(&b); err != nil {
+		return
+	}
+	if b != expectTypeByte {
+		err = fmt.Errorf("Unexpected byte descriptor in header. Expecting %v. Received %v", expectTypeByte, b)
+		return
+	}
+	if err = c.read(msgid); err != nil {
+		return
+	}
+	if err = c.read(methodOrError); err != nil {
+		return
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 	return
 }
@@ -1076,8 +1354,12 @@ type msgpackSpecRpc struct{}
 
 // MsgpackSpecRpc implements Rpc using the communication protocol defined in
 // the msgpack spec at https://github.com/msgpack-rpc/msgpack-rpc/blob/master/spec.md .
+<<<<<<< HEAD
 //
 // See GoRpc documentation, for information on buffering for better performance.
+=======
+// Its methods (ServerCodec and ClientCodec) return values that implement RpcCodecBuffered.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 var MsgpackSpecRpc msgpackSpecRpc
 
 func (x msgpackSpecRpc) ServerCodec(conn io.ReadWriteCloser, h Handle) rpc.ServerCodec {

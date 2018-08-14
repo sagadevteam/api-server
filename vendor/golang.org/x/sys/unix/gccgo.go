@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Copyright 2015 The Go Authors. All rights reserved.
+=======
+// Copyright 2015 The Go Authors.  All rights reserved.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -8,6 +12,7 @@ package unix
 
 import "syscall"
 
+<<<<<<< HEAD
 // We can't use the gc-syntax .s files for gccgo. On the plus side
 // much of the functionality can be written directly in Go.
 
@@ -24,6 +29,14 @@ func SyscallNoError(trap, a1, a2, a3 uintptr) (r1, r2 uintptr) {
 	return r, 0
 }
 
+=======
+// We can't use the gc-syntax .s files for gccgo.  On the plus side
+// much of the functionality can be written directly in Go.
+
+//extern gccgoRealSyscall
+func realSyscall(trap, a1, a2, a3, a4, a5, a6, a7, a8, a9 uintptr) (r, errno uintptr)
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func Syscall(trap, a1, a2, a3 uintptr) (r1, r2 uintptr, err syscall.Errno) {
 	syscall.Entersyscall()
 	r, errno := realSyscall(trap, a1, a2, a3, 0, 0, 0, 0, 0, 0)
@@ -45,11 +58,14 @@ func Syscall9(trap, a1, a2, a3, a4, a5, a6, a7, a8, a9 uintptr) (r1, r2 uintptr,
 	return r, 0, syscall.Errno(errno)
 }
 
+<<<<<<< HEAD
 func RawSyscallNoError(trap, a1, a2, a3 uintptr) (r1, r2 uintptr) {
 	r := realSyscallNoError(trap, a1, a2, a3, 0, 0, 0, 0, 0, 0)
 	return r, 0
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func RawSyscall(trap, a1, a2, a3 uintptr) (r1, r2 uintptr, err syscall.Errno) {
 	r, errno := realSyscall(trap, a1, a2, a3, 0, 0, 0, 0, 0, 0)
 	return r, 0, syscall.Errno(errno)

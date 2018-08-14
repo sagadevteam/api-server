@@ -108,7 +108,11 @@ type Statfs_t struct {
 	Owner       uint32
 	Type        int32
 	Flags       int32
+<<<<<<< HEAD
 	_           [4]byte
+=======
+	Pad_cgo_0   [4]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	Syncwrites  int64
 	Asyncwrites int64
 	Fstypename  [16]int8
@@ -118,7 +122,11 @@ type Statfs_t struct {
 	Spares1     int16
 	Mntfromname [80]int8
 	Spares2     int16
+<<<<<<< HEAD
 	_           [4]byte
+=======
+	Pad_cgo_1   [4]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	Spare       [2]int64
 }
 
@@ -143,10 +151,13 @@ type Fsid struct {
 	Val [2]int32
 }
 
+<<<<<<< HEAD
 const (
 	PathMax = 0x400
 )
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type RawSockaddrInet4 struct {
 	Len    uint8
 	Family uint8
@@ -219,10 +230,17 @@ type IPv6Mreq struct {
 type Msghdr struct {
 	Name       *byte
 	Namelen    uint32
+<<<<<<< HEAD
 	_          [4]byte
 	Iov        *Iovec
 	Iovlen     int32
 	_          [4]byte
+=======
+	Pad_cgo_0  [4]byte
+	Iov        *Iovec
+	Iovlen     int32
+	Pad_cgo_1  [4]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	Control    *byte
 	Controllen uint32
 	Flags      int32
@@ -294,6 +312,7 @@ const (
 )
 
 type IfMsghdr struct {
+<<<<<<< HEAD
 	Msglen  uint16
 	Version uint8
 	Type    uint8
@@ -302,6 +321,16 @@ type IfMsghdr struct {
 	Index   uint16
 	_       [2]byte
 	Data    IfData
+=======
+	Msglen    uint16
+	Version   uint8
+	Type      uint8
+	Addrs     int32
+	Flags     int32
+	Index     uint16
+	Pad_cgo_0 [2]byte
+	Data      IfData
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type IfData struct {
@@ -311,7 +340,11 @@ type IfData struct {
 	Hdrlen     uint8
 	Recvquota  uint8
 	Xmitquota  uint8
+<<<<<<< HEAD
 	_          [2]byte
+=======
+	Pad_cgo_0  [2]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	Mtu        uint64
 	Metric     uint64
 	Link_state uint64
@@ -333,6 +366,7 @@ type IfData struct {
 }
 
 type IfaMsghdr struct {
+<<<<<<< HEAD
 	Msglen  uint16
 	Version uint8
 	Type    uint8
@@ -351,6 +385,26 @@ type IfmaMsghdr struct {
 	Flags   int32
 	Index   uint16
 	_       [2]byte
+=======
+	Msglen    uint16
+	Version   uint8
+	Type      uint8
+	Addrs     int32
+	Flags     int32
+	Index     uint16
+	Pad_cgo_0 [2]byte
+	Metric    int32
+}
+
+type IfmaMsghdr struct {
+	Msglen    uint16
+	Version   uint8
+	Type      uint8
+	Addrs     int32
+	Flags     int32
+	Index     uint16
+	Pad_cgo_0 [2]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type IfAnnounceMsghdr struct {
@@ -363,6 +417,7 @@ type IfAnnounceMsghdr struct {
 }
 
 type RtMsghdr struct {
+<<<<<<< HEAD
 	Msglen  uint16
 	Version uint8
 	Type    uint8
@@ -376,6 +431,21 @@ type RtMsghdr struct {
 	Use     int32
 	Inits   uint64
 	Rmx     RtMetrics
+=======
+	Msglen    uint16
+	Version   uint8
+	Type      uint8
+	Index     uint16
+	Pad_cgo_0 [2]byte
+	Flags     int32
+	Addrs     int32
+	Pid       int32
+	Seq       int32
+	Errno     int32
+	Use       int32
+	Inits     uint64
+	Rmx       RtMetrics
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type RtMetrics struct {
@@ -391,7 +461,11 @@ type RtMetrics struct {
 	Hopcount  uint64
 	Mssopt    uint16
 	Pad       uint16
+<<<<<<< HEAD
 	_         [4]byte
+=======
+	Pad_cgo_0 [4]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	Msl       uint64
 	Iwmaxsegs uint64
 	Iwcapsegs uint64
@@ -416,9 +490,15 @@ type BpfStat struct {
 }
 
 type BpfProgram struct {
+<<<<<<< HEAD
 	Len   uint32
 	_     [4]byte
 	Insns *BpfInsn
+=======
+	Len       uint32
+	Pad_cgo_0 [4]byte
+	Insns     *BpfInsn
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type BpfInsn struct {
@@ -429,11 +509,19 @@ type BpfInsn struct {
 }
 
 type BpfHdr struct {
+<<<<<<< HEAD
 	Tstamp  Timeval
 	Caplen  uint32
 	Datalen uint32
 	Hdrlen  uint16
 	_       [6]byte
+=======
+	Tstamp    Timeval
+	Caplen    uint32
+	Datalen   uint32
+	Hdrlen    uint16
+	Pad_cgo_0 [6]byte
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 type Termios struct {
@@ -445,6 +533,7 @@ type Termios struct {
 	Ispeed uint32
 	Ospeed uint32
 }
+<<<<<<< HEAD
 
 type Winsize struct {
 	Row    uint16
@@ -484,3 +573,5 @@ type Utsname struct {
 	Version  [32]byte
 	Machine  [32]byte
 }
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

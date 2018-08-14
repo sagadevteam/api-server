@@ -13,6 +13,7 @@
 // Just jump to package syscall's implementation for all these functions.
 // The runtime may know about them.
 
+<<<<<<< HEAD
 TEXT ·Syscall(SB),NOSPLIT,$0-28
 	B	syscall·Syscall(SB)
 
@@ -53,4 +54,19 @@ TEXT ·RawSyscallNoError(SB),NOSPLIT,$0-24
 	RET
 
 TEXT ·seek(SB),NOSPLIT,$0-28
+=======
+TEXT	·Syscall(SB),NOSPLIT,$0-28
+	B	syscall·Syscall(SB)
+
+TEXT	·Syscall6(SB),NOSPLIT,$0-40
+	B	syscall·Syscall6(SB)
+
+TEXT ·RawSyscall(SB),NOSPLIT,$0-28
+	B	syscall·RawSyscall(SB)
+
+TEXT	·RawSyscall6(SB),NOSPLIT,$0-40
+	B	syscall·RawSyscall6(SB)
+
+TEXT ·seek(SB),NOSPLIT,$0-32
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	B	syscall·seek(SB)

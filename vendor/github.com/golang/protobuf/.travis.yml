@@ -4,7 +4,10 @@ go:
 - 1.6.x
 - 1.7.x
 - 1.8.x
+<<<<<<< HEAD
 - 1.9.x
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 install:
   - go get -v -d -t github.com/golang/protobuf/...

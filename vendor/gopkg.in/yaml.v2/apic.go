@@ -2,6 +2,10 @@ package yaml
 
 import (
 	"io"
+<<<<<<< HEAD
+=======
+	"os"
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 func yaml_insert_token(parser *yaml_parser_t, pos int, token *yaml_token_t) {
@@ -47,9 +51,15 @@ func yaml_string_read_handler(parser *yaml_parser_t, buffer []byte) (n int, err 
 	return n, nil
 }
 
+<<<<<<< HEAD
 // Reader read handler.
 func yaml_reader_read_handler(parser *yaml_parser_t, buffer []byte) (n int, err error) {
 	return parser.input_reader.Read(buffer)
+=======
+// File read handler.
+func yaml_file_read_handler(parser *yaml_parser_t, buffer []byte) (n int, err error) {
+	return parser.input_file.Read(buffer)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // Set a string input.
@@ -63,12 +73,21 @@ func yaml_parser_set_input_string(parser *yaml_parser_t, input []byte) {
 }
 
 // Set a file input.
+<<<<<<< HEAD
 func yaml_parser_set_input_reader(parser *yaml_parser_t, r io.Reader) {
 	if parser.read_handler != nil {
 		panic("must set the input source only once")
 	}
 	parser.read_handler = yaml_reader_read_handler
 	parser.input_reader = r
+=======
+func yaml_parser_set_input_file(parser *yaml_parser_t, file *os.File) {
+	if parser.read_handler != nil {
+		panic("must set the input source only once")
+	}
+	parser.read_handler = yaml_file_read_handler
+	parser.input_file = file
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // Set the source encoding.
@@ -80,13 +99,21 @@ func yaml_parser_set_encoding(parser *yaml_parser_t, encoding yaml_encoding_t) {
 }
 
 // Create a new emitter object.
+<<<<<<< HEAD
 func yaml_emitter_initialize(emitter *yaml_emitter_t) {
+=======
+func yaml_emitter_initialize(emitter *yaml_emitter_t) bool {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	*emitter = yaml_emitter_t{
 		buffer:     make([]byte, output_buffer_size),
 		raw_buffer: make([]byte, 0, output_raw_buffer_size),
 		states:     make([]yaml_emitter_state_t, 0, initial_stack_size),
 		events:     make([]yaml_event_t, 0, initial_queue_size),
 	}
+<<<<<<< HEAD
+=======
+	return true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // Destroy an emitter object.
@@ -100,10 +127,16 @@ func yaml_string_write_handler(emitter *yaml_emitter_t, buffer []byte) error {
 	return nil
 }
 
+<<<<<<< HEAD
 // yaml_writer_write_handler uses emitter.output_writer to write the
 // emitted text.
 func yaml_writer_write_handler(emitter *yaml_emitter_t, buffer []byte) error {
 	_, err := emitter.output_writer.Write(buffer)
+=======
+// File write handler.
+func yaml_file_write_handler(emitter *yaml_emitter_t, buffer []byte) error {
+	_, err := emitter.output_file.Write(buffer)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return err
 }
 
@@ -117,12 +150,21 @@ func yaml_emitter_set_output_string(emitter *yaml_emitter_t, output_buffer *[]by
 }
 
 // Set a file output.
+<<<<<<< HEAD
 func yaml_emitter_set_output_writer(emitter *yaml_emitter_t, w io.Writer) {
 	if emitter.write_handler != nil {
 		panic("must set the output target only once")
 	}
 	emitter.write_handler = yaml_writer_write_handler
 	emitter.output_writer = w
+=======
+func yaml_emitter_set_output_file(emitter *yaml_emitter_t, file io.Writer) {
+	if emitter.write_handler != nil {
+		panic("must set the output target only once")
+	}
+	emitter.write_handler = yaml_file_write_handler
+	emitter.output_file = file
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // Set the output encoding.
@@ -251,11 +293,16 @@ func yaml_emitter_set_break(emitter *yaml_emitter_t, line_break yaml_break_t) {
 //
 
 // Create STREAM-START.
+<<<<<<< HEAD
 func yaml_stream_start_event_initialize(event *yaml_event_t, encoding yaml_encoding_t) {
+=======
+func yaml_stream_start_event_initialize(event *yaml_event_t, encoding yaml_encoding_t) bool {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	*event = yaml_event_t{
 		typ:      yaml_STREAM_START_EVENT,
 		encoding: encoding,
 	}
+<<<<<<< HEAD
 }
 
 // Create STREAM-END.
@@ -272,20 +319,48 @@ func yaml_document_start_event_initialize(
 	tag_directives []yaml_tag_directive_t,
 	implicit bool,
 ) {
+=======
+	return true
+}
+
+// Create STREAM-END.
+func yaml_stream_end_event_initialize(event *yaml_event_t) bool {
+	*event = yaml_event_t{
+		typ: yaml_STREAM_END_EVENT,
+	}
+	return true
+}
+
+// Create DOCUMENT-START.
+func yaml_document_start_event_initialize(event *yaml_event_t, version_directive *yaml_version_directive_t,
+	tag_directives []yaml_tag_directive_t, implicit bool) bool {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	*event = yaml_event_t{
 		typ:               yaml_DOCUMENT_START_EVENT,
 		version_directive: version_directive,
 		tag_directives:    tag_directives,
 		implicit:          implicit,
 	}
+<<<<<<< HEAD
 }
 
 // Create DOCUMENT-END.
 func yaml_document_end_event_initialize(event *yaml_event_t, implicit bool) {
+=======
+	return true
+}
+
+// Create DOCUMENT-END.
+func yaml_document_end_event_initialize(event *yaml_event_t, implicit bool) bool {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	*event = yaml_event_t{
 		typ:      yaml_DOCUMENT_END_EVENT,
 		implicit: implicit,
 	}
+<<<<<<< HEAD
+=======
+	return true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 ///*
@@ -347,7 +422,11 @@ func yaml_sequence_end_event_initialize(event *yaml_event_t) bool {
 }
 
 // Create MAPPING-START.
+<<<<<<< HEAD
 func yaml_mapping_start_event_initialize(event *yaml_event_t, anchor, tag []byte, implicit bool, style yaml_mapping_style_t) {
+=======
+func yaml_mapping_start_event_initialize(event *yaml_event_t, anchor, tag []byte, implicit bool, style yaml_mapping_style_t) bool {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	*event = yaml_event_t{
 		typ:      yaml_MAPPING_START_EVENT,
 		anchor:   anchor,
@@ -355,6 +434,7 @@ func yaml_mapping_start_event_initialize(event *yaml_event_t, anchor, tag []byte
 		implicit: implicit,
 		style:    yaml_style_t(style),
 	}
+<<<<<<< HEAD
 }
 
 // Create MAPPING-END.
@@ -362,6 +442,17 @@ func yaml_mapping_end_event_initialize(event *yaml_event_t) {
 	*event = yaml_event_t{
 		typ: yaml_MAPPING_END_EVENT,
 	}
+=======
+	return true
+}
+
+// Create MAPPING-END.
+func yaml_mapping_end_event_initialize(event *yaml_event_t) bool {
+	*event = yaml_event_t{
+		typ: yaml_MAPPING_END_EVENT,
+	}
+	return true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // Destroy an event object.
@@ -468,7 +559,11 @@ func yaml_event_delete(event *yaml_event_t) {
 //    } context
 //    tag_directive *yaml_tag_directive_t
 //
+<<<<<<< HEAD
 //    context.error = YAML_NO_ERROR // Eliminate a compiler warning.
+=======
+//    context.error = YAML_NO_ERROR // Eliminate a compliler warning.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //
 //    assert(document) // Non-NULL document object is expected.
 //

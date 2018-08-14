@@ -9,7 +9,10 @@ package yaml
 import (
 	"errors"
 	"fmt"
+<<<<<<< HEAD
 	"io"
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"reflect"
 	"strings"
 	"sync"
@@ -82,13 +85,18 @@ func Unmarshal(in []byte, out interface{}) (err error) {
 }
 
 // UnmarshalStrict is like Unmarshal except that any fields that are found
+<<<<<<< HEAD
 // in the data that do not have corresponding struct members, or mapping
 // keys that are duplicates, will result in
+=======
+// in the data that do not have corresponding struct members will result in
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // an error.
 func UnmarshalStrict(in []byte, out interface{}) (err error) {
 	return unmarshal(in, out, true)
 }
 
+<<<<<<< HEAD
 // A Decorder reads and decodes YAML values from an input stream.
 type Decoder struct {
 	strict bool
@@ -134,6 +142,8 @@ func (dec *Decoder) Decode(v interface{}) (err error) {
 	return nil
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func unmarshal(in []byte, out interface{}, strict bool) (err error) {
 	defer handleErr(&err)
 	d := newDecoder(strict)
@@ -157,8 +167,13 @@ func unmarshal(in []byte, out interface{}, strict bool) (err error) {
 // of the generated document will reflect the structure of the value itself.
 // Maps and pointers (to struct, string, int, etc) are accepted as the in value.
 //
+<<<<<<< HEAD
 // Struct fields are only marshalled if they are exported (have an upper case
 // first letter), and are marshalled using the field name lowercased as the
+=======
+// Struct fields are only unmarshalled if they are exported (have an upper case
+// first letter), and are unmarshalled using the field name lowercased as the
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // default key. Custom keys may be defined via the "yaml" name in the field
 // tag: the content preceding the first comma is used as the key, and the
 // following comma-separated options are used to tweak the marshalling process.
@@ -172,10 +187,14 @@ func unmarshal(in []byte, out interface{}, strict bool) (err error) {
 //
 //     omitempty    Only include the field if it's not set to the zero
 //                  value for the type or to empty slices or maps.
+<<<<<<< HEAD
 //                  Zero valued structs will be omitted if all their public
 //                  fields are zero, unless they implement an IsZero
 //                  method (see the IsZeroer interface type), in which
 //                  case the field will be included if that method returns true.
+=======
+//                  Does not apply to zero valued structs.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //
 //     flow         Marshal using a flow style (useful for structs,
 //                  sequences and maps).
@@ -190,7 +209,11 @@ func unmarshal(in []byte, out interface{}, strict bool) (err error) {
 // For example:
 //
 //     type T struct {
+<<<<<<< HEAD
 //         F int `yaml:"a,omitempty"`
+=======
+//         F int "a,omitempty"
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //         B int
 //     }
 //     yaml.Marshal(&T{B: 2}) // Returns "b: 2\n"
@@ -200,12 +223,17 @@ func Marshal(in interface{}) (out []byte, err error) {
 	defer handleErr(&err)
 	e := newEncoder()
 	defer e.destroy()
+<<<<<<< HEAD
 	e.marshalDoc("", reflect.ValueOf(in))
+=======
+	e.marshal("", reflect.ValueOf(in))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	e.finish()
 	out = e.out
 	return
 }
 
+<<<<<<< HEAD
 // An Encoder writes YAML values to an output stream.
 type Encoder struct {
 	encoder *encoder
@@ -241,6 +269,8 @@ func (e *Encoder) Close() (err error) {
 	return nil
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func handleErr(err *error) {
 	if v := recover(); v != nil {
 		if e, ok := v.(yamlError); ok {
@@ -296,9 +326,12 @@ type fieldInfo struct {
 	Num       int
 	OmitEmpty bool
 	Flow      bool
+<<<<<<< HEAD
 	// Id holds the unique field identifier, so we can cheaply
 	// check for field duplicates without maintaining an extra map.
 	Id int
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	// Inline holds the field index if the field is part of an inlined struct.
 	Inline []int
@@ -378,7 +411,10 @@ func getStructInfo(st reflect.Type) (*structInfo, error) {
 					} else {
 						finfo.Inline = append([]int{i}, finfo.Inline...)
 					}
+<<<<<<< HEAD
 					finfo.Id = len(fieldsList)
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 					fieldsMap[finfo.Key] = finfo
 					fieldsList = append(fieldsList, finfo)
 				}
@@ -400,16 +436,23 @@ func getStructInfo(st reflect.Type) (*structInfo, error) {
 			return nil, errors.New(msg)
 		}
 
+<<<<<<< HEAD
 		info.Id = len(fieldsList)
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		fieldsList = append(fieldsList, info)
 		fieldsMap[info.Key] = info
 	}
 
+<<<<<<< HEAD
 	sinfo = &structInfo{
 		FieldsMap:  fieldsMap,
 		FieldsList: fieldsList,
 		InlineMap:  inlineMap,
 	}
+=======
+	sinfo = &structInfo{fieldsMap, fieldsList, inlineMap}
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 	fieldMapMutex.Lock()
 	structMap[st] = sinfo
@@ -417,6 +460,7 @@ func getStructInfo(st reflect.Type) (*structInfo, error) {
 	return sinfo, nil
 }
 
+<<<<<<< HEAD
 // IsZeroer is used to check whether an object is zero to
 // determine whether it should be omitted when marshaling
 // with the omitempty flag. One notable implementation
@@ -434,6 +478,10 @@ func isZero(v reflect.Value) bool {
 		return z.IsZero()
 	}
 	switch kind {
+=======
+func isZero(v reflect.Value) bool {
+	switch v.Kind() {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	case reflect.String:
 		return len(v.String()) == 0
 	case reflect.Interface, reflect.Ptr:

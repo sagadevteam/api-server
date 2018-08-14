@@ -34,7 +34,11 @@ func Getgroups() (gids []int, err error) {
 		return nil, nil
 	}
 
+<<<<<<< HEAD
 	// Sanity check group count. Max is 16 on BSD.
+=======
+	// Sanity check group count.  Max is 16 on BSD.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if n < 0 || n > 1000 {
 		return nil, EINVAL
 	}
@@ -352,6 +356,7 @@ func GetsockoptICMPv6Filter(fd, level, opt int) (*ICMPv6Filter, error) {
 	return &value, err
 }
 
+<<<<<<< HEAD
 // GetsockoptString returns the string value of the socket option opt for the
 // socket associated with fd at the given socket level.
 func GetsockoptString(fd, level, opt int) (string, error) {
@@ -364,6 +369,8 @@ func GetsockoptString(fd, level, opt int) (string, error) {
 	return string(buf[:vallen-1]), nil
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys   recvfrom(fd int, p []byte, flags int, from *RawSockaddrAny, fromlen *_Socklen) (n int, err error)
 //sys   sendto(s int, buf []byte, flags int, to unsafe.Pointer, addrlen _Socklen) (err error)
 //sys	recvmsg(s int, msg *Msghdr, flags int) (n int, err error)
@@ -573,6 +580,7 @@ func Utimes(path string, tv []Timeval) error {
 
 func UtimesNano(path string, ts []Timespec) error {
 	if ts == nil {
+<<<<<<< HEAD
 		err := utimensat(AT_FDCWD, path, nil, 0)
 		if err != ENOSYS {
 			return err
@@ -591,6 +599,15 @@ func UtimesNano(path string, ts []Timespec) error {
 	if err != ENOSYS {
 		return err
 	}
+=======
+		return utimes(path, nil)
+	}
+	// TODO: The BSDs can do utimensat with SYS_UTIMENSAT but it
+	// isn't supported by darwin so this uses utimes instead
+	if len(ts) != 2 {
+		return EINVAL
+	}
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// Not as efficient as it could be because Timespec and
 	// Timeval have different types in the different OSes
 	tv := [2]Timeval{
@@ -600,6 +617,7 @@ func UtimesNano(path string, ts []Timespec) error {
 	return utimes(path, (*[2]Timeval)(unsafe.Pointer(&tv[0])))
 }
 
+<<<<<<< HEAD
 func UtimesNanoAt(dirfd int, path string, ts []Timespec, flags int) error {
 	if ts == nil {
 		return utimensat(dirfd, path, nil, flags)
@@ -614,6 +632,8 @@ func UtimesNanoAt(dirfd int, path string, ts []Timespec, flags int) error {
 	return utimensat(dirfd, path, (*[2]Timespec)(unsafe.Pointer(&ts[0])), flags)
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	futimes(fd int, timeval *[2]Timeval) (err error)
 
 func Futimes(fd int, tv []Timeval) error {
@@ -628,6 +648,7 @@ func Futimes(fd int, tv []Timeval) error {
 
 //sys	fcntl(fd int, cmd int, arg int) (val int, err error)
 
+<<<<<<< HEAD
 //sys   poll(fds *PollFd, nfds int, timeout int) (n int, err error)
 
 func Poll(fds []PollFd, timeout int) (n int, err error) {
@@ -640,6 +661,14 @@ func Poll(fds []PollFd, timeout int) (n int, err error) {
 // TODO: wrap
 //	Acct(name nil-string) (err error)
 //	Gethostuuid(uuid *byte, timeout *Timespec) (err error)
+=======
+// TODO: wrap
+//	Acct(name nil-string) (err error)
+//	Gethostuuid(uuid *byte, timeout *Timespec) (err error)
+//	Madvise(addr *byte, len int, behav int) (err error)
+//	Mprotect(addr *byte, len int, prot int) (err error)
+//	Msync(addr *byte, len int, flags int) (err error)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //	Ptrace(req int, pid int, addr uintptr, data int) (ret uintptr, err error)
 
 var mapper = &mmapper{
@@ -655,6 +684,7 @@ func Mmap(fd int, offset int64, length int, prot int, flags int) (data []byte, e
 func Munmap(b []byte) (err error) {
 	return mapper.Munmap(b)
 }
+<<<<<<< HEAD
 
 //sys	Madvise(b []byte, behav int) (err error)
 //sys	Mlock(b []byte) (err error)
@@ -663,3 +693,5 @@ func Munmap(b []byte) (err error) {
 //sys	Msync(b []byte, flags int) (err error)
 //sys	Munlock(b []byte) (err error)
 //sys	Munlockall() (err error)
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

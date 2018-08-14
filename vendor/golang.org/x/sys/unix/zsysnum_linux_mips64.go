@@ -331,5 +331,8 @@ const (
 	SYS_PKEY_MPROTECT          = 5323
 	SYS_PKEY_ALLOC             = 5324
 	SYS_PKEY_FREE              = 5325
+<<<<<<< HEAD
 	SYS_STATX                  = 5326
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )

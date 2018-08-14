@@ -65,7 +65,10 @@ func Syscall9(trap, a1, a2, a3, a4, a5, a6, a7, a8, a9 uintptr) (r1, r2 uintptr,
 
 //sys	Lstat(path string, stat *Stat_t) (err error) = SYS_LSTAT64
 //sys	Fstat(fd int, stat *Stat_t) (err error) = SYS_FSTAT64
+<<<<<<< HEAD
 //sys	Fstatat(dirfd int, path string, stat *Stat_t, flags int) (err error) = SYS_FSTATAT64
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Stat(path string, stat *Stat_t) (err error) = SYS_STAT64
 
 //sys	Utime(path string, buf *Utimbuf) (err error)
@@ -100,12 +103,28 @@ func Seek(fd int, offset int64, whence int) (off int64, err error) {
 	return
 }
 
+<<<<<<< HEAD
 func setTimespec(sec, nsec int64) Timespec {
 	return Timespec{Sec: int32(sec), Nsec: int32(nsec)}
 }
 
 func setTimeval(sec, usec int64) Timeval {
 	return Timeval{Sec: int32(sec), Usec: int32(usec)}
+=======
+func TimespecToNsec(ts Timespec) int64 { return int64(ts.Sec)*1e9 + int64(ts.Nsec) }
+
+func NsecToTimespec(nsec int64) (ts Timespec) {
+	ts.Sec = int32(nsec / 1e9)
+	ts.Nsec = int32(nsec % 1e9)
+	return
+}
+
+func NsecToTimeval(nsec int64) (tv Timeval) {
+	nsec += 999 // round up to microsecond
+	tv.Sec = int32(nsec / 1e9)
+	tv.Usec = int32(nsec % 1e9 / 1e3)
+	return
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 //sysnb pipe2(p *[2]_C_int, flags int) (err error)
@@ -229,3 +248,8 @@ func Poll(fds []PollFd, timeout int) (n int, err error) {
 	}
 	return poll(&fds[0], len(fds), timeout)
 }
+<<<<<<< HEAD
+=======
+
+func Getpagesize() int { return 4096 }
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

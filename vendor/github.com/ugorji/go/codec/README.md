@@ -15,11 +15,25 @@ To install:
 
     go get github.com/ugorji/go/codec
 
+<<<<<<< HEAD
 This package will carefully use 'unsafe' for performance reasons in specific places.
 You can build without unsafe use by passing the safe or appengine tag
 i.e. 'go install -tags=safe ...'. Note that unsafe is only supported for the last 3
 go sdk versions e.g. current go release is go 1.9, so we support unsafe use only from
 go 1.7+ . This is because supporting unsafe requires knowledge of implementation details.
+=======
+This package understands the `unsafe` tag, to allow using unsafe semantics:
+
+  - When decoding into a struct, you need to read the field name as a string 
+    so you can find the struct field it is mapped to.
+    Using `unsafe` will bypass the allocation and copying overhead of `[]byte->string` conversion.
+
+To use it, you must pass the `unsafe` tag during install:
+
+```
+go install -tags=unsafe github.com/ugorji/go/codec 
+```
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 Online documentation: http://godoc.org/github.com/ugorji/go/codec  
 Detailed Usage/How-to Primer: http://ugorji.net/blog/go-codec-primer
@@ -30,6 +44,7 @@ the standard library (ie json, xml, gob, etc).
 Rich Feature Set includes:
 
   - Simple but extremely powerful and feature-rich API
+<<<<<<< HEAD
   - Support for go1.4 and above, while selectively using newer APIs for later releases
   - Excellent code coverage ( > 90% )
   - Very High Performance.
@@ -39,6 +54,13 @@ Rich Feature Set includes:
   - Lock-free (sans mutex) concurrency for scaling to 100's of cores
   - Coerce types where appropriate
     e.g. decode an int in the stream into a float, decode numbers from formatted strings, etc
+=======
+  - Very High Performance.
+    Our extensive benchmarks show us outperforming Gob, Json, Bson, etc by 2-4X.
+  - Multiple conversions:
+    Package coerces types where appropriate 
+    e.g. decode an int in the stream into a float, etc.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
   - Corner Cases: 
     Overflows, nil maps/slices, nil values in streams are handled correctly
   - Standard field renaming via tags
@@ -47,6 +69,7 @@ Rich Feature Set includes:
     (struct, slice, map, primitives, pointers, interface{}, etc)
   - Extensions to support efficient encoding/decoding of any named types
   - Support encoding.(Binary|Text)(M|Unm)arshaler interfaces
+<<<<<<< HEAD
   - Support IsZero() bool to determine if a value is a zero value.
     Analogous to time.Time.IsZero() bool.
   - Decoding without a schema (into a interface{}).
@@ -57,6 +80,12 @@ Rich Feature Set includes:
   - Encode a struct as an array, and decode struct from an array in the data stream
   - Option to encode struct keys as numbers (instead of strings)
     (to support structured streams with fields encoded as numeric codes)
+=======
+  - Decoding without a schema (into a interface{}).
+    Includes Options to configure what specific map or slice type to use
+    when decoding an encoded list or map into a nil interface{}
+  - Encode a struct as an array, and decode struct from an array in the data stream
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
   - Comprehensive support for anonymous fields
   - Fast (no-reflection) encoding/decoding of common maps and slices
   - Code-generation for faster performance.
@@ -96,6 +125,7 @@ encoded as an empty map because it has no exported fields, while UUID
 would be encoded as a string. However, with extension support, you can
 encode any of these however you like.
 
+<<<<<<< HEAD
 ## Custom Encoding and Decoding
 
 This package maintains symmetry in the encoding and decoding halfs.
@@ -117,6 +147,8 @@ Consequently, if a type only defines one-half of the symmetry
 then that type doesn't satisfy the check and we will continue walking down the
 decision tree.
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 ## RPC
 
 RPC Client and Server Codecs are implemented, so the codecs can be used
@@ -171,6 +203,7 @@ Typical usage model:
     //OR rpcCodec := codec.MsgpackSpecRpc.ClientCodec(conn, h)
     client := rpc.NewClientWithCodec(rpcCodec)
 
+<<<<<<< HEAD
 ## Running Tests
 
 To run tests, use the following:
@@ -204,3 +237,5 @@ Every other field in a struct will be encoded/decoded.
 
 Embedded fields are encoded as if they exist in the top-level struct,
 with some caveats. See Encode documentation.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

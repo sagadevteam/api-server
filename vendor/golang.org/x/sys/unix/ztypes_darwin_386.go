@@ -447,6 +447,7 @@ type Termios struct {
 	Ospeed uint32
 }
 
+<<<<<<< HEAD
 type Winsize struct {
 	Row    uint16
 	Col    uint16
@@ -454,12 +455,15 @@ type Winsize struct {
 	Ypixel uint16
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 const (
 	AT_FDCWD            = -0x2
 	AT_REMOVEDIR        = 0x80
 	AT_SYMLINK_FOLLOW   = 0x40
 	AT_SYMLINK_NOFOLLOW = 0x20
 )
+<<<<<<< HEAD
 
 type PollFd struct {
 	Fd      int32
@@ -487,3 +491,5 @@ type Utsname struct {
 	Version  [256]byte
 	Machine  [256]byte
 }
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

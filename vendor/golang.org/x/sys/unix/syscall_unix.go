@@ -7,7 +7,10 @@
 package unix
 
 import (
+<<<<<<< HEAD
 	"bytes"
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"runtime"
 	"sync"
 	"syscall"
@@ -51,6 +54,7 @@ func errnoErr(e syscall.Errno) error {
 	return e
 }
 
+<<<<<<< HEAD
 // clen returns the index of the first NULL byte in n or len(n) if n contains no NULL byte.
 func clen(n []byte) int {
 	i := bytes.IndexByte(n, 0)
@@ -60,6 +64,8 @@ func clen(n []byte) int {
 	return i
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Mmap manager, for use by operating system-specific implementations.
 
 type mmapper struct {
@@ -148,19 +154,28 @@ func Write(fd int, p []byte) (n int, err error) {
 // creation of IPv6 sockets to return EAFNOSUPPORT.
 var SocketDisableIPv6 bool
 
+<<<<<<< HEAD
 // Sockaddr represents a socket address.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type Sockaddr interface {
 	sockaddr() (ptr unsafe.Pointer, len _Socklen, err error) // lowercase; only we can define Sockaddrs
 }
 
+<<<<<<< HEAD
 // SockaddrInet4 implements the Sockaddr interface for AF_INET type sockets.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrInet4 struct {
 	Port int
 	Addr [4]byte
 	raw  RawSockaddrInet4
 }
 
+<<<<<<< HEAD
 // SockaddrInet6 implements the Sockaddr interface for AF_INET6 type sockets.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrInet6 struct {
 	Port   int
 	ZoneId uint32
@@ -168,7 +183,10 @@ type SockaddrInet6 struct {
 	raw    RawSockaddrInet6
 }
 
+<<<<<<< HEAD
 // SockaddrUnix implements the Sockaddr interface for AF_UNIX type sockets.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrUnix struct {
 	Name string
 	raw  RawSockaddrUnix
@@ -305,6 +323,7 @@ func SetNonblock(fd int, nonblocking bool) (err error) {
 	_, err = fcntl(fd, F_SETFL, flag)
 	return err
 }
+<<<<<<< HEAD
 
 // Exec calls execve(2), which replaces the calling executable in the process
 // tree. argv0 should be the full path to an executable ("/bin/ls") and the
@@ -314,3 +333,5 @@ func SetNonblock(fd int, nonblocking bool) (err error) {
 func Exec(argv0 string, argv []string, envv []string) error {
 	return syscall.Exec(argv0, argv, envv)
 }
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

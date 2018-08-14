@@ -11,7 +11,10 @@ package unix
 //sys	Fadvise(fd int, offset int64, length int64, advice int) (err error) = SYS_FADVISE64
 //sys	Fchown(fd int, uid int, gid int) (err error)
 //sys	Fstat(fd int, stat *Stat_t) (err error)
+<<<<<<< HEAD
 //sys	Fstatat(dirfd int, path string, stat *Stat_t, flags int) (err error) = SYS_NEWFSTATAT
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Fstatfs(fd int, buf *Statfs_t) (err error)
 //sys	Ftruncate(fd int, length int64) (err error)
 //sysnb	Getegid() (egid int)
@@ -70,6 +73,11 @@ func Gettimeofday(tv *Timeval) (err error) {
 	return nil
 }
 
+<<<<<<< HEAD
+=======
+func Getpagesize() int { return 4096 }
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func Time(t *Time_t) (tt Time_t, err error) {
 	var tv Timeval
 	errno := gettimeofday(&tv)
@@ -84,12 +92,28 @@ func Time(t *Time_t) (tt Time_t, err error) {
 
 //sys	Utime(path string, buf *Utimbuf) (err error)
 
+<<<<<<< HEAD
 func setTimespec(sec, nsec int64) Timespec {
 	return Timespec{Sec: sec, Nsec: nsec}
 }
 
 func setTimeval(sec, usec int64) Timeval {
 	return Timeval{Sec: sec, Usec: usec}
+=======
+func TimespecToNsec(ts Timespec) int64 { return int64(ts.Sec)*1e9 + int64(ts.Nsec) }
+
+func NsecToTimespec(nsec int64) (ts Timespec) {
+	ts.Sec = nsec / 1e9
+	ts.Nsec = nsec % 1e9
+	return
+}
+
+func NsecToTimeval(nsec int64) (tv Timeval) {
+	nsec += 999 // round up to microsecond
+	tv.Sec = nsec / 1e9
+	tv.Usec = nsec % 1e9 / 1e3
+	return
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 //sysnb	pipe(p *[2]_C_int) (err error)

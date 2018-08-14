@@ -138,9 +138,12 @@ func TestPassFD(t *testing.T) {
 		uc.Close()
 	})
 	_, oobn, _, _, err := uc.ReadMsgUnix(buf, oob)
+<<<<<<< HEAD
 	if err != nil {
 		t.Fatalf("ReadMsgUnix: %v", err)
 	}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	closeUnix.Stop()
 
 	scms, err := unix.ParseSocketControlMessage(oob[:oobn])
@@ -338,9 +341,12 @@ func TestDup(t *testing.T) {
 		t.Fatalf("Write to dup2 fd failed: %v", err)
 	}
 	_, err = unix.Seek(f, 0, 0)
+<<<<<<< HEAD
 	if err != nil {
 		t.Fatalf("Seek failed: %v", err)
 	}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	_, err = unix.Read(f, b2)
 	if err != nil {
 		t.Fatalf("Read back failed: %v", err)
@@ -349,6 +355,7 @@ func TestDup(t *testing.T) {
 		t.Errorf("Dup: stdout write not in file, expected %v, got %v", string(b1), string(b2))
 	}
 }
+<<<<<<< HEAD
 
 func TestPoll(t *testing.T) {
 	f, cleanup := mktmpfifo(t)
@@ -571,3 +578,5 @@ func chtmpdir(t *testing.T) func() {
 		os.RemoveAll(d)
 	}
 }
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

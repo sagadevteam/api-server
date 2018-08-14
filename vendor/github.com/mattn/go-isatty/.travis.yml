@@ -2,10 +2,13 @@ language: go
 go:
   - tip
 
+<<<<<<< HEAD
 os:
   - linux
   - osx
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 before_install:
   - go get github.com/mattn/goveralls
   - go get golang.org/x/tools/cmd/cover

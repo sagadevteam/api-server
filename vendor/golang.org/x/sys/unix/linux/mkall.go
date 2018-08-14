@@ -15,17 +15,24 @@
 package main
 
 import (
+<<<<<<< HEAD
 	"bufio"
 	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
+=======
+	"fmt"
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
+<<<<<<< HEAD
 	"unicode"
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 // These will be paths to the appropriate source directories.
@@ -133,6 +140,7 @@ var targets = []target{
 	// },
 }
 
+<<<<<<< HEAD
 // ptracePairs is a list of pairs of targets that can, in some cases,
 // run each other's binaries.
 var ptracePairs = []struct{ a1, a2 string }{
@@ -142,6 +150,8 @@ var ptracePairs = []struct{ a1, a2 string }{
 	{"mipsle", "mips64le"},
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func main() {
 	if runtime.GOOS != GOOS || runtime.GOARCH != BuildArch {
 		fmt.Printf("Build system has GOOS_GOARCH = %s_%s, need %s_%s\n",
@@ -172,6 +182,7 @@ func main() {
 			fmt.Printf("----- SUCCESS:    %s -----\n\n", t.GoArch)
 		}
 	}
+<<<<<<< HEAD
 
 	fmt.Printf("----- GENERATING ptrace pairs -----\n")
 	ok := true
@@ -184,6 +195,8 @@ func main() {
 	if ok {
 		fmt.Printf("----- SUCCESS ptrace pairs    -----\n\n")
 	}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // Makes an exec.Cmd with Stderr attached to os.Stderr
@@ -403,6 +416,7 @@ func (t *target) mksyscallFlags() (flags []string) {
 	}
 	return
 }
+<<<<<<< HEAD
 
 // generatePtracePair takes a pair of GOARCH values that can run each
 // other's binaries, such as 386 and amd64. It extracts the PtraceRegs
@@ -480,3 +494,5 @@ func writeOnePtrace(w io.Writer, arch, def string) {
 	fmt.Fprintf(w, "\treturn ptrace(PTRACE_SETREGS, pid, 0, uintptr(unsafe.Pointer(regs)))\n")
 	fmt.Fprintf(w, "}\n")
 }
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

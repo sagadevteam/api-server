@@ -33,5 +33,8 @@
 # at src/google/protobuf/descriptor.proto
 regenerate:
 	@echo WARNING! THIS RULE IS PROBABLY NOT RIGHT FOR YOUR INSTALLATION
+<<<<<<< HEAD
 	cp $(HOME)/src/protobuf/include/google/protobuf/descriptor.proto .
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	protoc --go_out=../../../../.. -I$(HOME)/src/protobuf/include $(HOME)/src/protobuf/include/google/protobuf/descriptor.proto

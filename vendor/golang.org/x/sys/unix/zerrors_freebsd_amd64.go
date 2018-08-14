@@ -351,8 +351,11 @@ const (
 	CSTOP                          = 0x13
 	CSTOPB                         = 0x400
 	CSUSP                          = 0x1a
+<<<<<<< HEAD
 	CTL_HW                         = 0x6
 	CTL_KERN                       = 0x1
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	CTL_MAXNAME                    = 0x18
 	CTL_NET                        = 0x4
 	DLT_A429                       = 0xb8
@@ -610,7 +613,10 @@ const (
 	F_UNLCKSYS                     = 0x4
 	F_WRLCK                        = 0x3
 	HUPCL                          = 0x4000
+<<<<<<< HEAD
 	HW_MACHINE                     = 0x1
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	ICANON                         = 0x100
 	ICMP6_FILTER                   = 0x12
 	ICRNL                          = 0x100
@@ -947,10 +953,13 @@ const (
 	IXANY                          = 0x800
 	IXOFF                          = 0x400
 	IXON                           = 0x200
+<<<<<<< HEAD
 	KERN_HOSTNAME                  = 0xa
 	KERN_OSRELEASE                 = 0x2
 	KERN_OSTYPE                    = 0x1
 	KERN_VERSION                   = 0x4
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	LOCK_EX                        = 0x2
 	LOCK_NB                        = 0x4
 	LOCK_SH                        = 0x1
@@ -989,6 +998,7 @@ const (
 	MAP_STACK                      = 0x400
 	MCL_CURRENT                    = 0x1
 	MCL_FUTURE                     = 0x2
+<<<<<<< HEAD
 	MNT_ACLS                       = 0x8000000
 	MNT_ASYNC                      = 0x40
 	MNT_AUTOMOUNTED                = 0x200000000
@@ -1032,6 +1042,8 @@ const (
 	MNT_USER                       = 0x8000
 	MNT_VISFLAGMASK                = 0x3fef0ffff
 	MNT_WAIT                       = 0x1
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	MSG_CMSG_CLOEXEC               = 0x40000
 	MSG_COMPAT                     = 0x8000
 	MSG_CTRUNC                     = 0x20

@@ -83,6 +83,7 @@ func TestGoPackageOption(t *testing.T) {
 		}
 	}
 }
+<<<<<<< HEAD
 
 func TestUnescape(t *testing.T) {
 	tests := []struct {
@@ -112,3 +113,5 @@ func TestUnescape(t *testing.T) {
 		}
 	}
 }
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

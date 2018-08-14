@@ -81,7 +81,11 @@ func TestFormatMessage(t *testing.T) {
 	buf := make([]uint16, 300)
 	_, err = windows.FormatMessage(flags, uintptr(dll.Handle), uint32(errno), 0, buf, nil)
 	if err != nil {
+<<<<<<< HEAD
 		t.Fatalf("FormatMessage for handle=%x and errno=%x failed: %v", dll.Handle, errno, err)
+=======
+		t.Fatal("FormatMessage for handle=%x and errno=%x failed: %v", dll.Handle, errno, err)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 }
 

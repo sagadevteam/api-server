@@ -10,6 +10,7 @@
 // System calls for 386, Linux
 //
 
+<<<<<<< HEAD
 // See ../runtime/sys_linux_386.s for the reason why we always use int 0x80
 // instead of the glibc-specific "CALL 0x10(GS)".
 #define INVOKE_SYSCALL	INT	$0x80
@@ -55,6 +56,23 @@ TEXT ·RawSyscallNoError(SB),NOSPLIT,$0-24
 	MOVL	DX, r2+20(FP)
 	RET
 
+=======
+// Just jump to package syscall's implementation for all these functions.
+// The runtime may know about them.
+
+TEXT	·Syscall(SB),NOSPLIT,$0-28
+	JMP	syscall·Syscall(SB)
+
+TEXT	·Syscall6(SB),NOSPLIT,$0-40
+	JMP	syscall·Syscall6(SB)
+
+TEXT ·RawSyscall(SB),NOSPLIT,$0-28
+	JMP	syscall·RawSyscall(SB)
+
+TEXT	·RawSyscall6(SB),NOSPLIT,$0-40
+	JMP	syscall·RawSyscall6(SB)
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 TEXT ·socketcall(SB),NOSPLIT,$0-36
 	JMP	syscall·socketcall(SB)
 

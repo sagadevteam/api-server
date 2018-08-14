@@ -255,7 +255,11 @@ func Getgroups() (gids []int, err error) {
 		return nil, nil
 	}
 
+<<<<<<< HEAD
 	// Sanity check group count. Max is 1<<16 on Linux.
+=======
+	// Sanity check group count.  Max is 1<<16 on Linux.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if n < 0 || n > 1<<20 {
 		return nil, EINVAL
 	}
@@ -290,8 +294,13 @@ type WaitStatus uint32
 // 0x7F (stopped), or a signal number that caused an exit.
 // The 0x80 bit is whether there was a core dump.
 // An extra number (exit code, signal causing a stop)
+<<<<<<< HEAD
 // is in the high bits. At least that's the idea.
 // There are various irregularities. For example, the
+=======
+// is in the high bits.  At least that's the idea.
+// There are various irregularities.  For example, the
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // "continued" status is 0xFFFF, distinguishing itself
 // from stopped via the core dump bit.
 
@@ -413,7 +422,10 @@ func (sa *SockaddrUnix) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	return unsafe.Pointer(&sa.raw), sl, nil
 }
 
+<<<<<<< HEAD
 // SockaddrLinklayer implements the Sockaddr interface for AF_PACKET type sockets.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrLinklayer struct {
 	Protocol uint16
 	Ifindex  int
@@ -440,7 +452,10 @@ func (sa *SockaddrLinklayer) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	return unsafe.Pointer(&sa.raw), SizeofSockaddrLinklayer, nil
 }
 
+<<<<<<< HEAD
 // SockaddrNetlink implements the Sockaddr interface for AF_NETLINK type sockets.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrNetlink struct {
 	Family uint16
 	Pad    uint16
@@ -457,8 +472,11 @@ func (sa *SockaddrNetlink) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	return unsafe.Pointer(&sa.raw), SizeofSockaddrNetlink, nil
 }
 
+<<<<<<< HEAD
 // SockaddrHCI implements the Sockaddr interface for AF_BLUETOOTH type sockets
 // using the HCI protocol.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 type SockaddrHCI struct {
 	Dev     uint16
 	Channel uint16
@@ -472,6 +490,7 @@ func (sa *SockaddrHCI) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	return unsafe.Pointer(&sa.raw), SizeofSockaddrHCI, nil
 }
 
+<<<<<<< HEAD
 // SockaddrL2 implements the Sockaddr interface for AF_BLUETOOTH type sockets
 // using the L2CAP protocol.
 type SockaddrL2 struct {
@@ -497,6 +516,8 @@ func (sa *SockaddrL2) sockaddr() (unsafe.Pointer, _Socklen, error) {
 	return unsafe.Pointer(&sa.raw), SizeofSockaddrL2, nil
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // SockaddrCAN implements the Sockaddr interface for AF_CAN type sockets.
 // The RxID and TxID fields are used for transport protocol addressing in
 // (CAN_TP16, CAN_TP20, CAN_MCNET, and CAN_ISOTP), they can be left with
@@ -837,6 +858,7 @@ func GetsockoptTCPInfo(fd, level, opt int) (*TCPInfo, error) {
 	return &value, err
 }
 
+<<<<<<< HEAD
 // GetsockoptString returns the string value of the socket option opt for the
 // socket associated with fd at the given socket level.
 func GetsockoptString(fd, level, opt int) (string, error) {
@@ -855,6 +877,8 @@ func GetsockoptString(fd, level, opt int) (string, error) {
 	return string(buf[:vallen-1]), nil
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func SetsockoptIPMreqn(fd, level, opt int, mreq *IPMreqn) (err error) {
 	return setsockopt(fd, level, opt, unsafe.Pointer(mreq), unsafe.Sizeof(*mreq))
 }
@@ -973,11 +997,16 @@ func Recvmsg(fd int, p, oob []byte, flags int) (n, oobn int, recvflags int, from
 	msg.Namelen = uint32(SizeofSockaddrAny)
 	var iov Iovec
 	if len(p) > 0 {
+<<<<<<< HEAD
 		iov.Base = &p[0]
+=======
+		iov.Base = (*byte)(unsafe.Pointer(&p[0]))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		iov.SetLen(len(p))
 	}
 	var dummy byte
 	if len(oob) > 0 {
+<<<<<<< HEAD
 		var sockType int
 		sockType, err = GetsockoptInt(fd, SOL_SOCKET, SO_TYPE)
 		if err != nil {
@@ -989,6 +1018,14 @@ func Recvmsg(fd int, p, oob []byte, flags int) (n, oobn int, recvflags int, from
 			iov.SetLen(1)
 		}
 		msg.Control = &oob[0]
+=======
+		// receive at least one normal byte
+		if len(p) == 0 {
+			iov.Base = &dummy
+			iov.SetLen(1)
+		}
+		msg.Control = (*byte)(unsafe.Pointer(&oob[0]))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		msg.SetControllen(len(oob))
 	}
 	msg.Iov = &iov
@@ -1021,15 +1058,24 @@ func SendmsgN(fd int, p, oob []byte, to Sockaddr, flags int) (n int, err error) 
 		}
 	}
 	var msg Msghdr
+<<<<<<< HEAD
 	msg.Name = (*byte)(ptr)
 	msg.Namelen = uint32(salen)
 	var iov Iovec
 	if len(p) > 0 {
 		iov.Base = &p[0]
+=======
+	msg.Name = (*byte)(unsafe.Pointer(ptr))
+	msg.Namelen = uint32(salen)
+	var iov Iovec
+	if len(p) > 0 {
+		iov.Base = (*byte)(unsafe.Pointer(&p[0]))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		iov.SetLen(len(p))
 	}
 	var dummy byte
 	if len(oob) > 0 {
+<<<<<<< HEAD
 		var sockType int
 		sockType, err = GetsockoptInt(fd, SOL_SOCKET, SO_TYPE)
 		if err != nil {
@@ -1041,6 +1087,14 @@ func SendmsgN(fd int, p, oob []byte, to Sockaddr, flags int) (n int, err error) 
 			iov.SetLen(1)
 		}
 		msg.Control = &oob[0]
+=======
+		// send at least one normal byte
+		if len(p) == 0 {
+			iov.Base = &dummy
+			iov.SetLen(1)
+		}
+		msg.Control = (*byte)(unsafe.Pointer(&oob[0]))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		msg.SetControllen(len(oob))
 	}
 	msg.Iov = &iov
@@ -1070,7 +1124,11 @@ func ptracePeek(req int, pid int, addr uintptr, out []byte) (count int, err erro
 
 	var buf [sizeofPtr]byte
 
+<<<<<<< HEAD
 	// Leading edge. PEEKTEXT/PEEKDATA don't require aligned
+=======
+	// Leading edge.  PEEKTEXT/PEEKDATA don't require aligned
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// access (PEEKUSER warns that it might), but if we don't
 	// align our reads, we might straddle an unmapped page
 	// boundary and not get the bytes leading up to the page
@@ -1172,10 +1230,13 @@ func PtracePokeData(pid int, addr uintptr, data []byte) (count int, err error) {
 	return ptracePoke(PTRACE_POKEDATA, PTRACE_PEEKDATA, pid, addr, data)
 }
 
+<<<<<<< HEAD
 func PtracePokeUser(pid int, addr uintptr, data []byte) (count int, err error) {
 	return ptracePoke(PTRACE_POKEUSR, PTRACE_PEEKUSR, pid, addr, data)
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func PtraceGetRegs(pid int, regsout *PtraceRegs) (err error) {
 	return ptrace(PTRACE_GETREGS, pid, 0, uintptr(unsafe.Pointer(regsout)))
 }
@@ -1219,6 +1280,25 @@ func ReadDirent(fd int, buf []byte) (n int, err error) {
 	return Getdents(fd, buf)
 }
 
+<<<<<<< HEAD
+=======
+func direntIno(buf []byte) (uint64, bool) {
+	return readInt(buf, unsafe.Offsetof(Dirent{}.Ino), unsafe.Sizeof(Dirent{}.Ino))
+}
+
+func direntReclen(buf []byte) (uint64, bool) {
+	return readInt(buf, unsafe.Offsetof(Dirent{}.Reclen), unsafe.Sizeof(Dirent{}.Reclen))
+}
+
+func direntNamlen(buf []byte) (uint64, bool) {
+	reclen, ok := direntReclen(buf)
+	if !ok {
+		return 0, false
+	}
+	return reclen - uint64(unsafe.Offsetof(Dirent{}.Name)), true
+}
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	mount(source string, target string, fstype string, flags uintptr, data *byte) (err error)
 
 func Mount(source string, target string, fstype string, flags uintptr, data string) (err error) {
@@ -1297,7 +1377,10 @@ func Getpgrp() (pid int) {
 //sys	PivotRoot(newroot string, putold string) (err error) = SYS_PIVOT_ROOT
 //sysnb prlimit(pid int, resource int, newlimit *Rlimit, old *Rlimit) (err error) = SYS_PRLIMIT64
 //sys   Prctl(option int, arg2 uintptr, arg3 uintptr, arg4 uintptr, arg5 uintptr) (err error)
+<<<<<<< HEAD
 //sys	Pselect(nfd int, r *FdSet, w *FdSet, e *FdSet, timeout *Timespec, sigmask *Sigset_t) (n int, err error) = SYS_PSELECT6
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	read(fd int, p []byte) (n int, err error)
 //sys	Removexattr(path string, attr string) (err error)
 //sys	Renameat(olddirfd int, oldpath string, newdirfd int, newpath string) (err error)
@@ -1324,7 +1407,10 @@ func Setgid(uid int) (err error) {
 
 //sys	Setpriority(which int, who int, prio int) (err error)
 //sys	Setxattr(path string, attr string, data []byte, flags int) (err error)
+<<<<<<< HEAD
 //sys	Statx(dirfd int, path string, flags int, mask int, stat *Statx_t) (err error)
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Sync()
 //sys	Syncfs(fd int) (err error)
 //sysnb	Sysinfo(info *Sysinfo_t) (err error)
@@ -1361,9 +1447,15 @@ func Munmap(b []byte) (err error) {
 //sys	Madvise(b []byte, advice int) (err error)
 //sys	Mprotect(b []byte, prot int) (err error)
 //sys	Mlock(b []byte) (err error)
+<<<<<<< HEAD
 //sys	Mlockall(flags int) (err error)
 //sys	Msync(b []byte, flags int) (err error)
 //sys	Munlock(b []byte) (err error)
+=======
+//sys	Munlock(b []byte) (err error)
+//sys	Mlockall(flags int) (err error)
+//sys	Msync(b []byte, flags int) (err error)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 //sys	Munlockall() (err error)
 
 // Vmsplice splices user pages from a slice of Iovecs into a pipe specified by fd,
@@ -1431,6 +1523,10 @@ func Vmsplice(fd int, iovs []Iovec, flags int) (int, error) {
 // ModifyLdt
 // Mount
 // MovePages
+<<<<<<< HEAD
+=======
+// Mprotect
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // MqGetsetattr
 // MqNotify
 // MqOpen
@@ -1442,6 +1538,10 @@ func Vmsplice(fd int, iovs []Iovec, flags int) (int, error) {
 // Msgget
 // Msgrcv
 // Msgsnd
+<<<<<<< HEAD
+=======
+// Newfstatat
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Nfsservctl
 // Personality
 // Pselect6
@@ -1462,9 +1562,17 @@ func Vmsplice(fd int, iovs []Iovec, flags int) (int, error) {
 // RtSigtimedwait
 // SchedGetPriorityMax
 // SchedGetPriorityMin
+<<<<<<< HEAD
 // SchedGetparam
 // SchedGetscheduler
 // SchedRrGetInterval
+=======
+// SchedGetaffinity
+// SchedGetparam
+// SchedGetscheduler
+// SchedRrGetInterval
+// SchedSetaffinity
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // SchedSetparam
 // SchedYield
 // Security

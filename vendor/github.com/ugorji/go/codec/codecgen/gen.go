@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Copyright (c) 2012-2018 Ugorji Nwoke. All rights reserved.
+=======
+// Copyright (c) 2012-2015 Ugorji Nwoke. All rights reserved.
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 // Use of this source code is governed by a MIT license found in the LICENSE file.
 
 // codecgen generates codec.Selfer implementations for a set of types.
@@ -29,8 +33,11 @@ const genCodecPkg = "codec1978" // keep this in sync with codec.genCodecPkg
 
 const genFrunMainTmpl = `//+build ignore
 
+<<<<<<< HEAD
 // Code generated - temporary main package for codecgen - DO NOT EDIT.
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 package main
 {{ if .Types }}import "{{ .ImportPath }}"{{ end }}
 func main() {
@@ -40,9 +47,12 @@ func main() {
 
 // const genFrunPkgTmpl = `//+build codecgen
 const genFrunPkgTmpl = `
+<<<<<<< HEAD
 
 // Code generated - temporary package for codecgen - DO NOT EDIT.
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 package {{ $.PackageName }}
 
 import (
@@ -55,12 +65,16 @@ import (
 )
 
 func CodecGenTempWrite{{ .RandString }}() {
+<<<<<<< HEAD
 	os.Remove("{{ .OutFile }}")
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	fout, err := os.Create("{{ .OutFile }}")
 	if err != nil {
 		panic(err)
 	}
 	defer fout.Close()
+<<<<<<< HEAD
 	
 	var typs []reflect.Type
 	var typ reflect.Type
@@ -82,6 +96,17 @@ typ = reflect.TypeOf(t{{ $index }})
 
 	bout, err := format.Source(out.Bytes())
 	// println("... lengths: before formatting: ", len(out.Bytes()), ", after formatting", len(bout))
+=======
+	var out bytes.Buffer
+	
+	var typs []reflect.Type 
+{{ range $index, $element := .Types }}
+	var t{{ $index }} {{ . }}
+	typs = append(typs, reflect.TypeOf(t{{ $index }}))
+{{ end }}
+	{{ if not .CodecPkgFiles }}{{ .CodecPkgName }}.{{ end }}Gen(&out, "{{ .BuildTag }}", "{{ .PackageName }}", "{{ .RandString }}", {{ .UseUnsafe }}, {{ if not .CodecPkgFiles }}{{ .CodecPkgName }}.{{ end }}NewTypeInfos(strings.Split("{{ .StructTags }}", ",")), typs...)
+	bout, err := format.Source(out.Bytes())
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if err != nil {
 		fout.Write(out.Bytes())
 		panic(err)
@@ -100,12 +125,17 @@ typ = reflect.TypeOf(t{{ $index }})
 // Tool then executes: "go run __frun__" which creates fout.
 // fout contains Codec(En|De)codeSelf implementations for every type T.
 //
+<<<<<<< HEAD
 func Generate(outfile, buildTag, codecPkgPath string,
 	uid int64,
 	goRunTag string, st string,
 	regexName, notRegexName *regexp.Regexp,
 	deleteTempFile, noExtensions bool,
 	infiles ...string) (err error) {
+=======
+func Generate(outfile, buildTag, codecPkgPath string, uid int64, useUnsafe bool, goRunTag string,
+	st string, regexName *regexp.Regexp, notRegexName *regexp.Regexp, deleteTempFile bool, infiles ...string) (err error) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	// For each file, grab AST, find each type, and write a call to it.
 	if len(infiles) == 0 {
 		return
@@ -116,7 +146,12 @@ func Generate(outfile, buildTag, codecPkgPath string,
 	}
 	if uid < 0 {
 		uid = -uid
+<<<<<<< HEAD
 	} else if uid == 0 {
+=======
+	}
+	if uid == 0 {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		rr := rand.New(rand.NewSource(time.Now().UnixNano()))
 		uid = 101 + rr.Int63n(9777)
 	}
@@ -141,18 +176,29 @@ func Generate(outfile, buildTag, codecPkgPath string,
 		BuildTag        string
 		StructTags      string
 		Types           []string
+<<<<<<< HEAD
 		AllFilesSize    int64
 		CodecPkgFiles   bool
 		NoExtensions    bool
+=======
+		CodecPkgFiles   bool
+		UseUnsafe       bool
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 	tv := tmplT{
 		CodecPkgName:    genCodecPkg,
 		OutFile:         outfile,
 		CodecImportPath: codecPkgPath,
 		BuildTag:        buildTag,
+<<<<<<< HEAD
 		RandString:      strconv.FormatInt(uid, 10),
 		StructTags:      st,
 		NoExtensions:    noExtensions,
+=======
+		UseUnsafe:       useUnsafe,
+		RandString:      strconv.FormatInt(uid, 10),
+		StructTags:      st,
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 	tv.ImportPath = pkg.ImportPath
 	if tv.ImportPath == tv.CodecImportPath {
@@ -163,17 +209,23 @@ func Generate(outfile, buildTag, codecPkgPath string,
 		tv.ImportPath = stripVendor(tv.ImportPath)
 	}
 	astfiles := make([]*ast.File, len(infiles))
+<<<<<<< HEAD
 	var fi os.FileInfo
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	for i, infile := range infiles {
 		if filepath.Dir(infile) != lastdir {
 			err = errors.New("in files must all be in same directory as outfile")
 			return
 		}
+<<<<<<< HEAD
 		if fi, err = os.Stat(infile); err != nil {
 			return
 		}
 		tv.AllFilesSize += fi.Size()
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		fset := token.NewFileSet()
 		astfiles[i], err = parser.ParseFile(fset, infile, nil, 0)
 		if err != nil {
@@ -235,10 +287,13 @@ func Generate(outfile, buildTag, codecPkgPath string,
 						//   chan: ChanType
 						// do not generate:
 						//   FuncType, InterfaceType, StarExpr (ptr), etc
+<<<<<<< HEAD
 						//
 						// We generate for all these types (not just structs), because they may be a field
 						// in another struct which doesn't have codecgen run on it, and it will be nice
 						// to take advantage of the fact that the type is a Selfer.
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 						switch td.Type.(type) {
 						case *ast.StructType, *ast.Ident, *ast.MapType, *ast.ArrayType, *ast.ChanType:
 							// only add to tv.Types iff
@@ -288,7 +343,11 @@ func Generate(outfile, buildTag, codecPkgPath string,
 	os.Remove(outfile)
 
 	// execute go run frun
+<<<<<<< HEAD
 	cmd := exec.Command("go", "run", "-tags", "codecgen.exec safe "+goRunTag, frunMainName) //, frunPkg.Name())
+=======
+	cmd := exec.Command("go", "run", "-tags="+goRunTag, frunMainName) //, frunPkg.Name())
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	var buf bytes.Buffer
 	cmd.Stdout = &buf
 	cmd.Stderr = &buf
@@ -314,7 +373,10 @@ func gen1(frunName, tmplStr string, tv interface{}) (frun *os.File, err error) {
 	}
 	bw := bufio.NewWriter(frun)
 	if err = t.Execute(bw, tv); err != nil {
+<<<<<<< HEAD
 		bw.Flush()
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return
 	}
 	if err = bw.Flush(); err != nil {
@@ -346,6 +408,7 @@ func main() {
 	rt := flag.String("rt", "", "tags for go run")
 	st := flag.String("st", "codec,json", "struct tag keys to introspect")
 	x := flag.Bool("x", false, "keep temp file")
+<<<<<<< HEAD
 	_ = flag.Bool("u", false, "Allow unsafe use. ***IGNORED*** - kept for backwards compatibility: ")
 	d := flag.Int64("d", 0, "random identifier for use in generated code")
 	nx := flag.Bool("nx", false, "do not support extensions - support of extensions may cause extra allocation")
@@ -354,6 +417,13 @@ func main() {
 	err := Generate(*o, *t, *c, *d, *rt, *st,
 		regexp.MustCompile(*r), regexp.MustCompile(*nr), !*x, *nx, flag.Args()...)
 	if err != nil {
+=======
+	u := flag.Bool("u", false, "Use unsafe, e.g. to avoid unnecessary allocation on []byte->string")
+	d := flag.Int64("d", 0, "random identifier for use in generated code")
+	flag.Parse()
+	if err := Generate(*o, *t, *c, *d, *u, *rt, *st,
+		regexp.MustCompile(*r), regexp.MustCompile(*nr), !*x, flag.Args()...); err != nil {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		fmt.Fprintf(os.Stderr, "codecgen error: %v\n", err)
 		os.Exit(1)
 	}

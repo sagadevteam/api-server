@@ -51,6 +51,7 @@ func (l keyList) Less(i, j int) bool {
 		}
 		var ai, bi int
 		var an, bn int64
+<<<<<<< HEAD
 		if ar[i] == '0' || br[i] == '0' {
 			for j := i-1; j >= 0 && unicode.IsDigit(ar[j]); j-- {
 				if ar[j] != '0' {
@@ -60,6 +61,8 @@ func (l keyList) Less(i, j int) bool {
 				}
 			}
 		}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		for ai = i; ai < len(ar) && unicode.IsDigit(ar[ai]); ai++ {
 			an = an*10 + int64(ar[ai]-'0')
 		}

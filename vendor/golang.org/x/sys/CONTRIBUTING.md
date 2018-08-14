@@ -4,15 +4,27 @@ Go is an open source project.
 
 It is the work of hundreds of contributors. We appreciate your help!
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 ## Filing issues
 
 When [filing an issue](https://golang.org/issue/new), make sure to answer these five questions:
 
+<<<<<<< HEAD
 1.  What version of Go are you using (`go version`)?
 2.  What operating system and processor architecture are you using?
 3.  What did you do?
 4.  What did you expect to see?
 5.  What did you see instead?
+=======
+1. What version of Go are you using (`go version`)?
+2. What operating system and processor architecture are you using?
+3. What did you do?
+4. What did you expect to see?
+5. What did you see instead?
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 
 General questions should go to the [golang-nuts mailing list](https://groups.google.com/group/golang-nuts) instead of the issue tracker.
 The gophers there will answer or ask you to file an issue if you've tripped over a bug.
@@ -22,5 +34,14 @@ The gophers there will answer or ask you to file an issue if you've tripped over
 Please read the [Contribution Guidelines](https://golang.org/doc/contribute.html)
 before sending patches.
 
+<<<<<<< HEAD
 Unless otherwise noted, the Go source files are distributed under
 the BSD-style license found in the LICENSE file.
+=======
+**We do not accept GitHub pull requests**
+(we use [Gerrit](https://code.google.com/p/gerrit/) instead for code review).
+
+Unless otherwise noted, the Go source files are distributed under
+the BSD-style license found in the LICENSE file.
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a

@@ -168,8 +168,11 @@ const (
 	CSTOP                             = 0x13
 	CSTOPB                            = 0x400
 	CSUSP                             = 0x1a
+<<<<<<< HEAD
 	CTL_HW                            = 0x6
 	CTL_KERN                          = 0x1
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	CTL_MAXNAME                       = 0xc
 	CTL_NET                           = 0x4
 	DLT_A429                          = 0xb8
@@ -355,7 +358,10 @@ const (
 	F_UNLCK                           = 0x2
 	F_WRLCK                           = 0x3
 	HUPCL                             = 0x4000
+<<<<<<< HEAD
 	HW_MACHINE                        = 0x1
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	ICANON                            = 0x100
 	ICMP6_FILTER                      = 0x12
 	ICRNL                             = 0x100
@@ -838,10 +844,13 @@ const (
 	IXANY                             = 0x800
 	IXOFF                             = 0x400
 	IXON                              = 0x200
+<<<<<<< HEAD
 	KERN_HOSTNAME                     = 0xa
 	KERN_OSRELEASE                    = 0x2
 	KERN_OSTYPE                       = 0x1
 	KERN_VERSION                      = 0x4
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	LOCK_EX                           = 0x2
 	LOCK_NB                           = 0x4
 	LOCK_SH                           = 0x1
@@ -980,10 +989,14 @@ const (
 	RLIMIT_CPU                        = 0x0
 	RLIMIT_DATA                       = 0x2
 	RLIMIT_FSIZE                      = 0x1
+<<<<<<< HEAD
 	RLIMIT_MEMLOCK                    = 0x6
 	RLIMIT_NOFILE                     = 0x8
 	RLIMIT_NPROC                      = 0x7
 	RLIMIT_RSS                        = 0x5
+=======
+	RLIMIT_NOFILE                     = 0x8
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	RLIMIT_STACK                      = 0x3
 	RLIM_INFINITY                     = 0x7fffffffffffffff
 	RTAX_AUTHOR                       = 0x6

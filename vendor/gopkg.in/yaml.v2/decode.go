@@ -4,7 +4,10 @@ import (
 	"encoding"
 	"encoding/base64"
 	"fmt"
+<<<<<<< HEAD
 	"io"
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	"math"
 	"reflect"
 	"strconv"
@@ -23,22 +26,35 @@ type node struct {
 	kind         int
 	line, column int
 	tag          string
+<<<<<<< HEAD
 	// For an alias node, alias holds the resolved alias.
 	alias    *node
 	value    string
 	implicit bool
 	children []*node
 	anchors  map[string]*node
+=======
+	value        string
+	implicit     bool
+	children     []*node
+	anchors      map[string]*node
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 // ----------------------------------------------------------------------------
 // Parser, produces a node tree out of a libyaml event stream.
 
 type parser struct {
+<<<<<<< HEAD
 	parser   yaml_parser_t
 	event    yaml_event_t
 	doc      *node
 	doneInit bool
+=======
+	parser yaml_parser_t
+	event  yaml_event_t
+	doc    *node
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func newParser(b []byte) *parser {
@@ -46,6 +62,7 @@ func newParser(b []byte) *parser {
 	if !yaml_parser_initialize(&p.parser) {
 		panic("failed to initialize YAML emitter")
 	}
+<<<<<<< HEAD
 	if len(b) == 0 {
 		b = []byte{'\n'}
 	}
@@ -70,6 +87,23 @@ func (p *parser) init() {
 	p.doneInit = true
 }
 
+=======
+
+	if len(b) == 0 {
+		b = []byte{'\n'}
+	}
+
+	yaml_parser_set_input_string(&p.parser, b)
+
+	p.skip()
+	if p.event.typ != yaml_STREAM_START_EVENT {
+		panic("expected stream start event, got " + strconv.Itoa(int(p.event.typ)))
+	}
+	p.skip()
+	return &p
+}
+
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (p *parser) destroy() {
 	if p.event.typ != yaml_NO_EVENT {
 		yaml_event_delete(&p.event)
@@ -77,6 +111,7 @@ func (p *parser) destroy() {
 	yaml_parser_delete(&p.parser)
 }
 
+<<<<<<< HEAD
 // expect consumes an event from the event stream and
 // checks that it's of the expected type.
 func (p *parser) expect(e yaml_event_type_t) {
@@ -101,11 +136,22 @@ func (p *parser) expect(e yaml_event_type_t) {
 func (p *parser) peek() yaml_event_type_t {
 	if p.event.typ != yaml_NO_EVENT {
 		return p.event.typ
+=======
+func (p *parser) skip() {
+	if p.event.typ != yaml_NO_EVENT {
+		if p.event.typ == yaml_STREAM_END_EVENT {
+			failf("attempted to go past the end of stream; corrupted value?")
+		}
+		yaml_event_delete(&p.event)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 	if !yaml_parser_parse(&p.parser, &p.event) {
 		p.fail()
 	}
+<<<<<<< HEAD
 	return p.event.typ
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func (p *parser) fail() {
@@ -113,10 +159,13 @@ func (p *parser) fail() {
 	var line int
 	if p.parser.problem_mark.line != 0 {
 		line = p.parser.problem_mark.line
+<<<<<<< HEAD
 		// Scanner errors don't iterate line before returning error
 		if p.parser.error == yaml_SCANNER_ERROR {
 			line++
 		}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	} else if p.parser.context_mark.line != 0 {
 		line = p.parser.context_mark.line
 	}
@@ -139,8 +188,12 @@ func (p *parser) anchor(n *node, anchor []byte) {
 }
 
 func (p *parser) parse() *node {
+<<<<<<< HEAD
 	p.init()
 	switch p.peek() {
+=======
+	switch p.event.typ {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	case yaml_SCALAR_EVENT:
 		return p.scalar()
 	case yaml_ALIAS_EVENT:
@@ -155,7 +208,11 @@ func (p *parser) parse() *node {
 		// Happens when attempting to decode an empty buffer.
 		return nil
 	default:
+<<<<<<< HEAD
 		panic("attempted to parse unknown event: " + p.event.typ.String())
+=======
+		panic("attempted to parse unknown event: " + strconv.Itoa(int(p.event.typ)))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	}
 }
 
@@ -171,20 +228,33 @@ func (p *parser) document() *node {
 	n := p.node(documentNode)
 	n.anchors = make(map[string]*node)
 	p.doc = n
+<<<<<<< HEAD
 	p.expect(yaml_DOCUMENT_START_EVENT)
 	n.children = append(n.children, p.parse())
 	p.expect(yaml_DOCUMENT_END_EVENT)
+=======
+	p.skip()
+	n.children = append(n.children, p.parse())
+	if p.event.typ != yaml_DOCUMENT_END_EVENT {
+		panic("expected end of document event but got " + strconv.Itoa(int(p.event.typ)))
+	}
+	p.skip()
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return n
 }
 
 func (p *parser) alias() *node {
 	n := p.node(aliasNode)
 	n.value = string(p.event.anchor)
+<<<<<<< HEAD
 	n.alias = p.doc.anchors[n.value]
 	if n.alias == nil {
 		failf("unknown anchor '%s' referenced", n.value)
 	}
 	p.expect(yaml_ALIAS_EVENT)
+=======
+	p.skip()
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return n
 }
 
@@ -194,29 +264,49 @@ func (p *parser) scalar() *node {
 	n.tag = string(p.event.tag)
 	n.implicit = p.event.implicit
 	p.anchor(n, p.event.anchor)
+<<<<<<< HEAD
 	p.expect(yaml_SCALAR_EVENT)
+=======
+	p.skip()
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return n
 }
 
 func (p *parser) sequence() *node {
 	n := p.node(sequenceNode)
 	p.anchor(n, p.event.anchor)
+<<<<<<< HEAD
 	p.expect(yaml_SEQUENCE_START_EVENT)
 	for p.peek() != yaml_SEQUENCE_END_EVENT {
 		n.children = append(n.children, p.parse())
 	}
 	p.expect(yaml_SEQUENCE_END_EVENT)
+=======
+	p.skip()
+	for p.event.typ != yaml_SEQUENCE_END_EVENT {
+		n.children = append(n.children, p.parse())
+	}
+	p.skip()
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return n
 }
 
 func (p *parser) mapping() *node {
 	n := p.node(mappingNode)
 	p.anchor(n, p.event.anchor)
+<<<<<<< HEAD
 	p.expect(yaml_MAPPING_START_EVENT)
 	for p.peek() != yaml_MAPPING_END_EVENT {
 		n.children = append(n.children, p.parse(), p.parse())
 	}
 	p.expect(yaml_MAPPING_END_EVENT)
+=======
+	p.skip()
+	for p.event.typ != yaml_MAPPING_END_EVENT {
+		n.children = append(n.children, p.parse(), p.parse())
+	}
+	p.skip()
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return n
 }
 
@@ -225,7 +315,11 @@ func (p *parser) mapping() *node {
 
 type decoder struct {
 	doc     *node
+<<<<<<< HEAD
 	aliases map[*node]bool
+=======
+	aliases map[string]bool
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	mapType reflect.Type
 	terrors []string
 	strict  bool
@@ -236,13 +330,20 @@ var (
 	durationType   = reflect.TypeOf(time.Duration(0))
 	defaultMapType = reflect.TypeOf(map[interface{}]interface{}{})
 	ifaceType      = defaultMapType.Elem()
+<<<<<<< HEAD
 	timeType       = reflect.TypeOf(time.Time{})
 	ptrTimeType    = reflect.TypeOf(&time.Time{})
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 )
 
 func newDecoder(strict bool) *decoder {
 	d := &decoder{mapType: defaultMapType, strict: strict}
+<<<<<<< HEAD
 	d.aliases = make(map[*node]bool)
+=======
+	d.aliases = make(map[string]bool)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return d
 }
 
@@ -291,7 +392,11 @@ func (d *decoder) callUnmarshaler(n *node, u Unmarshaler) (good bool) {
 //
 // If n holds a null value, prepare returns before doing anything.
 func (d *decoder) prepare(n *node, out reflect.Value) (newout reflect.Value, unmarshaled, good bool) {
+<<<<<<< HEAD
 	if n.tag == yaml_NULL_TAG || n.kind == scalarNode && n.tag == "" && (n.value == "null" || n.value == "~" || n.value == "" && n.implicit) {
+=======
+	if n.tag == yaml_NULL_TAG || n.kind == scalarNode && n.tag == "" && (n.value == "null" || n.value == "" && n.implicit) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		return out, false, false
 	}
 	again := true
@@ -348,6 +453,7 @@ func (d *decoder) document(n *node, out reflect.Value) (good bool) {
 }
 
 func (d *decoder) alias(n *node, out reflect.Value) (good bool) {
+<<<<<<< HEAD
 	if d.aliases[n] {
 		// TODO this could actually be allowed in some circumstances.
 		failf("anchor '%s' value contains itself", n.value)
@@ -355,6 +461,18 @@ func (d *decoder) alias(n *node, out reflect.Value) (good bool) {
 	d.aliases[n] = true
 	good = d.unmarshal(n.alias, out)
 	delete(d.aliases, n)
+=======
+	an, ok := d.doc.anchors[n.value]
+	if !ok {
+		failf("unknown anchor '%s' referenced", n.value)
+	}
+	if d.aliases[n.value] {
+		failf("anchor '%s' value contains itself", n.value)
+	}
+	d.aliases[n.value] = true
+	good = d.unmarshal(an, out)
+	delete(d.aliases, n.value)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	return good
 }
 
@@ -366,7 +484,11 @@ func resetMap(out reflect.Value) {
 	}
 }
 
+<<<<<<< HEAD
 func (d *decoder) scalar(n *node, out reflect.Value) bool {
+=======
+func (d *decoder) scalar(n *node, out reflect.Value) (good bool) {
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	var tag string
 	var resolved interface{}
 	if n.tag == "" && !n.implicit {
@@ -390,6 +512,7 @@ func (d *decoder) scalar(n *node, out reflect.Value) bool {
 		}
 		return true
 	}
+<<<<<<< HEAD
 	if resolvedv := reflect.ValueOf(resolved); out.Type() == resolvedv.Type() {
 		// We've resolved to exactly the type we want, so use that.
 		out.Set(resolvedv)
@@ -410,6 +533,11 @@ func (d *decoder) scalar(n *node, out reflect.Value) bool {
 				text = []byte(n.value)
 			}
 			err := u.UnmarshalText(text)
+=======
+	if s, ok := resolved.(string); ok && out.CanAddr() {
+		if u, ok := out.Addr().Interface().(encoding.TextUnmarshaler); ok {
+			err := u.UnmarshalText([]byte(s))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			if err != nil {
 				fail(err)
 			}
@@ -420,15 +548,23 @@ func (d *decoder) scalar(n *node, out reflect.Value) bool {
 	case reflect.String:
 		if tag == yaml_BINARY_TAG {
 			out.SetString(resolved.(string))
+<<<<<<< HEAD
 			return true
 		}
 		if resolved != nil {
 			out.SetString(n.value)
 			return true
+=======
+			good = true
+		} else if resolved != nil {
+			out.SetString(n.value)
+			good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 	case reflect.Interface:
 		if resolved == nil {
 			out.Set(reflect.Zero(out.Type()))
+<<<<<<< HEAD
 		} else if tag == yaml_TIMESTAMP_TAG {
 			// It looks like a timestamp but for backward compatibility
 			// reasons we set it as a string, so that code that unmarshals
@@ -440,34 +576,60 @@ func (d *decoder) scalar(n *node, out reflect.Value) bool {
 			out.Set(reflect.ValueOf(resolved))
 		}
 		return true
+=======
+		} else {
+			out.Set(reflect.ValueOf(resolved))
+		}
+		good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		switch resolved := resolved.(type) {
 		case int:
 			if !out.OverflowInt(int64(resolved)) {
 				out.SetInt(int64(resolved))
+<<<<<<< HEAD
 				return true
+=======
+				good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			}
 		case int64:
 			if !out.OverflowInt(resolved) {
 				out.SetInt(resolved)
+<<<<<<< HEAD
 				return true
+=======
+				good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			}
 		case uint64:
 			if resolved <= math.MaxInt64 && !out.OverflowInt(int64(resolved)) {
 				out.SetInt(int64(resolved))
+<<<<<<< HEAD
 				return true
+=======
+				good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			}
 		case float64:
 			if resolved <= math.MaxInt64 && !out.OverflowInt(int64(resolved)) {
 				out.SetInt(int64(resolved))
+<<<<<<< HEAD
 				return true
+=======
+				good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			}
 		case string:
 			if out.Type() == durationType {
 				d, err := time.ParseDuration(resolved)
 				if err == nil {
 					out.SetInt(int64(d))
+<<<<<<< HEAD
 					return true
+=======
+					good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 				}
 			}
 		}
@@ -476,34 +638,55 @@ func (d *decoder) scalar(n *node, out reflect.Value) bool {
 		case int:
 			if resolved >= 0 && !out.OverflowUint(uint64(resolved)) {
 				out.SetUint(uint64(resolved))
+<<<<<<< HEAD
 				return true
+=======
+				good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			}
 		case int64:
 			if resolved >= 0 && !out.OverflowUint(uint64(resolved)) {
 				out.SetUint(uint64(resolved))
+<<<<<<< HEAD
 				return true
+=======
+				good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			}
 		case uint64:
 			if !out.OverflowUint(uint64(resolved)) {
 				out.SetUint(uint64(resolved))
+<<<<<<< HEAD
 				return true
+=======
+				good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			}
 		case float64:
 			if resolved <= math.MaxUint64 && !out.OverflowUint(uint64(resolved)) {
 				out.SetUint(uint64(resolved))
+<<<<<<< HEAD
 				return true
+=======
+				good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			}
 		}
 	case reflect.Bool:
 		switch resolved := resolved.(type) {
 		case bool:
 			out.SetBool(resolved)
+<<<<<<< HEAD
 			return true
+=======
+			good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 	case reflect.Float32, reflect.Float64:
 		switch resolved := resolved.(type) {
 		case int:
 			out.SetFloat(float64(resolved))
+<<<<<<< HEAD
 			return true
 		case int64:
 			out.SetFloat(float64(resolved))
@@ -519,6 +702,18 @@ func (d *decoder) scalar(n *node, out reflect.Value) bool {
 		if resolvedv := reflect.ValueOf(resolved); out.Type() == resolvedv.Type() {
 			out.Set(resolvedv)
 			return true
+=======
+			good = true
+		case int64:
+			out.SetFloat(float64(resolved))
+			good = true
+		case uint64:
+			out.SetFloat(float64(resolved))
+			good = true
+		case float64:
+			out.SetFloat(resolved)
+			good = true
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 	case reflect.Ptr:
 		if out.Type().Elem() == reflect.TypeOf(resolved) {
@@ -526,11 +721,21 @@ func (d *decoder) scalar(n *node, out reflect.Value) bool {
 			elem := reflect.New(out.Type().Elem())
 			elem.Elem().Set(reflect.ValueOf(resolved))
 			out.Set(elem)
+<<<<<<< HEAD
 			return true
 		}
 	}
 	d.terror(n, tag, out)
 	return false
+=======
+			good = true
+		}
+	}
+	if !good {
+		d.terror(n, tag, out)
+	}
+	return good
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 }
 
 func settableValueOf(i interface{}) reflect.Value {
@@ -547,10 +752,13 @@ func (d *decoder) sequence(n *node, out reflect.Value) (good bool) {
 	switch out.Kind() {
 	case reflect.Slice:
 		out.Set(reflect.MakeSlice(out.Type(), l, l))
+<<<<<<< HEAD
 	case reflect.Array:
 		if l != out.Len() {
 			failf("invalid array: want %d elements but got %d", out.Len(), l)
 		}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	case reflect.Interface:
 		// No type hints. Will have to use a generic sequence.
 		iface = out
@@ -569,9 +777,13 @@ func (d *decoder) sequence(n *node, out reflect.Value) (good bool) {
 			j++
 		}
 	}
+<<<<<<< HEAD
 	if out.Kind() != reflect.Array {
 		out.Set(out.Slice(0, j))
 	}
+=======
+	out.Set(out.Slice(0, j))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	if iface.IsValid() {
 		iface.Set(out)
 	}
@@ -632,7 +844,11 @@ func (d *decoder) mapping(n *node, out reflect.Value) (good bool) {
 			}
 			e := reflect.New(et).Elem()
 			if d.unmarshal(n.children[i+1], e) {
+<<<<<<< HEAD
 				d.setMapIndex(n.children[i+1], out, k, e)
+=======
+				out.SetMapIndex(k, e)
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			}
 		}
 	}
@@ -640,6 +856,7 @@ func (d *decoder) mapping(n *node, out reflect.Value) (good bool) {
 	return true
 }
 
+<<<<<<< HEAD
 func (d *decoder) setMapIndex(n *node, out, k, v reflect.Value) {
 	if d.strict && out.MapIndex(k) != zeroValue {
 		d.terrors = append(d.terrors, fmt.Sprintf("line %d: key %#v already set in map", n.line+1, k.Interface()))
@@ -648,6 +865,8 @@ func (d *decoder) setMapIndex(n *node, out, k, v reflect.Value) {
 	out.SetMapIndex(k, v)
 }
 
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 func (d *decoder) mappingSlice(n *node, out reflect.Value) (good bool) {
 	outt := out.Type()
 	if outt.Elem() != mapItemType {
@@ -695,10 +914,13 @@ func (d *decoder) mappingStruct(n *node, out reflect.Value) (good bool) {
 		elemType = inlineMap.Type().Elem()
 	}
 
+<<<<<<< HEAD
 	var doneFields []bool
 	if d.strict {
 		doneFields = make([]bool, len(sinfo.FieldsList))
 	}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 	for i := 0; i < l; i += 2 {
 		ni := n.children[i]
 		if isMerge(ni) {
@@ -709,6 +931,7 @@ func (d *decoder) mappingStruct(n *node, out reflect.Value) (good bool) {
 			continue
 		}
 		if info, ok := sinfo.FieldsMap[name.String()]; ok {
+<<<<<<< HEAD
 			if d.strict {
 				if doneFields[info.Id] {
 					d.terrors = append(d.terrors, fmt.Sprintf("line %d: field %s already set in type %s", ni.line+1, name.String(), out.Type()))
@@ -716,6 +939,8 @@ func (d *decoder) mappingStruct(n *node, out reflect.Value) (good bool) {
 				}
 				doneFields[info.Id] = true
 			}
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 			var field reflect.Value
 			if info.Inline == nil {
 				field = out.Field(info.Num)
@@ -729,9 +954,15 @@ func (d *decoder) mappingStruct(n *node, out reflect.Value) (good bool) {
 			}
 			value := reflect.New(elemType).Elem()
 			d.unmarshal(n.children[i+1], value)
+<<<<<<< HEAD
 			d.setMapIndex(n.children[i+1], inlineMap, name, value)
 		} else if d.strict {
 			d.terrors = append(d.terrors, fmt.Sprintf("line %d: field %s not found in type %s", ni.line+1, name.String(), out.Type()))
+=======
+			inlineMap.SetMapIndex(name, value)
+		} else if d.strict {
+			d.terrors = append(d.terrors, fmt.Sprintf("line %d: field %s not found in struct %s", n.line+1, name.String(), out.Type()))
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
 		}
 	}
 	return true

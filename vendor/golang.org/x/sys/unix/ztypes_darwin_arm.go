@@ -447,6 +447,7 @@ type Termios struct {
 	Ispeed uint32
 	Ospeed uint32
 }
+<<<<<<< HEAD
 
 type Winsize struct {
 	Row    uint16
@@ -488,3 +489,5 @@ type Utsname struct {
 	Version  [256]byte
 	Machine  [256]byte
 }
+=======
+>>>>>>> b5201c34e840e2ec911a64aedeb052cd36fcd58a
