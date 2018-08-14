@@ -7,10 +7,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	config "api-server/config"
+	database "api-server/database"
+
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
+	_ "github.com/jmoiron/sqlx"
 )
 
+// DB - tmp global var
 var DB = make(map[string]string)
 
 func setupRouter() *gin.Engine {
@@ -63,37 +67,23 @@ func setupRouter() *gin.Engine {
 	return r
 }
 
-type User struct {
-	ID         int    `db:"id"`
-	Email      string `db:"email"`
-	Password   string `db:"password"`
-	EthAddress string `db:"eth_address"`
-	IsAdmin    int    `db:"is_admin"`
-}
-
 func main() {
-	db, err := sqlx.Connect(`mysql`, `root:123456@/saga`)
-	if err != nil {
-		log.Fatalln(err)
-	}
 
-	tx := db.MustBegin()
-	tx.MustExec(`INSERT INTO users (id, email, password, eth_address, is_admin) VALUES (?, ?, ?, ?, ?)`, 1, "jmoiron@jmoiron.net", "Jason", "0x0", 1)
-	tx.MustExec(`INSERT INTO users (id, email, password, eth_address, is_admin) VALUES (?, ?, ?, ?, ?)`, 2, "hello@john.net", "John", "0x0", 0)
-	tx.NamedExec(`INSERT INTO users (id, email, password, eth_address, is_admin) VALUES (?, ?, ?, ?, ?)`, &User{3, "guest@jane.net", "Jane", "0x0", 0})
-	tx.Commit()
-
-	people := []User{}
+	db := database.Session
+	people := []database.User{}
 	db.Select(&people, `SELECT * FROM users ORDER BY email ASC`)
 	jason, john := people[0], people[1]
 
 	fmt.Printf("%#v\n%#v", jason, john)
 
-	jason = User{}
-	err = db.Get(&jason, "SELECT * FROM users WHERE email=$1", "hello@john.net")
+	jason = database.User{}
+	if err := db.Get(&jason, "SELECT * FROM users WHERE email=?", "hello@john.net"); err != nil {
+		log.Fatalln(err.Error())
+		return
+	}
 	fmt.Printf("%#v\n", jason)
 
 	r := setupRouter()
 	// Listen and Server in 0.0.0.0:8080
-	r.Run(":8080")
+	r.Run(":" + config.API.Port)
 }

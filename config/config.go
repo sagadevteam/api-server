@@ -14,23 +14,24 @@ var (
 	// API - Api general config
 	API APIConf
 
-	// Db - DB general config
-	Db Database
+	// DB - DB general config
+	DB Database
 )
 
 // Database is the struct of cassandra config unmarshal
 type Database struct {
-	Keyspace string   `yaml:"db_keyspace"`
-	Hosts    []string `yaml:"db_hosts"`
-	User     string   `yaml:"db_user"`
-	Pwd      string   `yaml:"db_pwd"`
-	Port     int      `yaml:"db_port"`
+	Table string `yaml:"db_table"`
+	Host  string `yaml:"db_host"`
+	User  string `yaml:"db_user"`
+	Pwd   string `yaml:"db_pwd"`
+	Port  int    `yaml:"db_port"`
 }
 
 // APIConf config
 type APIConf struct {
 	APIprotocol string `yaml:"api_protocol"`
 	Domain      string `yaml:"api_domain"`
+	Port        string `yaml:"api_port"`
 }
 
 // DeploySet - deploy config
@@ -51,6 +52,6 @@ func init() {
 	}
 
 	API = dconf.API
-	Db = dconf.Database
+	DB = dconf.Database
 
 }
