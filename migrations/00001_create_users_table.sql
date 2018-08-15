@@ -1,11 +1,13 @@
 -- +goose Up
 CREATE TABLE users (
-    id int NOT NULL AUTO_INCREMENT,
-    email text,
-    password text,
-    eth_address text,
-    is_admin tinyint(1),
-    PRIMARY KEY(id)
+    user_id int NOT NULL AUTO_INCREMENT,
+    email text NOT NULL,
+    password text NOT NULL,
+    eth_addr text NOT NULL,
+    eth_value text NOT NULL,
+    saga_point text NOT NULL,
+    is_admin tinyint(1) DEFAULT '0',
+    PRIMARY KEY(user_id)
 );
 
 -- +goose Down
