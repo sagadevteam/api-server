@@ -7,7 +7,6 @@ import (
 
 	config "api-server/config"
 	controllers "api-server/controllers"
-	database "api-server/database"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jmoiron/sqlx"
@@ -27,18 +26,7 @@ func setupRouter() *gin.Engine {
 	})
 
 	// Get user value
-	r.GET("/user/:email", func(c *gin.Context) {
-		db := database.Session
-		email := c.Params.ByName("email")
-		user := database.User{}
-		err := db.Get(&user, `SELECT * FROM users WHERE email=?`, email)
-
-		if err == nil {
-			c.JSON(http.StatusOK, gin.H{"user": email, "value": user})
-		} else {
-			c.JSON(http.StatusNotFound, gin.H{"user": email, "status": "no value", "msg": err.Error()})
-		}
-	})
+	r.GET("/user/:email", controllers.GetUserByEmail)
 
 	// Insert test user to db
 	r.GET("/insertUser", controllers.GetInsertUser)

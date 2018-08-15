@@ -8,6 +8,20 @@ import (
 	database "api-server/database"
 )
 
+// Get user by email
+func GetUserByEmail(c *gin.Context) {
+	db := database.Session
+	email := c.Params.ByName("email")
+	user := database.User{}
+	err := db.Get(&user, `SELECT * FROM users WHERE email=?`, email)
+
+	if err == nil {
+		c.JSON(http.StatusOK, gin.H{"user": email, "value": user})
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"user": email, "status": "no value", "msg": err.Error()})
+	}
+}
+
 // Insert test user to db
 func GetInsertUser(c *gin.Context) {
 	email := c.Query("email")
