@@ -1,4 +1,4 @@
-package database
+package models
 
 // User is user schema in mysql
 type User struct {

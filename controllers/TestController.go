@@ -5,14 +5,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	database "api-server/database"
+	models "api-server/models"
 )
 
 // Get user by email
 func GetUserByEmail(c *gin.Context) {
-	db := database.Session
+	db := models.Session
 	email := c.Params.ByName("email")
-	user := database.User{}
+	user := models.User{}
 	err := db.Get(&user, `SELECT * FROM users WHERE email=?`, email)
 
 	if err == nil {
@@ -30,7 +30,7 @@ func GetInsertUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please enter email"})
 		return
 	}
-	db := database.Session
+	db := models.Session
 	tx := db.MustBegin()
 	defer tx.Rollback()
 	_, err := tx.Exec(`INSERT INTO users (email, password, eth_addr, eth_value, saga_point, is_admin) VALUES (?, ?, ?, ?, ?, ?)`, email, email+"_test", "0x0", "0x0", "0x0", 1)
