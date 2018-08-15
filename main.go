@@ -81,21 +81,6 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
-
-	// db := database.Session
-	// people := []database.User{}
-	// db.Select(&people, `SELECT * FROM users ORDER BY email ASC`)
-	// jason, john := people[0], people[1]
-
-	// fmt.Printf("%#v\n%#v", jason, john)
-
-	// jason = database.User{}
-	// if err := db.Get(&jason, "SELECT * FROM users WHERE email=?", "hello@john.net"); err != nil {
-	// 	log.Fatalln(err.Error())
-	// 	return
-	// }
-	// fmt.Printf("%#v\n", jason)
-
 	r := setupRouter()
 	// Listen and Server in 0.0.0.0:8080
 	r.Run(":" + config.API.Port)
