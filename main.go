@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	config "api-server/config"
+	controllers "api-server/controllers"
 	database "api-server/database"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -40,19 +41,7 @@ func setupRouter() *gin.Engine {
 	})
 
 	// Insert test user to db
-	r.GET("/insertUser", func(c *gin.Context) {
-		email := c.Query("email")
-
-		if email == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"msg": "Please enter email"})
-			return
-		}
-		db := database.Session
-		tx := db.MustBegin()
-		tx.MustExec(`INSERT INTO users (email, password, eth_address, is_admin) VALUES (?, ?, ?, ?)`, email, email+"_test", "0x0", 1)
-		tx.Commit()
-		c.JSON(http.StatusOK, gin.H{"msg": "User " + email + " inserted"})
-	})
+	r.GET("/insertUser", controllers.GetInsertUser)
 
 	// Authorized group (uses gin.BasicAuth() middleware)
 	// Same than:
