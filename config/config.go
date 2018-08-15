@@ -20,11 +20,13 @@ var (
 
 // Database is the struct of cassandra config unmarshal
 type Database struct {
-	Table string `yaml:"db_table"`
-	Host  string `yaml:"db_host"`
-	User  string `yaml:"db_user"`
-	Pwd   string `yaml:"db_pwd"`
-	Port  int    `yaml:"db_port"`
+	Table       string `yaml:"db_table"`
+	Host        string `yaml:"db_host"`
+	User        string `yaml:"db_user"`
+	Pwd         string `yaml:"db_pwd"`
+	Port        int    `yaml:"db_port"`
+	MaxConn     int    `yaml:"db_max_connections"`
+	MaxIdleConn int    `yaml:"db_max_idle_connections"`
 }
 
 // APIConf config
@@ -53,5 +55,4 @@ func init() {
 
 	API = dconf.API
 	DB = dconf.Database
-
 }
