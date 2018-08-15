@@ -26,13 +26,16 @@ func setupRouter() *gin.Engine {
 	})
 
 	// Get user value
-	r.GET("/user/:name", func(c *gin.Context) {
-		user := c.Params.ByName("name")
-		value, ok := DB[user]
-		if ok {
-			c.JSON(http.StatusOK, gin.H{"user": user, "value": value})
+	r.GET("/user/:email", func(c *gin.Context) {
+		db := database.Session
+		email := c.Params.ByName("email")
+		user := database.User{}
+		err := db.Get(&user, `SELECT * FROM users WHERE email=?`, email)
+
+		if err == nil {
+			c.JSON(http.StatusOK, gin.H{"user": email, "value": user})
 		} else {
-			c.JSON(http.StatusOK, gin.H{"user": user, "status": "no value"})
+			c.JSON(http.StatusNotFound, gin.H{"user": email, "status": "no value", "msg": err.Error()})
 		}
 	})
 
