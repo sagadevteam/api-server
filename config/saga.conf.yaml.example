@@ -5,6 +5,8 @@ db:
     db_host: 127.0.0.1
     db_user: 
     db_pwd: 
+    db_max_connections: 140
+    db_max_idle_connections: 70
 api:
     api_protocol: http
     api_domain: localhost
