@@ -44,6 +44,9 @@ func setupRouter() *gin.Engine {
 	// Login the user
 	r.POST("/login", controllers.Login)
 
+	// Logout the user
+	r.POST("/logout", controllers.Logout)
+
 	// Add new inventory
 	r.POST("/inventory", controllers.AddInventory)
 

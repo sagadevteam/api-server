@@ -126,3 +126,16 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"msg": "Login successfully"})
 	}
 }
+
+// Logout the user
+func Logout(c *gin.Context) {
+	session := sessions.Default(c)
+	user := session.Get("user")
+	if user == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
+	} else {
+		session.Delete("user")
+		session.Save()
+		c.JSON(http.StatusOK, gin.H{"message": "Log out successfully"})
+	}
+}
