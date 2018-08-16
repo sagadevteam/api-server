@@ -11,3 +11,4 @@ import:
 - package: github.com/jmoiron/sqlx
 - package: github.com/robfig/cron
   version: v1.1
+- package: github.com/badoux/checkmail

@@ -31,6 +31,9 @@ func setupRouter() *gin.Engine {
 	// Insert test user to db
 	r.GET("/insertUser", controllers.GetInsertUser)
 
+	// Signup the user
+	r.POST("/signup", controllers.Signup)
+
 	// Authorized group (uses gin.BasicAuth() middleware)
 	// Same than:
 	// authorized := r.Group("/")
