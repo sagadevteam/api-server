@@ -47,14 +47,11 @@ func Signup(c *gin.Context) {
 
 	// Maybe add email verification code
 	db := models.Session
-	tx := db.MustBegin()
-	defer tx.Rollback()
-	_, err = tx.Exec(`INSERT INTO users (email, password, eth_addr, eth_value, saga_point, is_admin) VALUES (?, ?, ?, ?, ?, ?)`, signupData.Email, signupData.Password, "0", "0", "0", 1)
+	_, err = db.Exec(`INSERT INTO users (email, password, eth_addr, eth_value, saga_point, is_admin) VALUES (?, ?, ?, ?, ?, ?)`, signupData.Email, signupData.Password, "0", "0", "0", 1)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
 	} else {
-		tx.Commit()
 		c.JSON(http.StatusOK, gin.H{"msg": "User " + signupData.Email + " inserted"})
 	}
 }
