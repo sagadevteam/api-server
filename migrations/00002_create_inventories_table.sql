@@ -4,7 +4,6 @@ CREATE TABLE inventories (
     buyer_id int,
     price int NOT NULL DEFAULT '0',
     metadata int NOT NULL DEFAULT '0',
-    buy_time int(11),
     start_time int(11) NOT NULL,
     end_time int(11) NOT NULL,
     created_time int(11) NOT NULL,
