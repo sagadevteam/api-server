@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"io/ioutil"
+	"strconv"
 	"github.com/robfig/cron"
 )
 
@@ -21,9 +22,10 @@ type EthMarketPriceOfMax struct {
 }
 
 func getPrice() *EthMarketPriceOfMax {
+	// max exchange api
 	resp, err := http.Get("https://max-api.maicoin.com/api/v2/tickers/ethtwd")
 	if err != nil {
-		log.Println("http error");
+		log.Println("http error")
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
@@ -41,10 +43,20 @@ func getPrice() *EthMarketPriceOfMax {
 
 func main() {
 	c := cron.New()
+	lastStrikePrice := 0.0
 	spec := "* * * * * *"
 	c.AddFunc(spec, func() {
 		ethPrice := getPrice()
-		fmt.Printf("Timestamp: %d, Ether price: %s\n", ethPrice.At, ethPrice.Last)
+
+		latestPrice, err := strconv.ParseFloat(ethPrice.Last, 64)
+		if err != nil {
+			// handle error
+		}
+
+		if lastStrikePrice != latestPrice && ethPrice.At != 0 {
+			lastStrikePrice = latestPrice
+			fmt.Printf("Timestamp: %d, Ether price: %s\n", ethPrice.At, ethPrice.Last)
+		}
 	})
 	c.Start()
 	select{}
