@@ -1,12 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"api-server/models"
 	"log"
 	"encoding/json"
 	"net/http"
 	"io/ioutil"
 	"strconv"
+
 	"github.com/robfig/cron"
 )
 
@@ -41,6 +42,14 @@ func getPrice() *EthMarketPriceOfMax {
 	return price
 }
 
+func insertEthRate(at uint, last float64) {
+	db := models.Session
+	_, err := db.Exec(`INSERT INTO eth_rates (symbol, price, time) VALUES (?, ?, ?)`, "twd", last, at)
+	if err != nil {
+		// handle error
+	}
+}
+
 func main() {
 	c := cron.New()
 	lastStrikePrice := 0.0
@@ -55,7 +64,8 @@ func main() {
 
 		if lastStrikePrice != latestPrice && ethPrice.At != 0 {
 			lastStrikePrice = latestPrice
-			fmt.Printf("Timestamp: %d, Ether price: %s\n", ethPrice.At, ethPrice.Last)
+			insertEthRate(ethPrice.At, latestPrice)
+			//log.Printf("Timestamp: %d, Ether price: %s\n", ethPrice.At, ethPrice.Last)
 		}
 	})
 	c.Start()
