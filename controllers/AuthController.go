@@ -37,7 +37,7 @@ func (signupData *SignupData) Save() error {
 	bytePassword := []byte(signupData.Password)
 	hashedPassword := hashPassword(bytePassword)
 	db := models.Session
-	_, err := db.Exec(`INSERT INTO users (email, password, eth_addr, eth_value, saga_point, is_admin) VALUES (?, ?, ?, ?, ?, ?)`, signupData.Email, hashedPassword, "0", "0", "0", 1)
+	_, err := db.Exec(`INSERT INTO users (email, password, eth_addr, eth_value, saga_point, is_admin) VALUES (?, ?, ?, ?, ?, ?)`, signupData.Email, hashedPassword, "0", "0", "0", 0)
 
 	return err
 }
