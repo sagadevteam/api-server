@@ -31,12 +31,12 @@ func getPrice() *EthMarketPriceOfMax {
 		// handle error
 	}
 
-	var price EthMarketPriceOfMax
+	price := new(EthMarketPriceOfMax)
 	err = json.Unmarshal(body, &price)
 	if err != nil {
 		// handle error
 	}
-	return &price
+	return price
 }
 
 func main() {
