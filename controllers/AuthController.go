@@ -26,59 +26,47 @@ func comparePassword(hashedPassword string, plainPassword []byte) bool {
 	return true
 }
 
-// SignupData is login schema in post form
-type SignupData struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-func (signupData *SignupData) Save() error {
-	// hash password
-	bytePassword := []byte(signupData.Password)
-	hashedPassword := hashPassword(bytePassword)
-	db := models.Session
-	_, err := db.Exec(`INSERT INTO users (email, password, eth_addr, eth_value, saga_point, is_admin) VALUES (?, ?, ?, ?, ?, ?)`, signupData.Email, hashedPassword, "0", "0", "0", 0)
-
-	return err
-}
-
 func Signup(c *gin.Context) {
-	var signupData SignupData
+	var signupForm models.SignupForm
 
-	err := c.BindJSON(&signupData)
+	err := c.BindJSON(&signupForm)
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	// Validate email format
-	err = checkmail.ValidateFormat(signupData.Email)
+	err = checkmail.ValidateFormat(signupForm.Email)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
 		return
 	}
 
 	// Validate email host
-	// err = checkmail.ValidateHost(signupData.Email)
+	// err = checkmail.ValidateHost(signupForm.Email)
 	// if err != nil {
 	// 	c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
 	// 	return
 	// }
 
 	// Validate password
-	passwordLen := len(signupData.Password)
+	passwordLen := len(signupForm.Password)
 	if passwordLen < 6 {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": "Password must longer than 6"})
 		return
 	}
 
 	// Maybe add email verification code
-	// Save signup data
-	err = signupData.Save()
+	// hash password
+	bytePassword := []byte(signupForm.Password)
+	hashedPassword := hashPassword(bytePassword)
+	signupForm.Password = hashedPassword
+	// Save signup form
+	err = signupForm.Create()
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"msg": "User " + signupData.Email + " inserted"})
+		c.JSON(http.StatusOK, gin.H{"msg": "User " + signupForm.Email + " inserted"})
 	}
 }
