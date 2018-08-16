@@ -1,5 +1,5 @@
-hash: 6a2077a3e7e9c82b2d4f5e216a32d1c6df8a75055cd10ae3ec24052a81f2caa6
-updated: 2018-08-15T21:22:25.504883-07:00
+hash: 3165c2d5926bbe3d8ddfe09d2a1c91fa456c80e277e96accaad2433cd69badf6
+updated: 2018-08-16T00:28:45.098905-07:00
 imports:
 - name: github.com/badoux/checkmail
   version: 0755fe2dc241caebab64327c352006712f6a55c4
@@ -40,6 +40,7 @@ imports:
 - name: golang.org/x/crypto
   version: 027cca12c2d63e3d62b670d901e8a2c95854feec
   subpackages:
+  - bcrypt
   - ssh/terminal
 - name: golang.org/x/sys
   version: 6c888cc515d3ed83fc103cf1d84468aad274b0a7

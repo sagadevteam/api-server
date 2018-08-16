@@ -12,3 +12,6 @@ import:
 - package: github.com/robfig/cron
   version: v1.1
 - package: github.com/badoux/checkmail
+- package: golang.org/x/crypto
+  subpackages:
+  - bcrypt
