@@ -1,14 +1,12 @@
 package controllers
 
 import (
+	"api-server/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-
-	models "api-server/models"
 )
 
-// Get user by email
 func GetUserByEmail(c *gin.Context) {
 	db := models.Session
 	email := c.Params.ByName("email")
@@ -22,7 +20,6 @@ func GetUserByEmail(c *gin.Context) {
 	}
 }
 
-// Insert test user to db
 func GetInsertUser(c *gin.Context) {
 	email := c.Query("email")
 
