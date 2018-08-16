@@ -1,10 +1,16 @@
-hash: 3165c2d5926bbe3d8ddfe09d2a1c91fa456c80e277e96accaad2433cd69badf6
-updated: 2018-08-16T00:28:45.098905-07:00
+hash: 76311096dba3fe38d866b6dcc7e4dbad215355ad5d8d54da3d860c7228f8c488
+updated: 2018-08-16T15:36:18.673325-07:00
 imports:
 - name: github.com/badoux/checkmail
   version: 0755fe2dc241caebab64327c352006712f6a55c4
+- name: github.com/boj/redistore
+  version: 82b86d293eb292dd6949fadc09388c47f095dc54
 - name: github.com/gin-contrib/sse
   version: 22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae
+- name: github.com/gin-gonic/contrib
+  version: 39cfb9727134fef3120d2458fce5fab14265a46c
+  subpackages:
+  - sessions
 - name: github.com/gin-gonic/gin
   version: b869fe1415e4b9eb52f247441830d502aece2d4d
   subpackages:
@@ -17,6 +23,17 @@ imports:
   version: 9f81198da99b79e14d70ca2c3cc1bbe44c6e69b6
   subpackages:
   - proto
+- name: github.com/gomodule/redigo
+  version: 2cd21d9966bf7ff9ae091419744f0b3fb0fecace
+  subpackages:
+  - internal
+  - redis
+- name: github.com/gorilla/context
+  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
+- name: github.com/gorilla/securecookie
+  version: 78f3d318a8bf316cda921f25e96fd0b441c5173d
+- name: github.com/gorilla/sessions
+  version: 03b6f63cc43ef9c7240a635a5e22b13180e822b8
 - name: github.com/jmoiron/sqlx
   version: 0dae4fefe7c0e190f7b5a78dac28a1c82cc8d849
   subpackages:
@@ -41,6 +58,7 @@ imports:
   version: 027cca12c2d63e3d62b670d901e8a2c95854feec
   subpackages:
   - bcrypt
+  - blowfish
   - ssh/terminal
 - name: golang.org/x/sys
   version: 6c888cc515d3ed83fc103cf1d84468aad274b0a7

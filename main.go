@@ -1,12 +1,15 @@
 package main
 
 import (
+	"encoding/gob"
 	"net/http"
 
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
 	config "api-server/config"
 	controllers "api-server/controllers"
+	"api-server/models"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jmoiron/sqlx"
@@ -19,6 +22,10 @@ func setupRouter() *gin.Engine {
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	r := gin.Default()
+
+	// Set session
+	store := sessions.NewCookieStore([]byte("sagasessionkey"))
+	r.Use(sessions.Sessions("sagasession", store))
 
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
@@ -33,6 +40,9 @@ func setupRouter() *gin.Engine {
 
 	// Signup the user
 	r.POST("/signup", controllers.Signup)
+
+	// Login the user
+	r.POST("/login", controllers.Login)
 
 	// Add new inventory
 	r.POST("/inventory", controllers.AddInventory)
@@ -73,7 +83,12 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
+	// Register models
+	gob.Register(models.User{})
+
+	// Setup router
 	r := setupRouter()
+
 	// Listen and Server in 0.0.0.0:8080
 	r.Run(":" + config.API.Port)
 }
