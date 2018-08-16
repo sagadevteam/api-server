@@ -9,3 +9,5 @@ import:
 - package: github.com/go-sql-driver/mysql
   version: v1.4.0
 - package: github.com/jmoiron/sqlx
+- package: github.com/robfig/cron
+  version: v1.1
