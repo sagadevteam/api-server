@@ -48,6 +48,9 @@ func setupRouter() *gin.Engine {
 	// Logout the user
 	r.POST("/logout", middlewares.AuthRequired(), controllers.Logout)
 
+	// Get authenticated the user
+	r.GET("/authenticated", middlewares.AuthRequired(), controllers.Authenticated)
+
 	// Add new inventory
 	r.POST("/inventory", controllers.AddInventory)
 
