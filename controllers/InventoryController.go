@@ -13,12 +13,9 @@ import (
 
 // GetInventory - Get inventory with inventory_id
 func GetInventory(c *gin.Context) {
-
 	// get inventory id
-	inventoryID := c.Query("id")
-	var inventory models.Inventory
-	var err error
-	inventory.InventoryID, err = strconv.Atoi(inventoryID)
+	inventoryIDQuery := c.Query("inventory_id")
+	inventoryID, err := strconv.Atoi(inventoryIDQuery)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Data type not int", "error": err.Error()})
@@ -26,7 +23,7 @@ func GetInventory(c *gin.Context) {
 	}
 
 	// query database
-	inventory, err = inventory.SelectWithID()
+	inventory, err := models.FindInventoryByID(inventoryID)
 	if err != nil {
 		fmt.Println(err.Error())
 		if err.Error() == "sql: no rows in result set" {
@@ -43,7 +40,6 @@ func GetInventory(c *gin.Context) {
 
 // GetInventories - Get inventories with page and page size
 func GetInventories(c *gin.Context) {
-
 	// get page and page size
 	var page, pageSize int
 	var err error
@@ -79,7 +75,6 @@ func GetInventories(c *gin.Context) {
 
 // AddInventory - Post function for adding inventory
 func AddInventory(c *gin.Context) {
-
 	// bind post data
 	var inventoryInput requests.NewInventoryRequest
 	if err := c.BindJSON(&inventoryInput); err != nil {
@@ -96,7 +91,7 @@ func AddInventory(c *gin.Context) {
 		return
 	}
 	inventory := inventoryInput.ToTableStruct()
-	if err := inventory.Insert(tx); err != nil {
+	if err := inventory.Save(tx); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Data insert failed", "error": err.Error()})
 		return

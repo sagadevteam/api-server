@@ -25,7 +25,7 @@ type Inventory struct {
 }
 
 // Insert - insert new inventory into table
-func (inventory *Inventory) Insert(tx *sql.Tx) error {
+func (inventory *Inventory) Save(tx *sql.Tx) error {
 
 	_, err := tx.Exec(
 		`INSERT INTO inventories (
@@ -50,8 +50,8 @@ func (inventory *Inventory) Insert(tx *sql.Tx) error {
 }
 
 // SelectWithID - select inventory with id
-func (inventory *Inventory) SelectWithID() (out Inventory, err error) {
-	err = DB.Get(&out, `SELECT * FROM inventories WHERE inventory_id=?`, inventory.InventoryID)
+func FindInventoryByID(inventoryID int) (inventory Inventory, err error) {
+	err = DB.Get(&inventory, `SELECT * FROM inventories WHERE inventory_id=?`, inventoryID)
 	return
 }
 

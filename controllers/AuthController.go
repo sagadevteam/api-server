@@ -64,6 +64,9 @@ func Signup(c *gin.Context) {
 	hashedPassword := hashPassword(bytePassword)
 
 	// Save user
+	tx, err := models.DB.Begin()
+	defer tx.Rollback()
+
 	user := models.User{}
 	user.Email = signupForm.Email
 	user.Password = hashedPassword
@@ -71,10 +74,11 @@ func Signup(c *gin.Context) {
 	user.EthValue = "0"
 	user.SagaPoint = "0"
 	user.IsAdmin = 0
-	err = user.Save()
+	err = user.Save(tx)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
 	} else {
+		tx.Commit()
 		c.JSON(http.StatusOK, gin.H{"msg": "User " + signupForm.Email + " inserted"})
 	}
 }
@@ -112,7 +116,7 @@ func Login(c *gin.Context) {
 	}
 
 	user := models.User{}
-	user, err = models.FindUserByEmail(loginForm.Email)
+	user, err = models.FindUserByEmail(loginForm.Email, nil)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Something wrong happened", "error": err.Error()})
 		return
