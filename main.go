@@ -34,7 +34,7 @@ func setupRouter() *gin.Engine {
 	})
 
 	// Get user value
-	r.GET("/user/:email", controllers.GetUserByEmail)
+	// r.GET("/user/:email", controllers.GetUserByEmail)
 
 	// Insert test user to db
 	r.GET("/insertUser", controllers.GetInsertUser)
