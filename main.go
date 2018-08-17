@@ -40,6 +40,9 @@ func setupRouter() *gin.Engine {
 	// Get inventory with id
 	r.GET("/inventory", controllers.GetInventory)
 
+	// Get inventories
+	r.GET("/inventories", controllers.GetInventories)
+
 	// Authorized group (uses gin.BasicAuth() middleware)
 	// Same than:
 	// authorized := r.Group("/")

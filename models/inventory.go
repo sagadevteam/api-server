@@ -6,6 +6,8 @@ import (
 	"reflect"
 )
 
+const defaultSize = 10 // default page size 10
+
 // NullInt64 - type for sql.NullInt64
 type NullInt64 sql.NullInt64
 
@@ -26,9 +28,20 @@ func (inventory *Inventory) Insert() error {
 	return err
 }
 
-// SelectWithID - insert new inventory into table
+// SelectWithID - select inventory with id
 func (inventory *Inventory) SelectWithID() (out Inventory, err error) {
 	err = Session.Get(&out, `SELECT * FROM inventories WHERE inventory_id=?`, inventory.InventoryID)
+	return
+}
+
+// SelectInventoriesWithPage - select inventories with page and page size
+func SelectInventoriesWithPage(page, pageSize int) (inventories []Inventory, err error) {
+
+	// change page to limit
+	limit, limitSize := pageToLimit(page, pageSize)
+
+	// select inventories with limit
+	err = Session.Select(&inventories, `SELECT * FROM inventories ORDER BY created_time DESC LIMIT ?, ?`, limit, limitSize)
 	return
 }
 
@@ -53,4 +66,14 @@ func (ni NullInt64) MarshalJSON() ([]byte, error) {
 		return []byte("null"), nil
 	}
 	return json.Marshal(ni.Int64)
+}
+
+func pageToLimit(page, pageSize int) (limit, limitSize int) {
+	if pageSize == 0 {
+		limitSize = defaultSize
+	} else {
+		limitSize = pageSize
+	}
+	limit = page * limitSize
+	return
 }
