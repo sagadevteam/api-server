@@ -34,6 +34,12 @@ func setupRouter() *gin.Engine {
 	// Signup the user
 	r.POST("/signup", controllers.Signup)
 
+	// Add new inventory
+	r.POST("/inventory", controllers.AddInventory)
+
+	// Get inventory with id
+	r.GET("/inventory", controllers.GetInventory)
+
 	// Authorized group (uses gin.BasicAuth() middleware)
 	// Same than:
 	// authorized := r.Group("/")
