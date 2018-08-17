@@ -1,4 +1,4 @@
-package models
+package forms
 
 // LoginForm is login schema in post form
 type LoginForm struct {
