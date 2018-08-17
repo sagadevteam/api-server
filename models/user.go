@@ -32,13 +32,13 @@ func FindUserByEmail(email string, tx *sql.Tx) (user User, err error) {
 func (user *User) Save(tx *sql.Tx) error {
 	var err error
 	insertQuery := `INSERT INTO users (
-				email,
-				password,
-				eth_addr,
-				eth_value,
-				saga_point,
-				is_admin)
-			VALUES (?, ?, ?, ?, ?, ?)`
+						email,
+						password,
+						eth_addr,
+						eth_value,
+						saga_point,
+						is_admin)
+					VALUES (?, ?, ?, ?, ?, ?)`
 	if tx != nil {
 		var stmt *sql.Stmt
 		if stmt, err = tx.Prepare(insertQuery); err != nil {
