@@ -9,6 +9,7 @@ import (
 
 	config "api-server/config"
 	controllers "api-server/controllers"
+	"api-server/middlewares"
 	"api-server/models"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -45,7 +46,7 @@ func setupRouter() *gin.Engine {
 	r.POST("/login", controllers.Login)
 
 	// Logout the user
-	r.POST("/logout", controllers.Logout)
+	r.POST("/logout", middlewares.AuthRequired(), controllers.Logout)
 
 	// Add new inventory
 	r.POST("/inventory", controllers.AddInventory)
