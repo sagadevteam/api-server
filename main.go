@@ -40,10 +40,10 @@ func setupRouter() *gin.Engine {
 	r.GET("/insertUser", controllers.GetInsertUser)
 
 	// Signup the user
-	r.POST("/signup", controllers.Signup)
+	r.POST("/signup", middlewares.GuestRequired(), controllers.Signup)
 
 	// Login the user
-	r.POST("/login", controllers.Login)
+	r.POST("/login", middlewares.GuestRequired(), controllers.Login)
 
 	// Logout the user
 	r.POST("/logout", middlewares.AuthRequired(), controllers.Logout)
