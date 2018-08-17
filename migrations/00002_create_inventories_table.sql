@@ -7,7 +7,6 @@ CREATE TABLE inventories (
     end_time int(11) NOT NULL,
     created_time int(11) NOT NULL,
     PRIMARY KEY(inventory_id),
-    FOREIGN KEY (buyer_id) REFERENCES users(user_id),
     KEY (price, metadata, start_time, end_time, created_time)
 );
 
