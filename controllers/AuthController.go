@@ -62,10 +62,16 @@ func Signup(c *gin.Context) {
 	// hash password
 	bytePassword := []byte(signupForm.Password)
 	hashedPassword := hashPassword(bytePassword)
-	signupForm.Password = hashedPassword
 
-	// Save signup form
-	err = signupForm.Create()
+	// Save user
+	user := models.User{}
+	user.Email = signupForm.Email
+	user.Password = hashedPassword
+	user.EthAddress = "0"
+	user.EthValue = "0"
+	user.SagaPoint = "0"
+	user.IsAdmin = 0
+	err = user.Create()
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
 	} else {
