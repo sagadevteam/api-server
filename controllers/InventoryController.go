@@ -6,17 +6,10 @@ import (
 	"strconv"
 
 	"api-server/models"
+	"api-server/requests"
 
 	"github.com/gin-gonic/gin"
 )
-
-// inventoryForm is inventory schema in post form
-type inventoryForm struct {
-	Price     int   `json:"price"`
-	StartTime int   `json:"start_time"`
-	EndTime   int   `json:"end_time"`
-	Metadata  []int `json:"metadata"`
-}
 
 // GetInventory - Get inventory with inventory_id
 func GetInventory(c *gin.Context) {
@@ -88,33 +81,33 @@ func GetInventories(c *gin.Context) {
 func AddInventory(c *gin.Context) {
 
 	// bind post data
-	var inventoryInput inventoryForm
+	var inventoryInput requests.NewInventoryRequest
 	if err := c.BindJSON(&inventoryInput); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
 		return
 	}
 
-	// auth seesion and admin
-
 	// insert into database
-	inventory := inventoryInput.toTableStruct()
-	if err := inventory.Insert(); err != nil {
+	tx, err := models.DB.Begin()
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "tx begin failed", "error": err.Error()})
+		return
+	}
+	inventory := inventoryInput.ToTableStruct()
+	if err := inventory.Insert(tx); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Data insert failed", "error": err.Error()})
 		return
 	}
+	err = tx.Commit()
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "tx commit failed", "error": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"msg": "Inventory inserted"})
 
-	return
-}
-
-func (in *inventoryForm) toTableStruct() (out models.Inventory) {
-	out.StartTime = in.StartTime
-	out.EndTime = in.EndTime
-	out.Price = in.Price
-	for _, item := range in.Metadata {
-		out.Metadata |= item
-	}
 	return
 }

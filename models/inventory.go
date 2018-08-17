@@ -13,24 +13,45 @@ type NullInt64 sql.NullInt64
 
 // Inventory - struct for database
 type Inventory struct {
-	InventoryID int       `db:"inventory_id" json:"inventory_id"`
-	BuyerID     NullInt64 `db:"buyer_id" json:"buyer_id"`
-	Price       int       `db:"price" json:"price"`
-	Metadata    int       `db:"metadata" json:"metadata"`
-	StartTime   int       `db:"start_time" json:"start_time"`
-	EndTime     int       `db:"end_time" json:"end_time"`
-	CreatedTime int       `db:"created_time" json:"created_time"`
+	InventoryID int    `db:"inventory_id" json:"inventory_id"`
+	Price       int    `db:"price" json:"price"`
+	Metadata    int    `db:"metadata" json:"metadata"`
+	StartTime   int    `db:"start_time" json:"start_time"`
+	EndTime     int    `db:"end_time" json:"end_time"`
+	CreatedTime int    `db:"created_time" json:"created_time"`
+	RoomNo      string `db:"room_no" json:"room_no"`
+	Title       string `db:"title" json:"title"`
+	Description string `db:"description" json:"description"`
 }
 
 // Insert - insert new inventory into table
-func (inventory *Inventory) Insert() error {
-	_, err := db.Exec(`INSERT INTO inventories ( price, metadata, start_time, end_time, created_time) VALUES ( ?, ?, ?, ?, unix_timestamp())`, inventory.Price, inventory.Metadata, inventory.StartTime, inventory.EndTime)
+func (inventory *Inventory) Insert(tx *sql.Tx) error {
+
+	_, err := tx.Exec(
+		`INSERT INTO inventories (
+			price, 
+			metadata, 
+			start_time, 
+			end_time, 
+			created_time,
+			room_no,
+			title,
+			description) 
+		VALUES 
+	  		( ?, ?, ?, ?, unix_timestamp(), ?, ?, ?)`,
+		inventory.Price,
+		inventory.Metadata,
+		inventory.StartTime,
+		inventory.EndTime,
+		inventory.RoomNo,
+		inventory.Title,
+		inventory.Description)
 	return err
 }
 
 // SelectWithID - select inventory with id
 func (inventory *Inventory) SelectWithID() (out Inventory, err error) {
-	err = db.Get(&out, `SELECT * FROM inventories WHERE inventory_id=?`, inventory.InventoryID)
+	err = DB.Get(&out, `SELECT * FROM inventories WHERE inventory_id=?`, inventory.InventoryID)
 	return
 }
 
@@ -41,7 +62,7 @@ func SelectInventoriesWithPage(page, pageSize int) (inventories []Inventory, err
 	limit, limitSize := pageToLimit(page, pageSize)
 
 	// select inventories with limit
-	err = db.Select(&inventories, `SELECT * FROM inventories ORDER BY created_time DESC LIMIT ?, ?`, limit, limitSize)
+	err = DB.Select(&inventories, `SELECT * FROM inventories ORDER BY created_time DESC LIMIT ?, ?`, limit, limitSize)
 	return
 }
 

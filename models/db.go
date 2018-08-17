@@ -11,17 +11,17 @@ import (
 )
 
 var (
-	// Session - Session for mysql query
-	db *sqlx.DB
+	// DB - DB for mysql query
+	DB *sqlx.DB
 )
 
 func init() {
 	var err error
 	dbStr := config.DB.User + ":" + config.DB.Pwd + "@tcp(" + config.DB.Host + ")/" + config.DB.Table
-	db, err = sqlx.Connect(`mysql`, dbStr)
-	db.SetMaxIdleConns(config.DB.MaxIdleConn)
-	db.SetConnMaxLifetime(2 * time.Minute)
-	db.SetMaxOpenConns(config.DB.MaxConn)
+	DB, err = sqlx.Connect(`mysql`, dbStr)
+	DB.SetMaxIdleConns(config.DB.MaxIdleConn)
+	DB.SetConnMaxLifetime(2 * time.Minute)
+	DB.SetMaxOpenConns(config.DB.MaxConn)
 	if err != nil {
 		log.Fatalln(err)
 	}

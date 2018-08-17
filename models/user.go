@@ -14,13 +14,13 @@ type User struct {
 // FindUserByEmail find user by email
 func FindUserByEmail(email string) (User, error) {
 	userModel := User{}
-	err := db.Get(&userModel, `SELECT * FROM users WHERE email=?`, email)
+	err := DB.Get(&userModel, `SELECT * FROM users WHERE email=?`, email)
 	return userModel, err
 }
 
 // Save user
 func (user *User) Save() error {
-	_, err := db.Exec(`
+	_, err := DB.Exec(`
 	INSERT INTO users (
 		email,
 		password,
