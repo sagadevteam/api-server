@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"api-server/forms"
 	"api-server/models"
+	"api-server/requests"
 	"net/http"
 
 	"github.com/badoux/checkmail"
@@ -29,7 +29,7 @@ func comparePassword(hashedPassword string, plainPassword []byte) bool {
 
 // Signup the user
 func Signup(c *gin.Context) {
-	var signupForm forms.SignupForm
+	var signupForm requests.SignupRequest
 
 	err := c.BindJSON(&signupForm)
 	if err != nil {
@@ -81,7 +81,7 @@ func Signup(c *gin.Context) {
 
 // Login the user
 func Login(c *gin.Context) {
-	var loginForm forms.LoginForm
+	var loginForm requests.LoginRequest
 
 	session := sessions.Default(c)
 	err := c.BindJSON(&loginForm)
