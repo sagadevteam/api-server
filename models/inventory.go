@@ -24,13 +24,13 @@ type Inventory struct {
 
 // Insert - insert new inventory into table
 func (inventory *Inventory) Insert() error {
-	_, err := Session.Exec(`INSERT INTO inventories ( price, metadata, start_time, end_time, created_time) VALUES ( ?, ?, ?, ?, unix_timestamp())`, inventory.Price, inventory.Metadata, inventory.StartTime, inventory.EndTime)
+	_, err := db.Exec(`INSERT INTO inventories ( price, metadata, start_time, end_time, created_time) VALUES ( ?, ?, ?, ?, unix_timestamp())`, inventory.Price, inventory.Metadata, inventory.StartTime, inventory.EndTime)
 	return err
 }
 
 // SelectWithID - select inventory with id
 func (inventory *Inventory) SelectWithID() (out Inventory, err error) {
-	err = Session.Get(&out, `SELECT * FROM inventories WHERE inventory_id=?`, inventory.InventoryID)
+	err = db.Get(&out, `SELECT * FROM inventories WHERE inventory_id=?`, inventory.InventoryID)
 	return
 }
 
@@ -41,7 +41,7 @@ func SelectInventoriesWithPage(page, pageSize int) (inventories []Inventory, err
 	limit, limitSize := pageToLimit(page, pageSize)
 
 	// select inventories with limit
-	err = Session.Select(&inventories, `SELECT * FROM inventories ORDER BY created_time DESC LIMIT ?, ?`, limit, limitSize)
+	err = db.Select(&inventories, `SELECT * FROM inventories ORDER BY created_time DESC LIMIT ?, ?`, limit, limitSize)
 	return
 }
 

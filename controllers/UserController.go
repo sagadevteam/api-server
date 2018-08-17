@@ -8,15 +8,13 @@ import (
 )
 
 func GetUserByEmail(c *gin.Context) {
-	db := models.Session
 	email := c.Params.ByName("email")
-	user := models.User{}
-	err := db.Get(&user, `SELECT * FROM users WHERE email=?`, email)
+	user, err := models.FindUserByEmail(email)
 
-	if err == nil {
-		c.JSON(http.StatusOK, gin.H{"user": email, "value": user})
-	} else {
+	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"user": email, "status": "no value", "msg": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, user)
 	}
 }
 
@@ -27,15 +25,18 @@ func GetInsertUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please enter email"})
 		return
 	}
-	db := models.Session
-	tx := db.MustBegin()
-	defer tx.Rollback()
-	_, err := tx.Exec(`INSERT INTO users (email, password, eth_addr, eth_value, saga_point, is_admin) VALUES (?, ?, ?, ?, ?, ?)`, email, email+"_test", "0x0", "0x0", "0x0", 1)
+	user := models.User{
+		Email:      email,
+		Password:   email + "_test",
+		EthAddress: "0x0",
+		EthValue:   "0x0",
+		SagaPoint:  "0x0",
+		IsAdmin:    0,
+	}
 
-	if err != nil {
+	if err := user.Save(); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
 	} else {
-		tx.Commit()
-		c.JSON(http.StatusOK, gin.H{"msg": "User " + email + " inserted"})
+		c.JSON(http.StatusOK, user)
 	}
 }

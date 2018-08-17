@@ -71,7 +71,7 @@ func Signup(c *gin.Context) {
 	user.EthValue = "0"
 	user.SagaPoint = "0"
 	user.IsAdmin = 0
-	err = user.Create()
+	err = user.Save()
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
 	} else {
@@ -112,7 +112,7 @@ func Login(c *gin.Context) {
 	}
 
 	user := models.User{}
-	err = user.FindByEmail(loginForm.Email)
+	user, err = models.FindUserByEmail(loginForm.Email)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Something wrong happened", "error": err.Error()})
 		return
