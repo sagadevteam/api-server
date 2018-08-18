@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 )
 
 // User is user schema in mysql
@@ -40,14 +39,11 @@ func (user *User) Save(tx *sql.Tx) error {
 						is_admin)
 					VALUES (?, ?, ?, ?, ?, ?)`
 	if tx != nil {
-		var stmt *sql.Stmt
-		if stmt, err = tx.Prepare(insertQuery); err != nil {
-		}
+		result, err := tx.Exec(insertQuery, user.Email, user.Password, user.EthAddress, user.EthValue, user.SagaPoint, user.IsAdmin)
 
-		if _, err = stmt.Exec(user.Email, user.Password, user.EthAddress, user.EthValue, user.SagaPoint, user.IsAdmin); err != nil {
-		}
+		userID64, _ := result.LastInsertId()
+		user.UserID = int(userID64)
 
-		fmt.Println(user)
 		return err
 	}
 	_, err = DB.Exec(insertQuery, user.Email, user.Password, user.EthAddress, user.EthValue, user.SagaPoint, user.IsAdmin)

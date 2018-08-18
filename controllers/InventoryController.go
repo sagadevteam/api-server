@@ -96,6 +96,11 @@ func AddInventory(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Data insert failed", "error": err.Error()})
 		return
 	}
+	if err := models.InsertManyTickets(inventory.InventoryID, inventory.StartTime, inventory.EndTime, tx); err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Data insert failed", "error": err.Error()})
+		return
+	}
 	err = tx.Commit()
 	if err != nil {
 		fmt.Println(err.Error())

@@ -2,14 +2,7 @@ package models
 
 import (
 	"database/sql"
-	"encoding/json"
-	"reflect"
 )
-
-const defaultSize = 10 // default page size 10
-
-// NullInt64 - type for sql.NullInt64
-type NullInt64 sql.NullInt64
 
 // Inventory - struct for database
 type Inventory struct {
@@ -24,10 +17,10 @@ type Inventory struct {
 	Description string `db:"description" json:"description"`
 }
 
-// Insert - insert new inventory into table
+// Save - insert new inventory into table
 func (inventory *Inventory) Save(tx *sql.Tx) error {
 
-	_, err := tx.Exec(
+	result, err := tx.Exec(
 		`INSERT INTO inventories (
 			price, 
 			metadata, 
@@ -46,10 +39,13 @@ func (inventory *Inventory) Save(tx *sql.Tx) error {
 		inventory.RoomNo,
 		inventory.Title,
 		inventory.Description)
+
+	InventoryID64, _ := result.LastInsertId()
+	inventory.InventoryID = int(InventoryID64)
 	return err
 }
 
-// SelectWithID - select inventory with id
+// FindInventoryByID - find inventory with id
 func FindInventoryByID(inventoryID int) (inventory Inventory, err error) {
 	err = DB.Get(&inventory, `SELECT * FROM inventories WHERE inventory_id=?`, inventoryID)
 	return
@@ -66,35 +62,7 @@ func SelectInventoriesWithPage(page, pageSize int) (inventories []Inventory, err
 	return
 }
 
-// Scan for NullInt64
-func (ni *NullInt64) Scan(value interface{}) error {
-	var i sql.NullInt64
-	if err := i.Scan(value); err != nil {
-		return err
-	}
-	// if nil the make Valid false
-	if reflect.TypeOf(value) == nil {
-		*ni = NullInt64{i.Int64, false}
-	} else {
-		*ni = NullInt64{i.Int64, true}
-	}
-	return nil
-}
-
-// MarshalJSON for NullInt64
-func (ni NullInt64) MarshalJSON() ([]byte, error) {
-	if !ni.Valid {
-		return []byte("null"), nil
-	}
-	return json.Marshal(ni.Int64)
-}
-
-func pageToLimit(page, pageSize int) (limit, limitSize int) {
-	if pageSize == 0 {
-		limitSize = defaultSize
-	} else {
-		limitSize = pageSize
-	}
-	limit = page * limitSize
+func (inventory *Inventory) ToTicketTableStruct() (ticket Tickets) {
+	ticket.InventoryID = inventory.InventoryID
 	return
 }
