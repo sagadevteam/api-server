@@ -134,7 +134,7 @@ func Authenticated(c *gin.Context) {
 	session := sessions.Default(c)
 	user := session.Get("user")
 	if user != nil {
-		c.JSON(http.StatusOK, gin.H{"message": "Authenticated", "user": user})
+		c.JSON(http.StatusOK, gin.H{"msg": "Authenticated", "user": user})
 	} else {
 		// Foridden in AuthRequired
 		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
