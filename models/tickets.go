@@ -47,3 +47,23 @@ func InsertManyTickets(inventoryID, start, end int, tx *sql.Tx) error {
 	_, err := DB.Exec(sqlStr, vals...)
 	return err
 }
+
+// SelectTicketsWithInventoryID - find tickets by inventory id
+func SelectTicketsWithInventoryID(inventoryID int) (tickets []Tickets, err error) {
+	rows, errQuery := DB.Query(`SELECT ticket_id, user_id, inventory_id, time FROM tickets WHERE inventory_id=?`, inventoryID)
+	if errQuery != nil {
+		err = errQuery
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var ticket Tickets
+		err = rows.Scan(&ticket.TicketID, &ticket.UserID, &ticket.InventoryID, &ticket.Time)
+		if err != nil {
+			return
+		}
+		tickets = append(tickets, ticket)
+	}
+	err = rows.Err()
+	return
+}

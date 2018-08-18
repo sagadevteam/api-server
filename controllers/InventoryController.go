@@ -33,7 +33,7 @@ func GetInventory(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Data select failed", "error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"msg": "Inventory selected", "result": inventory})
+	c.JSON(http.StatusOK, inventory)
 
 	return
 }
@@ -68,7 +68,7 @@ func GetInventories(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Data select failed", "error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"msg": "Inventories selected", "result": inventories})
+	c.JSON(http.StatusOK, gin.H{"inventories": inventories})
 
 	return
 }
