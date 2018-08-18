@@ -2,6 +2,8 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
+	"strings"
 )
 
 // User is user schema in mysql
@@ -16,8 +18,8 @@ type User struct {
 }
 
 // FindUserByEmail find user by email
-func FindUserByEmail(email string, tx *sql.Tx) (user User, err error) {
-	sql := `SELECT * FROM users WHERE email=? limit 1`
+func FindUserByEmail(email string, columns []string, tx *sql.Tx) (user User, err error) {
+	sql := fmt.Sprintf(`SELECT %s FROM users WHERE email=? limit 1`, strings.Join(columns[:], ","))
 	if tx != nil {
 		err = tx.QueryRow(sql, email).
 			Scan(&user.UserID, &user.Email, &user.Password, &user.EthAddress, &user.EthValue, &user.SagaPoint, &user.IsAdmin)

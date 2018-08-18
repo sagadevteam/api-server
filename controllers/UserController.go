@@ -16,7 +16,8 @@ func GetUserByEmail(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	user, err := models.FindUserByEmail(email, tx)
+	columns := []string{"*"}
+	user, err := models.FindUserByEmail(email, columns, tx)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"user": email, "status": "no value", "msg": err.Error()})
 	} else {

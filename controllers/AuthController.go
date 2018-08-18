@@ -92,8 +92,9 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	columns := []string{"*"}
 	user := models.User{}
-	user, err = models.FindUserByEmail(loginForm.Email, nil)
+	user, err = models.FindUserByEmail(loginForm.Email, columns, nil)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Something wrong happened", "error": err.Error()})
 		return
