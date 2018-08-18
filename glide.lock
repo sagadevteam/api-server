@@ -1,8 +1,8 @@
-hash: 76311096dba3fe38d866b6dcc7e4dbad215355ad5d8d54da3d860c7228f8c488
-updated: 2018-08-16T15:36:18.673325-07:00
+hash: 7778ee89d40d988ebb35449f427f9fc4595f375df49ec62c893458fa61945319
+updated: 2018-08-17T16:59:40.048738-07:00
 imports:
-- name: github.com/badoux/checkmail
-  version: 0755fe2dc241caebab64327c352006712f6a55c4
+- name: github.com/asaskevich/govalidator
+  version: ccb8e960c48f04d6935e72476ae4a51028f9e22f
 - name: github.com/boj/redistore
   version: 82b86d293eb292dd6949fadc09388c47f095dc54
 - name: github.com/gin-contrib/sse

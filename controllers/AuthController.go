@@ -5,7 +5,7 @@ import (
 	"api-server/requests"
 	"net/http"
 
-	"github.com/badoux/checkmail"
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -37,24 +37,15 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	// Validate email format
-	err = checkmail.ValidateFormat(signupForm.Email)
+	// Validate signup form struct
+	_, err = govalidator.ValidateStruct(signupForm)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
 		return
 	}
 
-	// Validate email host
-	// err = checkmail.ValidateHost(signupForm.Email)
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
-	// 	return
-	// }
-
-	// Validate password
-	passwordLen := len(signupForm.Password)
-	if passwordLen < 6 {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": "Password must longer than 6"})
+	if signupForm.Password != signupForm.PasswordAgain {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": "Passwords must be equal"})
 		return
 	}
 
@@ -94,24 +85,10 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Validate email format
-	err = checkmail.ValidateFormat(loginForm.Email)
+	// Validate login form struct
+	_, err = govalidator.ValidateStruct(loginForm)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
-		return
-	}
-
-	// Validate email host
-	// err = checkmail.ValidateHost(loginForm.Email)
-	// if err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
-	// 	return
-	// }
-
-	// Validate password
-	passwordLen := len(loginForm.Password)
-	if passwordLen < 6 {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": "Password must longer than 6"})
 		return
 	}
 
@@ -157,7 +134,7 @@ func Authenticated(c *gin.Context) {
 	session := sessions.Default(c)
 	user := session.Get("user")
 	if user != nil {
-		c.JSON(http.StatusOK, gin.H{"message": "Authenticated", "user": user})
+		c.JSON(http.StatusOK, gin.H{"msg": "Authenticated", "user": user})
 	} else {
 		// Foridden in AuthRequired
 		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
