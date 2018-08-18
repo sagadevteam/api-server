@@ -8,13 +8,13 @@ import (
 
 // User is user schema in mysql
 type User struct {
-	UserID     int    `db:"user_id"`
-	Email      string `db:"email"`
-	Password   string `db:"password"`
-	EthAddress string `db:"eth_addr"`
-	EthValue   string `db:"eth_value"`
-	SagaPoint  string `db:"saga_point"`
-	IsAdmin    int    `db:"is_admin"`
+	UserID     int    `db:"user_id" json:"user_id"`
+	Email      string `db:"email" json:"email"`
+	Password   string `db:"password" json:"-"`
+	EthAddress string `db:"eth_addr" json:"eth_addr"`
+	EthValue   string `db:"eth_value" json:"eth_value"`
+	SagaPoint  string `db:"saga_point" json:"saga_point"`
+	IsAdmin    int    `db:"is_admin" json:"is_admin"`
 }
 
 // FindUserByEmail find user by email
