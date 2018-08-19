@@ -6,8 +6,6 @@ import (
 	"database/sql"
 )
 
-const dayTime = 86400
-
 // Tickets - struct for database
 type Tickets struct {
 	TicketID    int              `db:"ticket_id" json:"ticket_id"`

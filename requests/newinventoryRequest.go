@@ -4,13 +4,13 @@ import "api-server/models"
 
 // NewInventoryRequest is schema in new inventory request
 type NewInventoryRequest struct {
-	Price       int    `json:"price"`
-	StartTime   int    `json:"start_time"`
-	EndTime     int    `json:"end_time"`
-	Metadata    []int  `json:"metadata"`
-	RoomNo      string `json:"room_no"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
+	Price       int    `json:"price" valid:"required"`
+	StartTime   int    `json:"start_time" valid:"required"`
+	EndTime     int    `json:"end_time" valid:"required"`
+	Metadata    []int  `json:"metadata" `
+	RoomNo      string `json:"room_no" valid:"required"`
+	Title       string `json:"title" valid:"required"`
+	Description string `json:"description" valid:"required"`
 }
 
 // ToTableStruct - transfer request form to table struct

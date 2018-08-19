@@ -16,6 +16,7 @@ var (
 )
 
 const defaultSize = 10 // default page size 10
+const dayTime = 86400
 
 func init() {
 	var err error

@@ -8,8 +8,11 @@ import (
 	"api-server/models"
 	"api-server/requests"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 )
+
+const dayTime = 86400
 
 // GetInventory - Get inventory with inventory_id
 func GetInventory(c *gin.Context) {
@@ -79,8 +82,19 @@ func AddInventory(c *gin.Context) {
 	var inventoryInput requests.NewInventoryRequest
 	if err := c.BindJSON(&inventoryInput); err != nil {
 		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data format", "error": err.Error()})
+		return
+	}
+
+	// Validate add inventory form struct
+	if _, err := govalidator.ValidateStruct(inventoryInput); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
 		return
+	}
+	if inventoryInput.StartTime >= inventoryInput.EndTime || (inventoryInput.EndTime-inventoryInput.StartTime)%dayTime != 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": "EndTime should greater than StartTime and should be 1 day difference"})
+		return
+
 	}
 
 	// insert into database
