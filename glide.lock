@@ -1,10 +1,12 @@
-hash: 7778ee89d40d988ebb35449f427f9fc4595f375df49ec62c893458fa61945319
-updated: 2018-08-17T16:59:40.048738-07:00
+hash: dee50148787b4613e5f8c0aa2f3d5aba950d52528c9da136d376eaf9fefd7a96
+updated: 2018-08-19T14:19:59.006193-07:00
 imports:
 - name: github.com/asaskevich/govalidator
   version: ccb8e960c48f04d6935e72476ae4a51028f9e22f
 - name: github.com/boj/redistore
   version: 82b86d293eb292dd6949fadc09388c47f095dc54
+- name: github.com/gin-contrib/cors
+  version: cf4846e6a636a76237a28d9286f163c132e841bc
 - name: github.com/gin-contrib/sse
   version: 22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae
 - name: github.com/gin-gonic/contrib

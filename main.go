@@ -4,6 +4,7 @@ import (
 	"encoding/gob"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 
@@ -27,6 +28,19 @@ func setupRouter() *gin.Engine {
 	// Set session
 	store := sessions.NewCookieStore([]byte("sagasessionkey"))
 	r.Use(sessions.Sessions("sagasession", store))
+
+	// Setup cors
+	// Use this when in production
+	// config := cors.Config{
+	// 	AllowOrigins:     []string{"http://localhost:8081"},
+	// 	AllowMethods:     []string{"GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH", "HEAD"},
+	// 	AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type"},
+	// 	AllowCredentials: true,
+	// 	MaxAge:           12 * time.Hour,
+	// }
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	r.Use(cors.New(config))
 
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
@@ -73,24 +87,24 @@ func setupRouter() *gin.Engine {
 	//	  "foo":  "bar",
 	//	  "manu": "123",
 	//}))
-	authorized := r.Group("/", gin.BasicAuth(gin.Accounts{
-		"foo":  "bar", // user:foo password:bar
-		"manu": "123", // user:manu password:123
-	}))
+	// authorized := r.Group("/", gin.BasicAuth(gin.Accounts{
+	// 	"foo":  "bar", // user:foo password:bar
+	// 	"manu": "123", // user:manu password:123
+	// }))
 
-	authorized.POST("admin", func(c *gin.Context) {
-		user := c.MustGet(gin.AuthUserKey).(string)
+	// authorized.POST("admin", func(c *gin.Context) {
+	// 	user := c.MustGet(gin.AuthUserKey).(string)
 
-		// Parse JSON
-		var json struct {
-			Value string `json:"value" binding:"required"`
-		}
+	// 	// Parse JSON
+	// 	var json struct {
+	// 		Value string `json:"value" binding:"required"`
+	// 	}
 
-		if c.Bind(&json) == nil {
-			DB[user] = json.Value
-			c.JSON(http.StatusOK, gin.H{"status": "ok"})
-		}
-	})
+	// 	if c.Bind(&json) == nil {
+	// 		DB[user] = json.Value
+	// 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	// 	}
+	// })
 
 	return r
 }
