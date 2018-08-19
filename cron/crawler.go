@@ -2,24 +2,24 @@ package main
 
 import (
 	"api-server/models"
-	"log"
 	"encoding/json"
-	"net/http"
 	"io/ioutil"
+	"log"
+	"net/http"
 	"strconv"
 
 	"github.com/robfig/cron"
 )
 
 type EthMarketPriceOfMax struct {
-	At uint `json:"at"`
-	Buy string `json:"buy"`
+	At   uint   `json:"at"`
+	Buy  string `json:"buy"`
 	Sell string `json:"sell"`
 	Open string `json:"open"`
-	Low string `json:"low"`
+	Low  string `json:"low"`
 	High string `json:"high"`
 	Last string `json:"last"`
-	Vol string `json:"vol"`
+	Vol  string `json:"vol"`
 }
 
 func getPrice() *EthMarketPriceOfMax {
@@ -43,8 +43,7 @@ func getPrice() *EthMarketPriceOfMax {
 }
 
 func insertEthRate(at uint, last float64) {
-	db := models.Session
-	_, err := db.Exec(`INSERT INTO eth_rates (symbol, price, time) VALUES (?, ?, ?)`, "twd", last, at)
+	_, err := models.DB.Exec(`INSERT INTO eth_rates (symbol, price, time) VALUES (?, ?, ?)`, "twd", last, at)
 	if err != nil {
 		// handle error
 	}
@@ -69,6 +68,6 @@ func main() {
 		}
 	})
 	c.Start()
-	select{}
-	
+	select {}
+
 }

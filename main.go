@@ -47,12 +47,6 @@ func setupRouter() *gin.Engine {
 		c.String(http.StatusOK, "pong")
 	})
 
-	// Get user value
-	// r.GET("/user/:email", controllers.GetUserByEmail)
-
-	// Insert test user to db
-	r.GET("/insertUser", controllers.GetInsertUser)
-
 	// Signup the user
 	r.POST("/signup", middlewares.GuestRequired(), controllers.Signup)
 
@@ -80,31 +74,14 @@ func setupRouter() *gin.Engine {
 	// Get tickets
 	r.GET("/usertickets", middlewares.AuthRequired(), controllers.GetTickets)
 
-	// Authorized group (uses gin.BasicAuth() middleware)
-	// Same than:
-	// authorized := r.Group("/")
-	// authorized.Use(gin.BasicAuth(gin.Credentials{
-	//	  "foo":  "bar",
-	//	  "manu": "123",
-	//}))
-	// authorized := r.Group("/", gin.BasicAuth(gin.Accounts{
-	// 	"foo":  "bar", // user:foo password:bar
-	// 	"manu": "123", // user:manu password:123
-	// }))
+	// Exchange rate
+	// r.GET("/rate/:symbol")
 
-	// authorized.POST("admin", func(c *gin.Context) {
-	// 	user := c.MustGet(gin.AuthUserKey).(string)
+	// Exchange ETH to SAGA points. format {symbol: 'sagatwd', wei_quantity: '0x3345678'}
+	// r.PUT("/exchange", middlewares.AuthRequired())
 
-	// 	// Parse JSON
-	// 	var json struct {
-	// 		Value string `json:"value" binding:"required"`
-	// 	}
-
-	// 	if c.Bind(&json) == nil {
-	// 		DB[user] = json.Value
-	// 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
-	// 	}
-	// })
+	// Pay by SAGA points. format: [ticket_id1, ticket_id2...]
+	// r.POST("/buy", middlewares.AuthRequired())
 
 	return r
 }
