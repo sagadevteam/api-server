@@ -1,15 +1,19 @@
 package models
 
-import "database/sql"
+import (
+	"api-server/common"
+	"api-server/responses"
+	"database/sql"
+)
 
 const dayTime = 86400
 
 // Tickets - struct for database
 type Tickets struct {
-	TicketID    int       `db:"ticket_id" json:"ticket_id"`
-	InventoryID int       `db:"inventory_id" json:"inventory_id"`
-	UserID      NullInt64 `db:"user_id" json:"user_id"`
-	Time        int       `db:"end_time" json:"end_time"`
+	TicketID    int              `db:"ticket_id" json:"ticket_id"`
+	InventoryID int              `db:"inventory_id" json:"inventory_id"`
+	UserID      common.NullInt64 `db:"user_id" json:"user_id"`
+	Time        int              `db:"end_time" json:"end_time"`
 }
 
 // Save - insert one ticket into table
@@ -63,6 +67,26 @@ func SelectTicketsWithInventoryID(inventoryID int) (tickets []Tickets, err error
 			return
 		}
 		tickets = append(tickets, ticket)
+	}
+	err = rows.Err()
+	return
+}
+
+// SelectTicketsWithUserID - find tickets by user id
+func SelectTicketsWithUserID(userID int) (tickets []responses.UserTicketsResponse, err error) {
+	rows, errQuery := DB.Query(`SELECT t.ticket_id, t.user_id, t.inventory_id, t.time, i.price, i.title, i.description, i.room_no, i.metadata  FROM tickets AS t INNER JOIN inventories AS i ON T.inventory_id=I.inventory_id WHERE user_id=?`, userID)
+	if errQuery != nil {
+		err = errQuery
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var response responses.UserTicketsResponse
+		err = rows.Scan(&response.TicketID, &response.UserID, &response.InventoryID, &response.Time, &response.Price, &response.Title, &response.Description, &response.RoomNo, &response.Metadata)
+		if err != nil {
+			return
+		}
+		tickets = append(tickets, response)
 	}
 	err = rows.Err()
 	return

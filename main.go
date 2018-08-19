@@ -61,7 +61,10 @@ func setupRouter() *gin.Engine {
 	r.GET("/inventories", controllers.GetInventories)
 
 	// Get tickets
-	r.GET("/tickets", controllers.GetTickets)
+	r.GET("/tickets", controllers.GetTicketsWithInventoryID)
+
+	// Get tickets
+	r.GET("/usertickets", middlewares.AuthRequired(), controllers.GetTickets)
 
 	// Authorized group (uses gin.BasicAuth() middleware)
 	// Same than:
