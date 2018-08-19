@@ -99,6 +99,7 @@ func main() {
 	// Setup router
 	r := setupRouter()
 
-	// Listen and Server in 0.0.0.0:8080
-	r.Run(":" + config.API.Port)
+	// Listen and Server in config.API.Domain:config.API.Port
+	// Maybe change to use efficient way to concat string
+	r.Run(config.API.Domain + ":" + config.API.Port)
 }
