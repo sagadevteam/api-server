@@ -7,7 +7,7 @@ import (
 )
 
 // Tickets - struct for database
-type Tickets struct {
+type Ticket struct {
 	TicketID    int              `db:"ticket_id" json:"ticket_id"`
 	InventoryID int              `db:"inventory_id" json:"inventory_id"`
 	UserID      common.NullInt64 `db:"user_id" json:"user_id"`
@@ -16,7 +16,7 @@ type Tickets struct {
 }
 
 // Save - insert one ticket into table
-func (ticket *Tickets) Save(tx *sql.Tx) error {
+func (ticket *Ticket) Save(tx *sql.Tx) error {
 
 	_, err := tx.Exec(
 		`INSERT INTO tickets (
@@ -52,7 +52,7 @@ func InsertManyTickets(inventoryID, start, end int, tx *sql.Tx) error {
 }
 
 // SelectTicketsWithInventoryID - find tickets by inventory id
-func SelectTicketsWithInventoryID(inventoryID int) (tickets []Tickets, err error) {
+func SelectTicketsWithInventoryID(inventoryID int) (tickets []Ticket, err error) {
 	rows, errQuery := DB.Query(`SELECT ticket_id, user_id, inventory_id, time FROM tickets WHERE inventory_id=?`, inventoryID)
 	if errQuery != nil {
 		err = errQuery
@@ -60,7 +60,7 @@ func SelectTicketsWithInventoryID(inventoryID int) (tickets []Tickets, err error
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var ticket Tickets
+		var ticket Ticket
 		err = rows.Scan(&ticket.TicketID, &ticket.UserID, &ticket.InventoryID, &ticket.Time)
 		if err != nil {
 			return

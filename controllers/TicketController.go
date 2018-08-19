@@ -24,7 +24,7 @@ func GetTicketsWithInventoryID(c *gin.Context) {
 	}
 
 	// query database
-	var tickets []models.Tickets
+	var tickets []models.Ticket
 	tickets, err = models.SelectTicketsWithInventoryID(inventoryID)
 	if err != nil {
 		fmt.Println(err.Error())

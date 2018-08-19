@@ -63,7 +63,7 @@ func SelectInventoriesWithPage(page, pageSize int) (inventories []Inventory, err
 }
 
 // ToTicketTableStruct - transfer inventory struct to ticket struct
-func (inventory *Inventory) ToTicketTableStruct() (ticket Tickets) {
+func (inventory *Inventory) ToTicketTableStruct() (ticket Ticket) {
 	ticket.InventoryID = inventory.InventoryID
 	return
 }
