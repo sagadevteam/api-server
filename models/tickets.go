@@ -4,9 +4,10 @@ import (
 	"api-server/common"
 	"api-server/responses"
 	"database/sql"
+	"errors"
 )
 
-// Tickets - struct for database
+// Ticket - struct for database
 type Ticket struct {
 	TicketID    int              `db:"ticket_id" json:"ticket_id"`
 	InventoryID int              `db:"inventory_id" json:"inventory_id"`
@@ -88,5 +89,58 @@ func SelectTicketsWithUserID(userID int) (tickets []responses.UserTicketsRespons
 		tickets = append(tickets, response)
 	}
 	err = rows.Err()
+	return
+}
+
+// SelectTicketsAndUpdate - select tickets and update point
+func SelectTicketsAndUpdate(userID int, tickets []int, tx *sql.Tx) (err error) {
+	// query statement
+	selectTicketBoughtQuery := "SELECT t.user_id, t.inventory_id, i.price FROM tickets AS t LEFT JOIN inventories AS i ON t.inventory_id=i.inventory_id WHERE ticket_id=?"
+	selectUserPointQuery := "SELECT saga_point FROM users WHERE user_id=?"
+	updateTicketSetUserQuery := "UPDATE tickets SET user_id=? WHERE ticket_id=?"
+	updateUserSetPointQuery := "UPDATE users SET saga_point=? WHERE user_id=?"
+	// find tickets
+	var inventory, totalPrice int
+	for _, item := range tickets {
+		var user common.NullInt64
+		var inventoryTmp, price int
+		err = tx.QueryRow(selectTicketBoughtQuery, item).Scan(&user, &inventoryTmp, &price)
+		if err != nil {
+			return
+		}
+		if user.Valid {
+			err = errors.New("ticket already bought")
+			return
+		}
+		if inventory == 0 {
+			inventory = inventoryTmp
+		} else {
+			if inventory != inventoryTmp {
+				err = errors.New("inventory not same")
+				return
+			}
+		}
+		totalPrice += price
+	}
+
+	// check user sagapoint
+	var sagaPoint int
+	err = tx.QueryRow(selectUserPointQuery, userID).Scan(&sagaPoint)
+	if err != nil {
+		return
+	}
+	if sagaPoint < totalPrice {
+		err = errors.New("saga point not enough")
+	}
+	sagaPoint -= totalPrice
+
+	// update all
+	for _, item := range tickets {
+		_, err = tx.Exec(updateTicketSetUserQuery, userID, item)
+		if err != nil {
+			return
+		}
+	}
+	_, err = tx.Exec(updateUserSetPointQuery, sagaPoint, userID)
 	return
 }

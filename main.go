@@ -61,7 +61,9 @@ func setupRouter(r *gin.Engine) {
 	// r.PUT("/exchange", middlewares.AuthRequired())
 
 	// Pay by SAGA points. format: [ticket_id1, ticket_id2...]
-	// r.POST("/buy", middlewares.AuthRequired())
+	r.POST("/buyticket", middlewares.AuthRequired(), controllers.BuyTickets)
+
+	return
 }
 
 func main() {

@@ -104,6 +104,7 @@ func AddInventory(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "tx begin failed", "error": err.Error()})
 		return
 	}
+	defer tx.Rollback()
 	inventory := inventoryInput.ToTableStruct()
 	if err := inventory.Save(tx); err != nil {
 		fmt.Println(err.Error())

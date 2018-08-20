@@ -2,11 +2,13 @@ package controllers
 
 import (
 	"api-server/models"
+	"api-server/requests"
 	"api-server/responses"
 	"fmt"
 	"net/http"
 	"strconv"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -66,5 +68,56 @@ func GetTickets(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"tickets": tickets})
+	return
+}
+
+// BuyTickets - buy ticket with user id in session
+func BuyTickets(c *gin.Context) {
+	// get user id
+	session := sessions.Default(c)
+	user := session.Get("user")
+	if user == nil {
+		fmt.Println("Page not found")
+		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
+		return
+	}
+
+	userID := user.(models.User).UserID
+
+	// bind post data
+	var buyTicketsInput requests.BuyTicketsRequest
+	if err := c.BindJSON(&buyTicketsInput); err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data format", "error": err.Error()})
+		return
+	}
+
+	// Validate buy tickets form struct
+	if _, err := govalidator.ValidateStruct(buyTicketsInput); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
+		return
+	}
+
+	// query database
+	tx, err := models.DB.Begin()
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "tx begin failed", "error": err.Error()})
+		return
+	}
+	defer tx.Rollback()
+	err = models.SelectTicketsAndUpdate(userID, buyTicketsInput.TicketID, tx)
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "buy ticket error", "error": err.Error()})
+		return
+	}
+	err = tx.Commit()
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "tx commit failed", "error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"msg": "tickets bought successfully"})
 	return
 }

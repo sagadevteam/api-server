@@ -30,8 +30,7 @@ func FindUserByEmail(email string, columns []string, tx *sql.Tx) (user User, err
 }
 
 // Save user
-func (user *User) Save(tx *sql.Tx) error {
-	var err error
+func (user *User) Save(tx *sql.Tx) (err error) {
 	insertQuery := `INSERT INTO users (
 						email,
 						password,
