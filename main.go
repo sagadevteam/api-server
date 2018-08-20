@@ -75,7 +75,7 @@ func setupRouter() *gin.Engine {
 	r.GET("/usertickets", middlewares.AuthRequired(), controllers.GetTickets)
 
 	// Exchange rate
-	// r.GET("/rate/:symbol")
+	r.GET("/rate/:symbol", controllers.GetRate)
 
 	// Exchange ETH to SAGA points. format {symbol: 'sagatwd', wei_quantity: '0x3345678'}
 	// r.PUT("/exchange", middlewares.AuthRequired())
