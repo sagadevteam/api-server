@@ -20,27 +20,7 @@ import (
 // DB - tmp global var
 var DB = make(map[string]string)
 
-func setupRouter() *gin.Engine {
-	// Disable Console Color
-	// gin.DisableConsoleColor()
-	r := gin.Default()
-
-	// Set session
-	store := sessions.NewCookieStore([]byte("sagasessionkey"))
-	r.Use(sessions.Sessions("sagasession", store))
-
-	// Setup cors
-	// Use this when in production
-	// config := cors.Config{
-	// 	AllowOrigins:     []string{"http://localhost:8081"},
-	// 	AllowMethods:     []string{"GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH", "HEAD"},
-	// 	AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type"},
-	// 	AllowCredentials: true,
-	// 	MaxAge:           12 * time.Hour,
-	// }
-	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
-	r.Use(cors.New(config))
+func setupRouter(r *gin.Engine) {
 
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
@@ -82,16 +62,41 @@ func setupRouter() *gin.Engine {
 
 	// Pay by SAGA points. format: [ticket_id1, ticket_id2...]
 	// r.POST("/buy", middlewares.AuthRequired())
-
-	return r
 }
 
 func main() {
 	// Register models
 	gob.Register(models.User{})
 
+	// Disable Console Color
+	// gin.DisableConsoleColor()
+	r := gin.Default()
+
+	// Set session
+	store := sessions.NewCookieStore([]byte("sagasessionkey"))
+	r.Use(sessions.Sessions("sagasession", store))
+
+	// Setup cors
+	// Use this when in production
+	// corsConfig := cors.Config{
+	// 	AllowOrigins:     []string{"http://localhost:8081"},
+	// 	AllowMethods:     []string{"GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH", "HEAD"},
+	// 	AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type"},
+	// 	AllowCredentials: true,
+	// 	MaxAge:           12 * time.Hour,
+	// }
+	corsConfig := cors.DefaultConfig()
+
+	// Set mode
+	if config.API.Debug == false {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		corsConfig.AllowAllOrigins = true
+	}
+	r.Use(cors.New(corsConfig))
+
 	// Setup router
-	r := setupRouter()
+	setupRouter(r)
 
 	// Listen and Server in config.API.Domain:config.API.Port
 	// Maybe change to use efficient way to concat string

@@ -34,6 +34,7 @@ type APIConf struct {
 	APIprotocol string `yaml:"api_protocol"`
 	Domain      string `yaml:"api_domain"`
 	Port        string `yaml:"api_port"`
+	Debug       bool   `yaml:"api_debug"`
 }
 
 // DeploySet - deploy config

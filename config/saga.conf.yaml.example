@@ -11,3 +11,4 @@ api:
     api_protocol: http
     api_domain: localhost
     api_port: 8080
+    api_debug: true
