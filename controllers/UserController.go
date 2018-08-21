@@ -44,7 +44,7 @@ func GetInsertUser(c *gin.Context) {
 		Password:   email + "_test",
 		EthAddress: "0x0",
 		EthValue:   "0x0",
-		SagaPoint:  "0x0",
+		SagaPoint:  0,
 		IsAdmin:    0,
 	}
 

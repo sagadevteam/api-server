@@ -68,7 +68,7 @@ func Signup(c *gin.Context) {
 	user.EthAddress = "0"
 	user.EthPrivateKey = "0"
 	user.EthValue = "0"
-	user.SagaPoint = "0"
+	user.SagaPoint = 0
 	user.IsAdmin = 0
 	err = user.Save(tx)
 	if err != nil {
