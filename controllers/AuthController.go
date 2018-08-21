@@ -93,7 +93,8 @@ func Login(c *gin.Context) {
 	// Validate login form struct
 	_, err = govalidator.ValidateStruct(loginForm)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "err": err.Error()})
+		errMap := govalidator.ErrorsByField(err)
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "err": errMap})
 		return
 	}
 
