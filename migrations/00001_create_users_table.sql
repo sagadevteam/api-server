@@ -6,7 +6,7 @@ CREATE TABLE users (
     eth_addr varchar(60) NOT NULL,
     eth_priv varchar(80) NOT NULL,
     eth_value text NOT NULL,
-    saga_point text NOT NULL,
+    saga_point int(11) NOT NULL,
     is_admin tinyint(1) DEFAULT '0',
     PRIMARY KEY(user_id),
     UNIQUE (email)

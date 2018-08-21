@@ -14,7 +14,7 @@ type User struct {
 	EthAddress    string `db:"eth_addr" json:"eth_addr"`
 	EthPrivateKey string `db:"eth_priv"`
 	EthValue      string `db:"eth_value" json:"eth_value"`
-	SagaPoint     string `db:"saga_point" json:"saga_point"`
+	SagaPoint     int    `db:"saga_point" json:"saga_point"`
 	IsAdmin       int    `db:"is_admin" json:"is_admin"`
 }
 
