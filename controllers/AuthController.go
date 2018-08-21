@@ -62,6 +62,7 @@ func Signup(c *gin.Context) {
 	user.Email = signupForm.Email
 	user.Password = hashedPassword
 	user.EthAddress = "0"
+	user.EthPrivateKey = "0"
 	user.EthValue = "0"
 	user.SagaPoint = "0"
 	user.IsAdmin = 0

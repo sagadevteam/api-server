@@ -8,13 +8,14 @@ import (
 
 // User is user schema in mysql
 type User struct {
-	UserID     int    `db:"user_id" json:"user_id"`
-	Email      string `db:"email" json:"email"`
-	Password   string `db:"password" json:"-"`
-	EthAddress string `db:"eth_addr" json:"eth_addr"`
-	EthValue   string `db:"eth_value" json:"eth_value"`
-	SagaPoint  string `db:"saga_point" json:"saga_point"`
-	IsAdmin    int    `db:"is_admin" json:"is_admin"`
+	UserID        int    `db:"user_id" json:"user_id"`
+	Email         string `db:"email" json:"email"`
+	Password      string `db:"password" json:"-"`
+	EthAddress    string `db:"eth_addr" json:"eth_addr"`
+	EthPrivateKey string `db:"eth_priv"`
+	EthValue      string `db:"eth_value" json:"eth_value"`
+	SagaPoint     string `db:"saga_point" json:"saga_point"`
+	IsAdmin       int    `db:"is_admin" json:"is_admin"`
 }
 
 // FindUserByEmail find user by email
@@ -35,12 +36,13 @@ func (user *User) Save(tx *sql.Tx) (err error) {
 						email,
 						password,
 						eth_addr,
+						eth_priv,
 						eth_value,
 						saga_point,
 						is_admin)
-					VALUES (?, ?, ?, ?, ?, ?)`
+					VALUES (?, ?, ?, ?, ?, ?, ?)`
 	if tx != nil {
-		result, err := tx.Exec(insertQuery, user.Email, user.Password, user.EthAddress, user.EthValue, user.SagaPoint, user.IsAdmin)
+		result, err := tx.Exec(insertQuery, user.Email, user.Password, user.EthAddress, user.EthPrivateKey, user.EthValue, user.SagaPoint, user.IsAdmin)
 
 		userID64, _ := result.LastInsertId()
 		user.UserID = int(userID64)
