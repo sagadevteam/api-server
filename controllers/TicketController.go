@@ -112,6 +112,12 @@ func BuyTickets(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "buy ticket error", "error": err.Error()})
 		return
 	}
+	err = models.InsertPayments(userID, buyTicketsInput.TicketID, tx)
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "add payment error", "error": err.Error()})
+		return
+	}
 	err = tx.Commit()
 	if err != nil {
 		fmt.Println(err.Error())
