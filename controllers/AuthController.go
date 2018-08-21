@@ -33,19 +33,23 @@ func Signup(c *gin.Context) {
 
 	err := c.BindJSON(&signupForm)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "err": err.Error()})
 		return
 	}
 
 	// Validate signup form struct
 	_, err = govalidator.ValidateStruct(signupForm)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
+		errMap := govalidator.ErrorsByField(err)
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "err": errMap})
 		return
 	}
 
+	// Maybe add same tag in govalidator
 	if signupForm.Password != signupForm.PasswordAgain {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": "Passwords must be equal"})
+		errMap := make(map[string]string)
+		errMap["password_again"] = "Password again must be equal to password"
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "err": errMap})
 		return
 	}
 
@@ -82,14 +86,14 @@ func Login(c *gin.Context) {
 	session := sessions.Default(c)
 	err := c.BindJSON(&loginForm)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "err": err.Error()})
 		return
 	}
 
 	// Validate login form struct
 	_, err = govalidator.ValidateStruct(loginForm)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "err": err.Error()})
 		return
 	}
 
@@ -97,7 +101,7 @@ func Login(c *gin.Context) {
 	user := models.User{}
 	user, err = models.FindUserByEmail(loginForm.Email, columns, nil)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "Something wrong happened", "error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Something wrong happened", "err": err.Error()})
 		return
 	}
 
@@ -124,10 +128,10 @@ func Logout(c *gin.Context) {
 	if user != nil {
 		session.Delete("user")
 		session.Save()
-		c.JSON(http.StatusOK, gin.H{"message": "Log out successfully"})
+		c.JSON(http.StatusOK, gin.H{"msg": "Log out successfully"})
 	} else {
 		// Foridden in GuestRequired
-		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
+		c.JSON(http.StatusNotFound, gin.H{"err": "Page not found"})
 	}
 }
 
@@ -139,6 +143,6 @@ func Authenticated(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"msg": "Authenticated", "user": user})
 	} else {
 		// Foridden in AuthRequired
-		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
+		c.JSON(http.StatusNotFound, gin.H{"err": "Page not found"})
 	}
 }
