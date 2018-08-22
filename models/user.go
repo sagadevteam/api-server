@@ -2,9 +2,13 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"strings"
 )
+
+// ErrorMsgSagaPointNotEnough - error message of admin saga point not enough
+const ErrorMsgSagaPointNotEnough = "admin saga point not enough"
 
 // User is user schema in mysql
 type User struct {
@@ -52,4 +56,51 @@ func (user *User) Save(tx *sql.Tx) (err error) {
 	_, err = DB.Exec(insertQuery, user.Email, user.Password, user.EthAddress, user.EthValue, user.SagaPoint, user.IsAdmin)
 
 	return err
+}
+
+// Update user
+func (user *User) Update(tx *sql.Tx) (err error) {
+	updateQuery := `UPDATE users SET
+						email=?,
+						password=?,
+						eth_addr=?,
+						eth_priv=?,
+						eth_value=?,
+						saga_point=?,
+						is_admin=?
+					WHERE user_id=?`
+	if tx != nil {
+		_, err := tx.Exec(updateQuery, user.Email, user.Password, user.EthAddress, user.EthPrivateKey, user.EthValue, user.SagaPoint, user.IsAdmin, user.UserID)
+		return err
+	}
+	_, err = DB.Exec(updateQuery, user.Password, user.EthAddress, user.EthPrivateKey, user.EthValue, user.SagaPoint, user.IsAdmin, user.UserID)
+
+	return err
+}
+
+// SelectAndUpdateAdminWithMinusSagaPoint - check saga point enough and update
+func SelectAndUpdateAdminWithMinusSagaPoint(sagaPoint int, tx *sql.Tx) (err error) {
+	var adminID, adminSaga int
+	selectQuery := `SELECT user_id,saga_point FROM users WHERE is_admin=1`
+	if tx != nil {
+		err = tx.QueryRow(selectQuery).Scan(&adminID, &adminSaga)
+	} else {
+		err = DB.QueryRow(selectQuery).Scan(&adminID, &adminSaga)
+	}
+	if err != nil {
+		return
+	}
+	if adminSaga < sagaPoint {
+		err = errors.New(ErrorMsgSagaPointNotEnough)
+		return
+	}
+	adminSaga -= sagaPoint
+	updateQuery := `UPDATE users SET saga_point=? WHERE user_id=?`
+	if tx != nil {
+		_, err = tx.Exec(updateQuery, adminSaga, adminID)
+	} else {
+		_, err = DB.Exec(updateQuery, adminSaga, adminID)
+	}
+
+	return
 }

@@ -24,7 +24,7 @@ func (ticket *Ticket) Save(tx *sql.Tx) error {
 			inventory_id, 
 			time) 
 		VALUES 
-	  		( ?, ?, ?)`,
+	  		( ?, ?)`,
 		ticket.InventoryID,
 		ticket.Time)
 
