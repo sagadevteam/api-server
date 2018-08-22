@@ -13,7 +13,9 @@ func GuestRequired() gin.HandlerFunc {
 		session := sessions.Default(c)
 		user := session.Get("user")
 		if user != nil {
-			c.JSON(http.StatusForbidden, gin.H{"error": "You are forbidden"})
+			c.JSON(http.StatusForbidden, gin.H{"err": "You are forbidden"})
+			c.Abort()
+			return
 		} else {
 			c.Next()
 		}

@@ -15,7 +15,9 @@ func AuthRequired() gin.HandlerFunc {
 		if user != nil {
 			c.Next()
 		} else {
-			c.JSON(http.StatusForbidden, gin.H{"error": "You are not authenticated"})
+			c.JSON(http.StatusForbidden, gin.H{"err": "You are not authenticated"})
+			c.Abort()
+			return
 		}
 	}
 }
