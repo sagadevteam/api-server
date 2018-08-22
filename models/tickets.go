@@ -14,6 +14,7 @@ type Ticket struct {
 	UserID      common.NullInt64 `db:"user_id" json:"user_id"`
 	Time        int              `db:"end_time" json:"end_time"`
 	OnChain     bool             `db:"on_chain" json:"on_chain"`
+	ToUser      bool             `db:"to_user" json:"to_user"`
 }
 
 // Save - insert one ticket into table
