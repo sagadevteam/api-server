@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/gob"
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/contrib/sessions"
@@ -81,20 +82,17 @@ func main() {
 
 	// Setup cors
 	// Use this when in production
-	// corsConfig := cors.Config{
-	// 	AllowOrigins:     []string{"http://localhost:8081"},
-	// 	AllowMethods:     []string{"GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH", "HEAD"},
-	// 	AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type"},
-	// 	AllowCredentials: true,
-	// 	MaxAge:           12 * time.Hour,
-	// }
-	corsConfig := cors.DefaultConfig()
+	corsConfig := cors.Config{
+		AllowOrigins:     config.API.CORSDomains,
+		AllowMethods:     []string{"GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH", "HEAD"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}
 
 	// Set mode
 	if config.API.Debug == false {
 		gin.SetMode(gin.ReleaseMode)
-	} else {
-		corsConfig.AllowAllOrigins = true
 	}
 	r.Use(cors.New(corsConfig))
 

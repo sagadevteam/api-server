@@ -31,10 +31,11 @@ type Database struct {
 
 // APIConf config
 type APIConf struct {
-	APIprotocol string `yaml:"api_protocol"`
-	Domain      string `yaml:"api_domain"`
-	Port        string `yaml:"api_port"`
-	Debug       bool   `yaml:"api_debug"`
+	APIprotocol string   `yaml:"api_protocol"`
+	Domain      string   `yaml:"api_domain"`
+	Port        string   `yaml:"api_port"`
+	Debug       bool     `yaml:"api_debug"`
+	CORSDomains []string `yaml:"api_cors_domains"`
 }
 
 // DeploySet - deploy config
