@@ -4,7 +4,7 @@ CREATE TABLE users (
     email varchar(512) NOT NULL,
     password varchar(100) NOT NULL,
     eth_addr varchar(60) NOT NULL,
-    eth_priv varchar(80) NOT NULL,
+    eth_priv varchar(200) NOT NULL,
     eth_value text NOT NULL,
     saga_point int(11) NOT NULL,
     is_admin tinyint(1) DEFAULT '0',

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"api-server/config"
+	apiCrypto "api-server/crypto"
 	"api-server/models"
 	"api-server/requests"
 	"encoding/hex"
@@ -77,12 +79,19 @@ func Signup(c *gin.Context) {
 	// Generate private key
 	privKey, _ := crypto.GenerateKey()
 
-	// TODO: encrypt the hexed private key
+	// Encrypt private key
+	var encPrivKey string
+	encPrivKey, err = apiCrypto.Encrypt([]byte(config.API.CipherKey), strings.ToLower(hex.EncodeToString(crypto.FromECDSA(privKey))))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": "Something wrong happened", "err": err.Error()})
+		return
+	}
+
 	user := models.User{}
 	user.Email = signupForm.Email
 	user.Password = hashedPassword
 	user.EthAddress = replaceZeroPrefix(strings.ToLower(crypto.PubkeyToAddress(privKey.PublicKey).Hex()))
-	user.EthPrivateKey = strings.ToLower(hex.EncodeToString(crypto.FromECDSA(privKey)))
+	user.EthPrivateKey = encPrivKey
 	user.EthValue = "0"
 	user.SagaPoint = 0
 	user.IsAdmin = 0
