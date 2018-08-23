@@ -94,22 +94,21 @@ func SelectTicketsWithUserID(userID int) (tickets []responses.UserTicketsRespons
 }
 
 // SelectTicketsAndUpdate - select tickets and update point
-func SelectTicketsAndUpdate(userID int, tickets []int, tx *sql.Tx) (err error) {
+func SelectTicketsAndUpdate(user *User, tickets []int, tx *sql.Tx) (err error) {
 	// query statement
 	selectTicketBoughtQuery := "SELECT t.user_id, t.inventory_id, i.price FROM tickets AS t LEFT JOIN inventories AS i ON t.inventory_id=i.inventory_id WHERE ticket_id=?"
-	selectUserPointQuery := "SELECT saga_point FROM users WHERE user_id=?"
 	updateTicketSetUserQuery := "UPDATE tickets SET user_id=? WHERE ticket_id=?"
 	updateUserSetPointQuery := "UPDATE users SET saga_point=? WHERE user_id=?"
 	// find tickets
 	var inventory, totalPrice int
 	for _, item := range tickets {
-		var user common.NullInt64
+		var userID common.NullInt64
 		var inventoryTmp, price int
-		err = tx.QueryRow(selectTicketBoughtQuery, item).Scan(&user, &inventoryTmp, &price)
+		err = tx.QueryRow(selectTicketBoughtQuery, item).Scan(&userID, &inventoryTmp, &price)
 		if err != nil {
 			return
 		}
-		if user.Valid {
+		if userID.Valid {
 			err = errors.New("ticket already bought")
 			return
 		}
@@ -125,23 +124,47 @@ func SelectTicketsAndUpdate(userID int, tickets []int, tx *sql.Tx) (err error) {
 	}
 
 	// check user sagapoint
-	var sagaPoint int
-	err = tx.QueryRow(selectUserPointQuery, userID).Scan(&sagaPoint)
-	if err != nil {
-		return
-	}
-	if sagaPoint < totalPrice {
+	if user.SagaPoint < totalPrice {
 		err = errors.New("saga point not enough")
 	}
-	sagaPoint -= totalPrice
+	user.SagaPoint -= totalPrice
 
 	// update all
 	for _, item := range tickets {
-		_, err = tx.Exec(updateTicketSetUserQuery, userID, item)
+		_, err = tx.Exec(updateTicketSetUserQuery, user.UserID, item)
 		if err != nil {
 			return
 		}
 	}
-	_, err = tx.Exec(updateUserSetPointQuery, sagaPoint, userID)
+	_, err = tx.Exec(updateUserSetPointQuery, user.SagaPoint, user.UserID)
+	return
+}
+
+// SelectTicketWithUserID - find tickets by user id
+func SelectTicketWithUserID(userID, ticketID int, tx *sql.Tx) (owned bool, err error) {
+	var ownerID common.NullInt64
+	sql := `SELECT user_id FROM tickets WHERE ticket_id=?`
+	if tx != nil {
+		err = tx.QueryRow(sql, ticketID).Scan(&ownerID)
+	} else {
+		err = DB.QueryRow(`sql`, ticketID).Scan(&ownerID)
+	}
+	if err != nil {
+		return
+	}
+	if ownerID.Valid && ownerID.Int64 == int64(userID) {
+		owned = true
+	}
+	return
+}
+
+// UpdateTicketUserID - find tickets by user id
+func UpdateTicketUserID(userID, ticketID int, tx *sql.Tx) (err error) {
+	sql := `UPDATE tickets SET user_id=? WHERE ticket_id=?`
+	if tx != nil {
+		_, err = tx.Exec(sql, userID, ticketID)
+	} else {
+		_, err = DB.Exec(sql, userID, ticketID)
+	}
 	return
 }

@@ -59,11 +59,13 @@ func setupRouter(r *gin.Engine) {
 	r.GET("/rate/:symbol", controllers.GetRate)
 
 	// Exchange ETH to SAGA points. format {symbol: 'sagatwd', wei_quantity: '0x3345678'}
-	r.POST("/buypoints", controllers.BuyPoints)
-	//r.POST("/buypoints", middlewares.AuthRequired(), controllers.BuyPoints)
+	r.POST("/buypoints", middlewares.AuthRequired(), controllers.BuyPoints)
 
 	// Pay by SAGA points. format: [ticket_id1, ticket_id2...]
 	r.POST("/buyticket", middlewares.AuthRequired(), controllers.BuyTickets)
+
+	// Exchange ticket. format: {ticket_id: 12, user_id: 1}
+	r.POST("/exchangeticket", middlewares.AuthRequired(), controllers.ExchangeTicket)
 
 	return
 }

@@ -133,7 +133,7 @@ func BuyPoints(c *gin.Context) {
 	}
 	defer tx.Rollback()
 	// update admin saga point
-	if err := models.SelectAndUpdateAdminWithMinusSagaPoint(user.SagaPoint, tx); err != nil {
+	if err := models.SelectAndUpdateAdminWithMinusSagaPoint(buyPointsInput.Amount, tx); err != nil {
 		fmt.Println(err.Error())
 		if err.Error() == models.ErrorMsgSagaPointNotEnough {
 			c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error(), "error": err.Error()})

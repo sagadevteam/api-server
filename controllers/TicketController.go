@@ -75,14 +75,12 @@ func GetTickets(c *gin.Context) {
 func BuyTickets(c *gin.Context) {
 	// get user id
 	session := sessions.Default(c)
-	user := session.Get("user")
-	if user == nil {
+	user, ok := session.Get("user").(models.User)
+	if !ok {
 		fmt.Println("Page not found")
 		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
 		return
 	}
-
-	userID := user.(models.User).UserID
 
 	// bind post data
 	var buyTicketsInput requests.BuyTicketsRequest
@@ -106,13 +104,13 @@ func BuyTickets(c *gin.Context) {
 		return
 	}
 	defer tx.Rollback()
-	err = models.SelectTicketsAndUpdate(userID, buyTicketsInput.TicketID, tx)
+	err = models.SelectTicketsAndUpdate(&user, buyTicketsInput.TicketID, tx)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "buy ticket error", "error": err.Error()})
 		return
 	}
-	err = models.InsertPayments(userID, buyTicketsInput.TicketID, tx)
+	err = models.InsertPayments(user.UserID, buyTicketsInput.TicketID, tx)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "add payment error", "error": err.Error()})
@@ -124,6 +122,83 @@ func BuyTickets(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "tx commit failed", "error": err.Error()})
 		return
 	}
+	// Set session
+	session.Set("user", user)
+	err = session.Save()
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"msg": "Buy point successfully"})
+	}
 	c.JSON(http.StatusOK, gin.H{"msg": "tickets bought successfully"})
+	return
+}
+
+// ExchangeTicket - exchange ticket with user id in session to another user
+func ExchangeTicket(c *gin.Context) {
+	// get user id
+	session := sessions.Default(c)
+	user, ok := session.Get("user").(models.User)
+	if !ok {
+		fmt.Println("Page not found")
+		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
+		return
+	}
+
+	// bind post data
+	var exchangeTicketInput requests.ExchangeTicketRequest
+	if err := c.BindJSON(&exchangeTicketInput); err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data format", "error": err.Error()})
+		return
+	}
+
+	// Validate buy tickets form struct
+	if _, err := govalidator.ValidateStruct(exchangeTicketInput); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data", "error": err.Error()})
+		return
+	}
+
+	// query database
+	tx, err := models.DB.Begin()
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "tx begin failed", "error": err.Error()})
+		return
+	}
+	defer tx.Rollback()
+
+	// check ticket owned by user
+	if owned, err := models.SelectTicketWithUserID(user.UserID, exchangeTicketInput.TicketID, tx); err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "check ticket owner error", "error": err.Error()})
+		return
+	} else if !owned {
+		fmt.Println("not owned by user")
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "ticket not owned by user", "error": "ticket not owned by user"})
+		return
+	}
+
+	// transfer ticket
+	if err := models.UpdateTicketUserID(exchangeTicketInput.UserID, exchangeTicketInput.TicketID, tx); err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "ticket transfer error", "error": err.Error()})
+		return
+	}
+
+	// set payments
+	if err := models.InsertPayments(exchangeTicketInput.UserID, []int{exchangeTicketInput.TicketID}, tx); err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "payment insert error", "error": err.Error()})
+		return
+	}
+	err = tx.Commit()
+	if err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "tx commit failed", "error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"msg": "tickets transfer successfully"})
 	return
 }
