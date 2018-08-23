@@ -3,9 +3,12 @@ package controllers
 import (
 	"api-server/models"
 	"api-server/requests"
+	"encoding/hex"
 	"net/http"
+	"strings"
 
 	"github.com/asaskevich/govalidator"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -25,6 +28,15 @@ func comparePassword(hashedPassword string, plainPassword []byte) bool {
 		return false
 	}
 	return true
+}
+
+// replace zero prefix
+// please ensure your string is lowercase
+func replaceZeroPrefix(hexString string) string {
+	if strings.Index(hexString, "0x") < 0 {
+		return hexString
+	}
+	return strings.Replace(hexString, "0x", "", 1)
 }
 
 // Signup the user
@@ -62,11 +74,15 @@ func Signup(c *gin.Context) {
 	tx, err := models.DB.Begin()
 	defer tx.Rollback()
 
+	// Generate private key
+	privKey, _ := crypto.GenerateKey()
+
+	// TODO: encrypt the hexed private key
 	user := models.User{}
 	user.Email = signupForm.Email
 	user.Password = hashedPassword
-	user.EthAddress = "0"
-	user.EthPrivateKey = "0"
+	user.EthAddress = replaceZeroPrefix(strings.ToLower(crypto.PubkeyToAddress(privKey.PublicKey).Hex()))
+	user.EthPrivateKey = strings.ToLower(hex.EncodeToString(crypto.FromECDSA(privKey)))
 	user.EthValue = "0"
 	user.SagaPoint = 0
 	user.IsAdmin = 0

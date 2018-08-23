@@ -1150,7 +1150,8 @@ func testCodecRpcOne(t *testing.T, rr Rpc, h Handle, doRequest bool, exitSleepMs
 	}
 	srv := rpc.NewServer()
 	srv.Register(testRpcInt)
-	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	ln, err := net.Listen("tcp", "127.0.0.1:0") // listen on ipv4 localhost
+	logT(t, "connFn: addr: %v, network: %v, port: %v", ln.Addr(), ln.Addr().Network(), (ln.Addr().(*net.TCPAddr)).Port)
 	// log("listener: %v", ln.Addr())
 	checkErrT(t, err)
 	port = (ln.Addr().(*net.TCPAddr)).Port
@@ -1169,10 +1170,12 @@ func testCodecRpcOne(t *testing.T, rr Rpc, h Handle, doRequest bool, exitSleepMs
 			// }
 			if atomic.LoadUint64(&serverExitFlag) == 1 {
 				serverExitChan <- true
-				conn1.Close()
+				if conn1 != nil {
+					conn1.Close()
+				}
 				return // exit serverFn goroutine
 			}
-			if err1 == nil {
+			if err1 == nil && conn1 != nil {
 				sc := rr.ServerCodec(testReadWriteCloser(conn1), h)
 				srv.ServeCodec(sc)
 			}
