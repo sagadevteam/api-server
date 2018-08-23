@@ -14,3 +14,4 @@ api:
     api_debug: true
     api_cors_domains:
         - http://localhost:8080
+    api_cipher_key: localhost

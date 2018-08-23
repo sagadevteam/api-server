@@ -36,6 +36,7 @@ type APIConf struct {
 	Port        string   `yaml:"api_port"`
 	Debug       bool     `yaml:"api_debug"`
 	CORSDomains []string `yaml:"api_cors_domains"`
+	CipherKey   string   `yaml:"api_cipher_key"`
 }
 
 // DeploySet - deploy config
