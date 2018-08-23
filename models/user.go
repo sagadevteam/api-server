@@ -48,6 +48,10 @@ func (user *User) Save(tx *sql.Tx) (err error) {
 	if tx != nil {
 		result, err := tx.Exec(insertQuery, user.Email, user.Password, user.EthAddress, user.EthPrivateKey, user.EthValue, user.SagaPoint, user.IsAdmin)
 
+		if err != nil {
+			return err
+		}
+
 		userID64, _ := result.LastInsertId()
 		user.UserID = int(userID64)
 
@@ -55,7 +59,7 @@ func (user *User) Save(tx *sql.Tx) (err error) {
 	}
 	_, err = DB.Exec(insertQuery, user.Email, user.Password, user.EthAddress, user.EthValue, user.SagaPoint, user.IsAdmin)
 
-	return err
+	return
 }
 
 // Update user
@@ -70,12 +74,12 @@ func (user *User) Update(tx *sql.Tx) (err error) {
 						is_admin=?
 					WHERE user_id=?`
 	if tx != nil {
-		_, err := tx.Exec(updateQuery, user.Email, user.Password, user.EthAddress, user.EthPrivateKey, user.EthValue, user.SagaPoint, user.IsAdmin, user.UserID)
-		return err
+		_, err = tx.Exec(updateQuery, user.Email, user.Password, user.EthAddress, user.EthPrivateKey, user.EthValue, user.SagaPoint, user.IsAdmin, user.UserID)
+		return
 	}
 	_, err = DB.Exec(updateQuery, user.Password, user.EthAddress, user.EthPrivateKey, user.EthValue, user.SagaPoint, user.IsAdmin, user.UserID)
 
-	return err
+	return
 }
 
 // SelectAndUpdateAdminWithMinusSagaPoint - check saga point enough and update
