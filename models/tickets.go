@@ -126,6 +126,7 @@ func SelectTicketsAndUpdate(user *User, tickets []int, tx *sql.Tx) (err error) {
 	// check user sagapoint
 	if user.SagaPoint < totalPrice {
 		err = errors.New("saga point not enough")
+		return
 	}
 	user.SagaPoint -= totalPrice
 
