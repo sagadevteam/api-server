@@ -127,9 +127,8 @@ func BuyTickets(c *gin.Context) {
 	err = session.Save()
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
-	} else {
-		c.JSON(http.StatusOK, gin.H{"msg": "Buy point successfully"})
 	}
+
 	c.JSON(http.StatusOK, gin.H{"msg": "tickets bought successfully"})
 	return
 }
