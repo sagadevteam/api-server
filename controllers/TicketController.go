@@ -75,8 +75,16 @@ func GetTickets(c *gin.Context) {
 func BuyTickets(c *gin.Context) {
 	// get user id
 	session := sessions.Default(c)
-	user, ok := session.Get("user").(models.User)
-	if !ok {
+	userID := session.Get("user")
+	if userID == nil {
+		fmt.Println("Page not found")
+		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
+		return
+	}
+
+	columns := []string{"*"}
+	user, err := models.FindUserByID(userID.(int), columns, nil)
+	if err != nil {
 		fmt.Println("Page not found")
 		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
 		return
@@ -121,12 +129,6 @@ func BuyTickets(c *gin.Context) {
 		fmt.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "tx commit failed", "error": err.Error()})
 		return
-	}
-	// Set session
-	session.Set("user", user)
-	err = session.Save()
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
 	}
 
 	c.JSON(http.StatusOK, gin.H{"msg": "tickets bought successfully"})

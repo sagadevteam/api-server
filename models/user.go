@@ -34,6 +34,18 @@ func FindUserByEmail(email string, columns []string, tx *sql.Tx) (user User, err
 	return
 }
 
+// FindUserByID find user by user_id
+func FindUserByID(userID int, columns []string, tx *sql.Tx) (user User, err error) {
+	sql := fmt.Sprintf(`SELECT %s FROM users WHERE user_id=? limit 1`, strings.Join(columns[:], ","))
+	if tx != nil {
+		err = tx.QueryRow(sql, userID).
+			Scan(&user.UserID, &user.Email, &user.Password, &user.EthAddress, &user.EthValue, &user.SagaPoint, &user.IsAdmin)
+		return
+	}
+	err = DB.Get(&user, sql, userID)
+	return
+}
+
 // Save user
 func (user *User) Save(tx *sql.Tx) (err error) {
 	insertQuery := `INSERT INTO users (

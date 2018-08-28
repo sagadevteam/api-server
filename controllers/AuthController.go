@@ -95,8 +95,7 @@ func Signup(c *gin.Context) {
 	user.EthValue = "0"
 	user.SagaPoint = 0
 	user.IsAdmin = 0
-	err = user.Save(tx)
-	if err != nil {
+	if err = user.Save(tx); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
 	} else {
 		tx.Commit()
@@ -138,9 +137,8 @@ func Login(c *gin.Context) {
 	}
 
 	// Set session
-	session.Set("user", user)
-	err = session.Save()
-	if err != nil {
+	session.Set("user", user.UserID)
+	if err = session.Save(); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"msg": "Login successfully"})
@@ -164,9 +162,14 @@ func Logout(c *gin.Context) {
 // Authenticated the user
 func Authenticated(c *gin.Context) {
 	session := sessions.Default(c)
-	user := session.Get("user")
-	if user != nil {
-		c.JSON(http.StatusOK, gin.H{"msg": "Authenticated", "user": user})
+	columns := []string{"*"}
+	if userID := session.Get("user"); userID != nil {
+		if user, err := models.FindUserByID(userID.(int), columns, nil); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"msg": "Something wrong happened", "err": err.Error()})
+			return
+		} else {
+			c.JSON(http.StatusOK, gin.H{"msg": "Authenticated", "user": user})
+		}
 	} else {
 		// Foridden in AuthRequired
 		c.JSON(http.StatusNotFound, gin.H{"err": "Page not found"})

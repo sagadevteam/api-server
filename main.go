@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/gob"
 	"net/http"
 	"time"
 
@@ -12,7 +11,6 @@ import (
 	config "api-server/config"
 	controllers "api-server/controllers"
 	"api-server/middlewares"
-	"api-server/models"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jmoiron/sqlx"
@@ -72,7 +70,7 @@ func setupRouter(r *gin.Engine) {
 
 func main() {
 	// Register models
-	gob.Register(models.User{})
+	// gob.Register(models.User{})
 
 	// Disable Console Color
 	// gin.DisableConsoleColor()

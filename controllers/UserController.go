@@ -65,10 +65,18 @@ func GetInsertUser(c *gin.Context) {
 
 // BuyPoints - user buy point from admin user
 func BuyPoints(c *gin.Context) {
-	// get user id and admin
+	// get user id
 	session := sessions.Default(c)
-	user, ok := session.Get("user").(models.User)
-	if !ok {
+	userID := session.Get("user")
+	if userID == nil {
+		fmt.Println("Page not found")
+		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
+		return
+	}
+
+	columns := []string{"*"}
+	user, err := models.FindUserByID(userID.(int), columns, nil)
+	if err != nil {
 		fmt.Println("Page not found")
 		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
 		return
@@ -157,14 +165,6 @@ func BuyPoints(c *gin.Context) {
 		return
 	}
 
-	// Set session
-	session.Set("user", user)
-	err = session.Save()
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"msg": err.Error()})
-	} else {
-		c.JSON(http.StatusOK, gin.H{"msg": "Buy point successfully"})
-	}
-
+	c.JSON(http.StatusOK, gin.H{"msg": "Buy point successfully"})
 	return
 }
