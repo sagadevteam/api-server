@@ -22,12 +22,12 @@ func init() {
 	var err error
 	dbStr := config.DB.User + ":" + config.DB.Pwd + "@tcp(" + config.DB.Host + ")/" + config.DB.Table
 	DB, err = sqlx.Connect(`mysql`, dbStr)
-	DB.SetMaxIdleConns(config.DB.MaxIdleConn)
-	DB.SetConnMaxLifetime(2 * time.Minute)
-	DB.SetMaxOpenConns(config.DB.MaxConn)
 	if err != nil {
 		log.Fatalln(err)
 	}
+	DB.SetMaxIdleConns(config.DB.MaxIdleConn)
+	DB.SetConnMaxLifetime(2 * time.Minute)
+	DB.SetMaxOpenConns(config.DB.MaxConn)
 }
 
 func pageToLimit(page, pageSize int) (limit, limitSize int) {
