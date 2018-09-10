@@ -15,6 +15,7 @@ import (
 
 const eth = 10000000000000000
 
+// GetUserByEmail - get user by email
 func GetUserByEmail(c *gin.Context) {
 	email := c.Params.ByName("email")
 	tx, err := models.DB.Begin()
@@ -33,6 +34,7 @@ func GetUserByEmail(c *gin.Context) {
 	}
 }
 
+// GetInsertUser - insert user
 func GetInsertUser(c *gin.Context) {
 	email := c.Query("email")
 
@@ -74,10 +76,26 @@ func BuyPoints(c *gin.Context) {
 		return
 	}
 
-	columns := []string{"*"}
-	user, err := models.FindUserByID(userID.(int), columns, nil)
+	// bind post data
+	var buyPointsInput requests.BuyPointsRequest
+	if err := c.BindJSON(&buyPointsInput); err != nil {
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data format", "error": err.Error()})
+		return
+	}
+
+	tx, err := models.DB.Begin()
 	if err != nil {
-		fmt.Println("Page not found")
+		fmt.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "tx begin failed", "error": err.Error()})
+		return
+	}
+	defer tx.Rollback()
+
+	columns := []string{"*"}
+	user, err := models.FindUserByID(userID.(int), columns, tx)
+	if err != nil {
+		fmt.Println(err.Error())
 		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
 		return
 	}
@@ -97,17 +115,8 @@ func BuyPoints(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "database eth_value type error", "error": "database eth_value type error"})
 		return
 	}
-
-	// bind post data
-	var buyPointsInput requests.BuyPointsRequest
-	if err := c.BindJSON(&buyPointsInput); err != nil {
-		fmt.Println(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "Please check your data format", "error": err.Error()})
-		return
-	}
-
 	// Query eth rate
-	ethRate, err := models.FindEthrateBySymbol(buyPointsInput.Symbol)
+	ethRate, err := models.FindEthrateBySymbol(buyPointsInput.Symbol, tx)
 	if err != nil {
 		fmt.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "Query symbol error", "error": err.Error()})
@@ -132,14 +141,6 @@ func BuyPoints(c *gin.Context) {
 		return
 	}
 
-	// save user
-	tx, err := models.DB.Begin()
-	if err != nil {
-		fmt.Println(err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "tx begin failed", "error": err.Error()})
-		return
-	}
-	defer tx.Rollback()
 	// update admin saga point
 	if err := models.SelectAndUpdateAdminWithMinusSagaPoint(buyPointsInput.Amount, tx); err != nil {
 		fmt.Println(err.Error())

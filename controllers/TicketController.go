@@ -45,19 +45,17 @@ func GetTicketsWithInventoryID(c *gin.Context) {
 func GetTickets(c *gin.Context) {
 	// get user id
 	session := sessions.Default(c)
-	user := session.Get("user")
-	if user == nil {
+	userID := session.Get("user")
+	if userID == nil {
 		fmt.Println("Page not found")
 		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
 		return
 	}
 
-	userID := user.(models.User).UserID
-
 	// query database
 	var tickets []responses.UserTicketsResponse
 	var err error
-	tickets, err = models.SelectTicketsWithUserID(userID)
+	tickets, err = models.SelectTicketsWithUserID(userID.(int))
 	if err != nil {
 		fmt.Println(err.Error())
 		if err.Error() == "sql: no rows in result set" {
@@ -77,14 +75,6 @@ func BuyTickets(c *gin.Context) {
 	session := sessions.Default(c)
 	userID := session.Get("user")
 	if userID == nil {
-		fmt.Println("Page not found")
-		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
-		return
-	}
-
-	columns := []string{"*"}
-	user, err := models.FindUserByID(userID.(int), columns, nil)
-	if err != nil {
 		fmt.Println("Page not found")
 		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
 		return
@@ -112,6 +102,15 @@ func BuyTickets(c *gin.Context) {
 		return
 	}
 	defer tx.Rollback()
+
+	columns := []string{"*"}
+	user, err := models.FindUserByID(userID.(int), columns, tx)
+	if err != nil {
+		fmt.Println("Page not found")
+		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
+		return
+	}
+
 	err = models.SelectTicketsAndUpdate(&user, buyTicketsInput.TicketID, tx)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -139,8 +138,8 @@ func BuyTickets(c *gin.Context) {
 func ExchangeTicket(c *gin.Context) {
 	// get user id
 	session := sessions.Default(c)
-	user, ok := session.Get("user").(models.User)
-	if !ok {
+	userID := session.Get("user")
+	if userID == nil {
 		fmt.Println("Page not found")
 		c.JSON(http.StatusNotFound, gin.H{"error": "Page not found"})
 		return
@@ -170,7 +169,7 @@ func ExchangeTicket(c *gin.Context) {
 	defer tx.Rollback()
 
 	// check ticket owned by user
-	if owned, err := models.SelectTicketWithUserID(user.UserID, exchangeTicketInput.TicketID, tx); err != nil {
+	if owned, err := models.SelectTicketWithUserID(userID.(int), exchangeTicketInput.TicketID, tx); err != nil {
 		fmt.Println(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "check ticket owner error", "error": err.Error()})
 		return

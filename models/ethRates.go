@@ -1,6 +1,9 @@
 package models
 
-import "api-server/common"
+import (
+	"api-server/common"
+	"database/sql"
+)
 
 // Ethrate - struct for database
 type Ethrate struct {
@@ -11,7 +14,12 @@ type Ethrate struct {
 }
 
 // FindEthrateBySymbol - find ethrate with symbol
-func FindEthrateBySymbol(symbol string) (ethrate Ethrate, err error) {
-	err = DB.Get(&ethrate, `SELECT * FROM eth_rates WHERE symbol=?`, symbol)
+func FindEthrateBySymbol(symbol string, tx *sql.Tx) (ethrate Ethrate, err error) {
+	sqlStr := `SELECT * FROM eth_rates WHERE symbol=?`
+	if tx != nil {
+		err = tx.QueryRow(sqlStr, symbol).Scan(&ethrate.ID, &ethrate.Symbol, &ethrate.Price, &ethrate.Time)
+	} else {
+		err = DB.QueryRow(sqlStr, symbol).Scan(&ethrate.ID, &ethrate.Symbol, &ethrate.Price, &ethrate.Time)
+	}
 	return
 }

@@ -27,7 +27,7 @@ func FindUserByEmail(email string, columns []string, tx *sql.Tx) (user User, err
 	sql := fmt.Sprintf(`SELECT %s FROM users WHERE email=? limit 1`, strings.Join(columns[:], ","))
 	if tx != nil {
 		err = tx.QueryRow(sql, email).
-			Scan(&user.UserID, &user.Email, &user.Password, &user.EthAddress, &user.EthValue, &user.SagaPoint, &user.IsAdmin)
+			Scan(&user.UserID, &user.Email, &user.Password, &user.EthAddress, &user.EthPrivateKey, &user.EthValue, &user.SagaPoint, &user.IsAdmin)
 		return
 	}
 	err = DB.Get(&user, sql, email)
@@ -39,7 +39,7 @@ func FindUserByID(userID int, columns []string, tx *sql.Tx) (user User, err erro
 	sql := fmt.Sprintf(`SELECT %s FROM users WHERE user_id=? limit 1`, strings.Join(columns[:], ","))
 	if tx != nil {
 		err = tx.QueryRow(sql, userID).
-			Scan(&user.UserID, &user.Email, &user.Password, &user.EthAddress, &user.EthValue, &user.SagaPoint, &user.IsAdmin)
+			Scan(&user.UserID, &user.Email, &user.Password, &user.EthAddress, &user.EthPrivateKey, &user.EthValue, &user.SagaPoint, &user.IsAdmin)
 		return
 	}
 	err = DB.Get(&user, sql, userID)
